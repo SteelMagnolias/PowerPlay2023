@@ -1,3 +1,4 @@
+// imports
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-
+// teleop - driver controlled
 @TeleOp(name="Oct9Run", group="Iterative Opmode")
 public class Oct9Run extends OpMode
 {
@@ -20,20 +21,15 @@ public class Oct9Run extends OpMode
     private DcMotor rightFront;
     // wheels lol
 
+    // arm motors, one on each side
     private DcMotor arm;
     private DcMotor arm2;
-    private DcMotor ducky;
-    private DcMotor intake;
-    // attachment motors
 
-    private Servo colorServo;
-
-    private ColorSensor frontColor;
-    private ColorSensor midColor;
-
-    private TouchSensor touch;
-
+    // used for timed movements
     ElapsedTime timer;
+
+    // finite state machine that defines the position of the arm in relation to certain events.
+    // bottom is the default
     public enum ArmState {
         BOTTOM,
         LOWER,
@@ -50,13 +46,17 @@ public class Oct9Run extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftBack  = hardwareMap.get(DcMotor.class, "leftBack");
-        rightBack = hardwareMap.get(DcMotor.class, "rightBack");
-        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
-        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
+        // initialize motors and link to configuration, configuartion is "testOct9" in the expansion hub
+        leftBack  = hardwareMap.get(DcMotor.class, "leftBack"); // in config --> port 1 --> "leftBack"
+        rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // in config --> port 2 --> "rightBack"
+        leftFront = hardwareMap.get(DcMotor.class, "leftFront"); // in config --> port 0 --> "leftFront"
+        rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // in config --> port 3 --> "rightFront"
 
-        arm = hardwareMap.get(DcMotor.class, "arm");
-        arm2 = hardwareMap.get(DcMotor.class, "arm2");
+        // now in the same configuration in the control hub
+        arm = hardwareMap.get(DcMotor.class, "arm"); // in config --> port 0 --> "arm"
+        arm2 = hardwareMap.get(DcMotor.class, "arm2"); // in config --> port 3 --> "arm2"
+
+        /*
         ducky = hardwareMap.get(DcMotor.class, "ducky");
         intake = hardwareMap.get(DcMotor.class, "intake");
 
@@ -74,6 +74,8 @@ public class Oct9Run extends OpMode
         //  touch.setMode(DigitalChannel.Mode.INPUT);
         // touch sensor that reads environment
 
+         */
+
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
 
@@ -82,11 +84,14 @@ public class Oct9Run extends OpMode
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         */
 
-        arm2.setDirection(DcMotorSimple.Direction.REVERSE);
+        // motors must move together.
 
-        levels = ArmState.BOTTOM;
-        timer = new ElapsedTime();
-        timer.reset();
+        arm.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
+        arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
+
+        levels = ArmState.BOTTOM; // sets the current level according to finite state machine to the bottom.
+        timer = new ElapsedTime(); // make a timer
+        timer.reset(); // put timer at 0
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -96,9 +101,10 @@ public class Oct9Run extends OpMode
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
+    // this is where we loop all of our code in teleop
     public void loop() {
         // Assigning & Data
-        double lefty1 = -(gamepad1.left_stick_y);
+        double lefty1 = -(gamepad1.left_stick_y); // this is the value of gamepad1's left joystick y value
         double leftx1 = gamepad1.left_stick_x;
         double rightx1 = gamepad1.right_stick_x;
         double righty1 = (gamepad1.right_stick_y);
@@ -141,7 +147,6 @@ public class Oct9Run extends OpMode
         telemetry.addData("x", x2);
         telemetry.addData("y", y2);
         telemetry.addData("rt", rt);
-        telemetry.addData("Touch Detected?", touch.isPressed());
 
 
         // Finite State Machine - Levels
@@ -200,6 +205,8 @@ public class Oct9Run extends OpMode
                     levels = ArmState.RESET;
                 }
                 break;
+
+                /*
             case RESET:
                 if (!touch.isPressed()) {
                     arm.setPower(-.8);
@@ -208,9 +215,13 @@ public class Oct9Run extends OpMode
                     levels = ArmState.BOTTOM;
                 }
                 break;
+
+                 */
+
             default:
                 levels = ArmState.BOTTOM;
         }
+
 
 
         double pow;
@@ -290,7 +301,7 @@ public class Oct9Run extends OpMode
 
 
         if (Math.abs(lefty2) >= .1) {
-            if (lefty2 < 0 && !touch.isPressed()) {
+            if (lefty2 < 0) {
                 arm.setPower(lefty2 * pow);
                 arm2.setPower(lefty2 * pow);
             }
@@ -309,11 +320,17 @@ public class Oct9Run extends OpMode
             arm2.setPower(0);
         }
 
+        // add information on arm powers
+        telemetry.addData("arm", arm.getPower());
+        telemetry.addData("arm2",arm2.getPower());
+
+        /*
         if (Math.abs(righty2) >= .1) {
             intake.setPower(-righty2);
         } else {
             intake.setPower(0);
         }
+        */
 
 
         // Below: precision (slower) movement
@@ -372,14 +389,18 @@ public class Oct9Run extends OpMode
             rightBack.setPower(0);
         }
 
+        /*
         // move color servos
         if (x1) {
             colorServo.setPosition(.55);
         } else if (y1) {
             colorServo.setPosition(0);
         }
+        */
 
+        /*
         ducky.setPower(rightx2*.65);
+         */
 
         // Ensures Data Updates
         telemetry.update();
