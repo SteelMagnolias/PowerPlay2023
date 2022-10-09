@@ -105,31 +105,32 @@ public class Oct9Run extends OpMode
     public void loop() {
         // Assigning & Data
         double lefty1 = -(gamepad1.left_stick_y); // this is the value of gamepad1's left joystick y value
-        double leftx1 = gamepad1.left_stick_x;
-        double rightx1 = gamepad1.right_stick_x;
-        double righty1 = (gamepad1.right_stick_y);
-        double lefty2 = -(gamepad2.left_stick_y);
-        double leftx2 = gamepad2.left_stick_x;
-        double rightx2 = gamepad2.right_stick_x;
-        double righty2 = (gamepad2.right_stick_y);
-        boolean buttonUp = gamepad1.dpad_up;
-        boolean buttonDown = gamepad1.dpad_down;
-        boolean buttonLeft = gamepad1.dpad_left;
-        boolean buttonRight = gamepad1.dpad_right;
-        boolean lb = gamepad1.left_bumper;
-        boolean rb = gamepad1.right_bumper;
-        boolean a1 = gamepad1.a;
-        boolean x1 = gamepad1.x;
-        boolean y1 = gamepad1.y;
-        boolean rt = gamepad1.right_stick_button;
+        double leftx1 = gamepad1.left_stick_x; // this is the value of gamepad1's left joystick x value
+        double rightx1 = gamepad1.right_stick_x; // this is the value of gamepad1's right joystick x value
+        double righty1 = (gamepad1.right_stick_y); // this the value of gamepad1's right joystick y value
+        double lefty2 = -(gamepad2.left_stick_y); // this is the value of gamepad2's left joystick y value
+        double leftx2 = gamepad2.left_stick_x; // this is the value of gamepad2's left joystick x value
+        double rightx2 = gamepad2.right_stick_x; // this the value of gamepad2's right joystick x value
+        double righty2 = (gamepad2.right_stick_y); // this is the value of gamepad2's right joystick y value
+        boolean buttonUp = gamepad1.dpad_up; // this is the value of gamepad1's up button on the dpad
+        boolean buttonDown = gamepad1.dpad_down; // this is the value of gamepad1's down button on the dpad
+        boolean buttonLeft = gamepad1.dpad_left; // this is the value of the gamepad1's left button on the dpad
+        boolean buttonRight = gamepad1.dpad_right; // this is the value of the gamepad1's right button on the dpad
+        boolean lb = gamepad1.left_bumper; // this is the value of the gamepad1's left bumper
+        boolean rb = gamepad1.right_bumper; // this is the value of the gamepad1's right bumper
+        boolean a1 = gamepad1.a; // this is the value of the a button on gamepad1
+        boolean x1 = gamepad1.x; // this is the value of the x button on gamepad1
+        boolean y1 = gamepad1.y; // this is the value of the y button on gamepad1
+        boolean rt = gamepad1.right_stick_button; // this is the value of the button behind the right stick on gamepad1
 
-        boolean buttonUp2 = gamepad2.dpad_up;
-        boolean buttonDown2 = gamepad2.dpad_down;
-        boolean b2 = gamepad2.b;
-        boolean a2 = gamepad2.a;
-        boolean y2 = gamepad2.y;
-        boolean x2 = gamepad2.x;
+        boolean buttonUp2 = gamepad2.dpad_up; // this is the value of the up button on gamepad2
+        boolean buttonDown2 = gamepad2.dpad_down; // this is  the value of the down button on gamepad2
+        boolean b2 = gamepad2.b; // this is the value of the b button on gamepad2
+        boolean a2 = gamepad2.a; // this is the value of the a button on gamepad2
+        boolean y2 = gamepad2.y; // this is the value of the y button on gamepad2
+        boolean x2 = gamepad2.x; // this is the value of the x button on gamepad2
 
+        // print values to console
         telemetry.addData("lefty1", lefty1);
         telemetry.addData("leftx1", leftx1);
         telemetry.addData("rightx1", rightx1);
@@ -154,30 +155,30 @@ public class Oct9Run extends OpMode
         final int middle = 300;
         final int upper = 600;
 
-        switch (levels) {
-            case BOTTOM:
-                if (a2) {
+        switch (levels) { // takes the state of the levels finite state machine
+            case BOTTOM: // bottom level
+                if (a2) { // if a pressed, reset and bring level to the lowest level
                     timer.reset();
                     levels = ArmState.LOWER;
                 }
-                if (b2) {
+                if (b2) { // if b pressed, reset and bring level to the middle level
                     timer.reset();
                     levels = ArmState.MIDDLE;
                 }
-                if (y2) {
+                if (y2) { // if y is pressed, reset and bring level to the top level
                     timer.reset();
                     levels = ArmState.UPPER;
                 }
                 break;
-            case LOWER:
-                if (timer.milliseconds() < lower) {
-                    arm.setPower(.8);
+            case LOWER: // if we are already on the lower level
+                if (timer.milliseconds() < lower) { //  if timer is less than the time for lower
+                    arm.setPower(.8); // set power
                     arm2.setPower(.8);
                 } else {
-                    arm.setPower(0);
+                    arm.setPower(0); // if not, then make it 0
                     arm2.setPower(0);
                 }
-                if (x2) {
+                if (x2) { // if x is pressed, then let's reset
                     levels = ArmState.RESET;
                 }
                 break;
