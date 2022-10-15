@@ -96,6 +96,8 @@ public class EarlySeasonDrive extends OpMode
         arm.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
         arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
 
+        leftSpin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
+
         levels = ArmState.BOTTOM; // sets the current level according to finite state machine to the bottom.
         timer = new ElapsedTime(); // make a timer
         timer.reset(); // put timer at 0
@@ -404,10 +406,10 @@ public class EarlySeasonDrive extends OpMode
             leftSpin.setPower(1);
             rightSpin.setPower(1);
         }
-        else if (righty2 < 0.1) {
+        else if (righty2 < -0.1) {
             // outtake
             leftSpin.setPower(-1);
-            rightSpin.setPower(1);
+            rightSpin.setPower(-1);
         }
         else {
             // nothing - stop spinning!
