@@ -29,6 +29,14 @@ public class EarlySeasonSignalDropParkRed extends LinearOpMode {
         // run code
 
         // initialize motors and servos later smol one
+        leftBack = hardwareMap.get(DcMotor.class, "leftBack");
+        rightBack = hardwareMap.get(DcMotor.class, "rightBack");
+        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
+        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
+        arm = hardwareMap.get(DcMotor.class, "arm");
+        arm2 = hardwareMap.get(DcMotor.class, "arm2");
+        leftSpin = hardwareMap.get(CRServo.class, "leftSpin");
+        rightSpin = hardwareMap.get(CRServo.class, "rightSpin");
 
         // actual fun part
 
@@ -58,5 +66,21 @@ public class EarlySeasonSignalDropParkRed extends LinearOpMode {
         }
 
         // yey we cool
+    }
+
+    public void drive(double lf, double rf, double lb, double rb, int time) {
+        leftFront.setPower(lf);
+        rightFront.setPower(rf);
+        leftBack.setPower(lb);
+        rightBack.setPower(rb);
+
+        sleep(time); // sleep for set time.
+
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+
+        sleep(time);
     }
 }
