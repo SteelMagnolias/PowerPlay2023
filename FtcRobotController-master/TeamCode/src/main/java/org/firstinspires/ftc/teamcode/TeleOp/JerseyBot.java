@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 // teleop - driver controlled
-@TeleOp(name="EarlySeasonDrive", group="Iterative Opmode")
+@TeleOp(name="JerseyBot", group="Iterative Opmode")
 public class JerseyBot extends OpMode
 {
     private DcMotor leftBack;
