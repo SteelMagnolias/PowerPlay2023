@@ -18,7 +18,7 @@ public class EarlySeasonSignalDropParkRed extends LinearOpMode {
     private DcMotor arm;
     private DcMotor arm2;
 
-    // declare servos
+    // declare servos yay
     private CRServo leftSpin;
     private CRServo rightSpin;
 
