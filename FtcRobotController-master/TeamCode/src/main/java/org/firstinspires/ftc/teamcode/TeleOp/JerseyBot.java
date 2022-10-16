@@ -33,7 +33,8 @@ public class JerseyBot extends OpMode
         rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // in config --> port 3 --> "rightFront"
         telemetry.addData("Status", "Initialized");
 
-
+        leftFront.setDirection(DcMotor.Direction.REVERSE);  // reverse for correct movement
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
     }
 
     /*
