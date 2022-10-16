@@ -14,3 +14,19 @@ public class EarlySeasonSignalDropParkBlue extends LinearOpMode {
         waitForStart();
     }
 }
+// Scan for levels
+
+// hehehe it's time for the fun part
+
+//start
+
+//straight 1 square
+
+//strafe left
+
+//drop preloaded cone 
+
+//back 1 square
+
+//park
+
