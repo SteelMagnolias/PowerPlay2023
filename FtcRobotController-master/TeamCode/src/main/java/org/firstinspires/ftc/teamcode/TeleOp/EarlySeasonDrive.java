@@ -60,28 +60,9 @@ public class EarlySeasonDrive extends OpMode
         arm = hardwareMap.get(DcMotor.class, "arm"); // in config --> port 0 --> "arm"
         arm2 = hardwareMap.get(DcMotor.class, "arm2"); // in config --> port 3 --> "arm2"
 
+        // intake
         leftSpin = hardwareMap.get(CRServo.class, "leftSpin");
         rightSpin = hardwareMap.get(CRServo.class, "rightSpin"); // initialize our servos
-
-        /*
-        ducky = hardwareMap.get(DcMotor.class, "ducky");
-        intake = hardwareMap.get(DcMotor.class, "intake");
-
-        colorServo = hardwareMap.get(Servo.class, "colorServo");
-
-        frontColor = hardwareMap.get(ColorSensor.class, "frontColor");
-        frontColor.enableLed(false);
-        // front sensor initialize
-
-        midColor = hardwareMap.get(ColorSensor.class, "midColor");
-        midColor.enableLed(false);
-        // mid sensor initialize
-
-        touch = hardwareMap.get(TouchSensor.class, "touch");
-        //  touch.setMode(DigitalChannel.Mode.INPUT);
-        // touch sensor that reads environment
-
-         */
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -335,15 +316,6 @@ public class EarlySeasonDrive extends OpMode
         // add information on arm powers
         telemetry.addData("arm", arm.getPower());
         telemetry.addData("arm2",arm2.getPower());
-
-        /*
-        if (Math.abs(righty2) >= .1) {
-            intake.setPower(-righty2);
-        } else {
-            intake.setPower(0);
-        }
-        */
-
 
         // Below: precision (slower) movement
         pow *= 0.5;
