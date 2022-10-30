@@ -29,6 +29,9 @@ public class EarlySeasonDrive extends OpMode
     private CRServo leftSpin; // left on robot looking from the back
     private CRServo rightSpin; // right from the back perspective
 
+    // touch sensors
+    private TouchSensor touchy;
+
     // used for timed movements
     ElapsedTime timer;
 
@@ -63,6 +66,9 @@ public class EarlySeasonDrive extends OpMode
         // intake
         leftSpin = hardwareMap.get(CRServo.class, "leftSpin");
         rightSpin = hardwareMap.get(CRServo.class, "rightSpin"); // initialize our servos
+
+        //touch sensors
+        touchy = hardwareMap.get(TouchSensor.class, "touchy");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -372,22 +378,23 @@ public class EarlySeasonDrive extends OpMode
             rightFront.setPower(0);
             rightBack.setPower(0);
         }
+     if (righty2 <0.1&& -0.1 < righty2&& touchy.isPressed() ) {
+         // nothing - stop spinning!
+         leftSpin.setPower(0);
+         rightSpin.setPower(0);
+     }
 
-        if (righty2 > 0.1) {
-            // intake
-            leftSpin.setPower(1);
-            rightSpin.setPower(1);
-        }
-        else if (righty2 < -0.1) {
-            // outtake
-            leftSpin.setPower(-1);
-            rightSpin.setPower(-1);
-        }
-        else {
-            // nothing - stop spinning!
-            leftSpin.setPower(0);
-            rightSpin.setPower(0);
-        }
+     else if (righty2 > 0.1) {
+         // intake
+         leftSpin.setPower(1);
+         rightSpin.setPower(1);
+     } else  {
+         // outtake
+         leftSpin.setPower(-1);
+         rightSpin.setPower(-1);
+
+            }
+
     }
     @Override
     public void stop() {

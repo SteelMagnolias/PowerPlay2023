@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name="EarlySeasonDrive", group="Iterative Opmode")
+@TeleOp(name="TestW", group="Iterative Opmode")
 public class TestW extends OpMode {
 
     // two motors of w lift
