@@ -1,7 +1,24 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-public class Earlyauton {
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
+@Autonomous(name = "Earlyauton", group="Iterative OpMode")
+public class Earlyauton extends LinearOpMode {
+
+    // declaration
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+
+        // stuff in init
+
+        waitForStart();
+
+        // movement
+    }
     //Add preloaded block
 
     //If A5 or F2 cone not touch the touch sensor hehe it rythms
