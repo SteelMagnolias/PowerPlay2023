@@ -20,7 +20,7 @@ public class Earlyauton extends LinearOpMode {
         // movement
     }
     //Add preloaded block
-if 1
+    
     //If A5 or F2 cone not touch the touch sensor hehe it rythms
 
     //If A2 or F5 make sure you push the button no duhhh
@@ -38,6 +38,8 @@ if 1
     // ITS GO TIME LEVYYYYY aka start :)
     
     // If the image is one (continue with multiplier) back into wall, drive left to lower goal.  Drop cone
+    if (x=1) {
+        
     
     // If image is 2 drive left until reaching mid Drop cone
     
