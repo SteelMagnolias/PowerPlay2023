@@ -20,7 +20,7 @@ public class Earlyauton extends LinearOpMode {
         // movement
     }
     //Add preloaded block
-
+if 1
     //If A5 or F2 cone not touch the touch sensor hehe it rythms
 
     //If A2 or F5 make sure you push the button no duhhh
