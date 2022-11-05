@@ -38,9 +38,9 @@ public class Earlyauton extends LinearOpMode {
     // ITS GO TIME LEVYYYYY aka start :)
     
     // If the image is one (continue with multiplier) back into wall, drive left to lower goal.  Drop cone
-    if (x=1) {
-        
-    
+    //if (x==1)
+
+    //}
     // If image is 2 drive left until reaching mid Drop cone
     
     //iF image is 3 drive forward 1 square and drive left until high.  Drop cone

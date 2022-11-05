@@ -50,6 +50,7 @@ public class EarlySeasonDrive extends OpMode
 
     // reverse by multiplying by this number
     private static final int REVERSE = -1;
+    private static final double DEAD_ZONE = 0.1;
 
     @Override
     public void init() {
@@ -386,12 +387,12 @@ public class EarlySeasonDrive extends OpMode
 
         pow = 1; // this is the speed in which we will turn the servos
 
-        if (righty2 <0.1&& -0.1 < righty2&& touchy.isPressed() ) {
+        if (righty2 < REVERSE * DEAD_ZONE && DEAD_ZONE < righty2&& touchy.isPressed() ) {
             // nothing - stop spinning!
             leftSpin.setPower(0);
             rightSpin.setPower(0);
         }
-        else if (righty2 > 0.1) {
+        else if (righty2 > DEAD_ZONE) {
             // intake
             leftSpin.setPower(pow);
             rightSpin.setPower(pow);

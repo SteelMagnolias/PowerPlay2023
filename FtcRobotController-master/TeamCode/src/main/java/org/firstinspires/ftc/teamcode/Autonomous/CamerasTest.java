@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -54,6 +55,7 @@ public class CamerasTest extends LinearOpMode {
     Vuforia will feed its information and pictures it finds into TensorFlow for further analysis!
      */
 
+/*
     @Override
     public void runOpMode() {
         // this is what happens in the autonomous code.
@@ -191,3 +193,4 @@ public class CamerasTest extends LinearOpMode {
         sleep(10);
     }
 }
+*/
