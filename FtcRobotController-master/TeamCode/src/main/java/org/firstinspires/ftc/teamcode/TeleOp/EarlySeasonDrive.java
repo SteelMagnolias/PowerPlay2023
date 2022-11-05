@@ -46,6 +46,11 @@ public class EarlySeasonDrive extends OpMode
     };
     ArmState levels;
 
+    // constant(s) for movement:
+
+    // reverse by multiplying by this number
+    private static final int REVERSE = -1;
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
@@ -378,22 +383,23 @@ public class EarlySeasonDrive extends OpMode
             rightFront.setPower(0);
             rightBack.setPower(0);
         }
-     if (righty2 <0.1&& -0.1 < righty2&& touchy.isPressed() ) {
-         // nothing - stop spinning!
-         leftSpin.setPower(0);
-         rightSpin.setPower(0);
-     }
 
-     else if (righty2 > 0.1) {
-         // intake
-         leftSpin.setPower(1);
-         rightSpin.setPower(1);
-     } else  {
-         // outtake
-         leftSpin.setPower(-1);
-         rightSpin.setPower(-1);
+        pow = 1; // this is the speed in which we will turn the servos
 
-            }
+        if (righty2 <0.1&& -0.1 < righty2&& touchy.isPressed() ) {
+            // nothing - stop spinning!
+            leftSpin.setPower(0);
+            rightSpin.setPower(0);
+        }
+        else if (righty2 > 0.1) {
+            // intake
+            leftSpin.setPower(pow);
+            rightSpin.setPower(pow);
+        } else  {
+            // outtake
+            leftSpin.setPower(REVERSE * pow);
+            rightSpin.setPower(REVERSE * pow);
+        }
 
     }
     @Override
