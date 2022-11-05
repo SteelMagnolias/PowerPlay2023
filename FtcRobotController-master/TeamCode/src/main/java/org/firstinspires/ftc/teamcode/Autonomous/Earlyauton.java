@@ -63,4 +63,17 @@ public class Earlyauton extends LinearOpMode {
     //iF image is 3 drive forward 1 square and drive left until high.
     
     //End of code woohhoooooooooooo
+
+    public void drive (double lf, double rf, double lb, double rb, int time){
+        leftFront.setPower(lf);
+        rightFront.setPower(rf);
+        leftBack.setPower(lb);
+        rightBack.setPower(rb);
+        sleep(time);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+        sleep(10);
+    }
 }

@@ -115,6 +115,7 @@ public class CamerasTest extends LinearOpMode {
 
                         if (recognition.getLabel().equals("1 Bolt")){
                             // do the first position stuff
+                            signal = 1;
                             arm.setPower(0.1);
                             arm2.setPower(0.1);
                             sleep(100);
@@ -123,6 +124,7 @@ public class CamerasTest extends LinearOpMode {
                         }
                         else if (recognition.getLabel().equals("2 Bulb")) {
                             // do the second position stuff
+                            signal = 2;
                             arm.setPower(-0.1);
                             arm2.setPower(-0.1);
                             sleep(100);
@@ -131,6 +133,7 @@ public class CamerasTest extends LinearOpMode {
                         }
                         else {
                             // this means we've seen the third thing and should do that stuff
+                            signal = 3;
                             drive(0.1,0.1,0.1,0.1,100);
                         }
                     }
