@@ -51,6 +51,7 @@ public class EarlySeasonDrive extends OpMode
     // reverse by multiplying by this number
     private static final int REVERSE = -1;
     private static final double DEAD_ZONE = 0.1;
+    private static final double OFF = 0;
 
     @Override
     public void init() {
@@ -98,7 +99,16 @@ public class EarlySeasonDrive extends OpMode
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
 
+        leftBack.setPower(OFF);
+        rightBack.setPower(OFF);
+        leftFront.setPower(OFF);
+        rightFront.setPower(OFF);
+        arm.setPower(OFF);
+        arm2.setPower(OFF);
 
+        // set servos to 0
+        leftSpin.setPower(OFF);
+        rightSpin.setPower(OFF);
     }
 
     /*
@@ -152,7 +162,6 @@ public class EarlySeasonDrive extends OpMode
         telemetry.addData("x", x2);
         telemetry.addData("y", y2);
         telemetry.addData("rt", rt);
-
 
         // Finite State Machine - Levels
         final int lower = 100;
@@ -305,7 +314,7 @@ public class EarlySeasonDrive extends OpMode
         rightBack.setPower(br - rightx1);
 
 
-        if (Math.abs(lefty2) >= .1) {
+        if (Math.abs(lefty2) >= DEAD_ZONE) {
             if (lefty2 < 0) {
                 arm.setPower(lefty2 * pow);
                 arm2.setPower(lefty2 * pow);
@@ -387,7 +396,11 @@ public class EarlySeasonDrive extends OpMode
 
         pow = 1; // this is the speed in which we will turn the servos
 
-        if (righty2 < REVERSE * DEAD_ZONE && DEAD_ZONE < righty2&& touchy.isPressed() ) {
+        telemetry.addData("Touchy", touchy.isPressed());
+        telemetry.addData("Right Joystick (righty2)", righty2);
+        telemetry.addData("leftSpin power", leftSpin.getPower());
+        telemetry.addData("rightSpin power", rightSpin.getPower());
+        if (touchy.isPressed() || (Math.abs(righty2) <= DEAD_ZONE)) {
             // nothing - stop spinning!
             leftSpin.setPower(0);
             rightSpin.setPower(0);
@@ -402,6 +415,7 @@ public class EarlySeasonDrive extends OpMode
             rightSpin.setPower(REVERSE * pow);
         }
 
+        telemetry.update(); // print output
     }
     @Override
     public void stop() {
