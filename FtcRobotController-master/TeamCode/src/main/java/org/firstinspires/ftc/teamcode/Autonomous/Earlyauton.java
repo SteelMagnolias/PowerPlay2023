@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous(name = "Earlyauton", group="Iterative OpMode")
 public class Earlyauton extends LinearOpMode {
@@ -15,7 +16,7 @@ public class Earlyauton extends LinearOpMode {
     private DcMotor leftBack;
     private DcMotor rightBack;
     private TouchSensor touchy;
-    private CRServo camera;
+    private Servo camera;
     private CRServo rightintake;
     private CRServo leftintake;
     // wheelies!
@@ -36,8 +37,16 @@ public class Earlyauton extends LinearOpMode {
 
         waitForStart();
         if (touchy.isPressed()) {
-            camera
+            camera.setPosition (0);
+
         }
+        else; {
+            camera.setPosition(1);
+
+
+        }
+        if (signal == 1)
+
 
     }
 
