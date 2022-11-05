@@ -1,4 +1,4 @@
-/*
+
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -54,8 +54,6 @@ public class CamerasTest extends LinearOpMode {
     /*
     Vuforia will feed its information and pictures it finds into TensorFlow for further analysis!
      */
-
-/*
     @Override
     public void runOpMode() {
         // this is what happens in the autonomous code.
@@ -115,8 +113,25 @@ public class CamerasTest extends LinearOpMode {
                         telemetry.addData("bottom", recognition.getBottom());
                         // get what's in the bottom
 
-                        if (recognition.getLabel().equals("Duck")){
-                            //duck = true; // duck is true meaning it was shown.
+                        if (recognition.getLabel().equals("1 Bolt")){
+                            // do the first position stuff
+                            arm.setPower(0.1);
+                            arm2.setPower(0.1);
+                            sleep(100);
+                            arm.setPower(0);
+                            arm2.setPower(0);
+                        }
+                        else if (recognition.getLabel().equals("2 Bulb")) {
+                            // do the second position stuff
+                            arm.setPower(-0.1);
+                            arm2.setPower(-0.1);
+                            sleep(100);
+                            arm.setPower(0);
+                            arm2.setPower(0);
+                        }
+                        else {
+                            // this means we've seen the third thing and should do that stuff
+                            drive(0.1,0.1,0.1,0.1,100);
                         }
                     }
 
@@ -128,20 +143,7 @@ public class CamerasTest extends LinearOpMode {
 
         waitForStart();
 
-        if (duck == true) {
-            // duck visible
 
-            drive(0.3, 0.3, 0.3, 0.3,250);
-            // drive forward for 1/4 of a second
-            telemetry.addData("Duck?", "yes");
-        }
-        else {
-            // duck not visible
-
-            drive(-0.3, -0.3, -0.3, -0.3, 250);
-            // drive backward for 1/4 of a second.
-            telemetry.addData("Duck?", "no");
-        }
 
         telemetry.update();
     }
@@ -193,4 +195,3 @@ public class CamerasTest extends LinearOpMode {
         sleep(10);
     }
 }
-*/
