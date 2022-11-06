@@ -43,12 +43,12 @@ public class Earlyauton extends LinearOpMode {
 
     private final static int REVERSE = -1;
     private final static double POWER = 0.3;
-    private final static int FORWARD;
-    private final static int STRAFE;
-    private final static int ROTATE;
-    private final static int one;
-    private final static int two;
-    private final static int three;
+    private int FORWARD;
+    private int STRAFE;
+    private int ROTATE;
+    private int one;
+    private int two;
+    private int three;
 
     private static final String VUFORIA_KEY =
             "Ae/tYNP/////AAABmWJ3jgvBrksYtYG8QcdbeqRWGQWezSnxje7FgEIzwTeFQ1hZ42y6YmaQ0h5p7aqN9x+q1QXf2zRRrh1Pxln3C2cR+ul6r9mHwHbTRgd3jyggk8tzc/ubgaPBdn1q+ufcYqCk6tqj7t8JNYM/UHLZjtpSQrr5RNVs227kQwBoOx6l4MLqWL7TCTnE2vUjgrHaEW1sP1hBsyf1D4SiyRl/Ab1Vksqkgv7hwR1c7J4+7+Nt3rDd16Fr2XToT87t0JlfOn6vszaPj10qvU7836U+/rx9cs1w53UPEdfF+AmDChhdW2TymZf+aS2QfnckyxdXKHjXUhdDw3f09BegsNdnVxXnvGkp0jhg9N7fjJa39k+8";
@@ -89,6 +89,8 @@ public class Earlyauton extends LinearOpMode {
 
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         // stuff in init
+
+        telemetry.addData("ABBY AND ALLIE LISTEN UP", "blue closest to the audience touch button using cone\nblue farthest from audience dont have cone hit button\nred closest to the audience dont hit the button with cone\nred farthest from audience have cone hit button ");
 
         if (touchy.isPressed()) {
             // A2 F5
@@ -272,7 +274,15 @@ public class Earlyauton extends LinearOpMode {
             rightintake.setPower(REVERSE);
 
             drive(pow, pow*REVERSE, pow,pow*REVERSE, 1000);
-            if ()
+            if (signal==1){
+                drive(pow,pow,pow,pow, one);
+            }
+            if (signal==2){
+                drive(pow,pow,pow,pow, two);
+            }
+            if (signal==3){
+                sleep(1000);
+            }
 
         }
 
