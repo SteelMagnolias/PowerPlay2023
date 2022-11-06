@@ -1,16 +1,9 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -25,25 +18,50 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "Earlyauton", group="Iterative OpMode")
-public class Earlyauton extends LinearOpMode {
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
-    // declaration
-    private DcMotor leftFront;
-    private DcMotor rightFront;
-    private DcMotor leftBack;
-    private DcMotor rightBack;
-    private TouchSensor touchy;
-    private Servo camera;
-    private CRServo rightintake;
-    private CRServo leftintake;
-    // wheelies!
+/**
+ * This OpMode illustrates using the Vuforia localizer to determine positioning and orientation of
+ * robot on the FTC field using a WEBCAM.  The code is structured as a LinearOpMode
+ *
+ * NOTE: If you are running on a Phone with a built-in camera, use the ConceptVuforiaFieldNavigation example instead of this one.
+ * NOTE: It is possible to switch between multiple WebCams (eg: one for the left side and one for the right).
+ *       For a related example of how to do this, see ConceptTensorFlowObjectDetectionSwitchableCameras
+ *
+ * When images are located, Vuforia is able to determine the position and orientation of the
+ * image relative to the camera.  This sample code then combines that information with a
+ * knowledge of where the target images are on the field, to determine the location of the camera.
+ *
+ * Finally, the location of the camera on the robot is used to determine the
+ * robot's location and orientation on the field.
+ *
+ * To learn more about the FTC field coordinate model, see FTC_FieldCoordinateSystemDefinition.pdf in this folder
+ *
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
+ *
+ * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
+ * is explained below.
+ */
 
-    private final static int REVERSE = -1;
-    private final static double POWER = 0.3;
-    private final static int FORWARD = 1;
-    private final static int STRAFE =1;
+@Autonomous(name="Vuforia Field Nav Webcam", group ="IterativeOpMode")
+public class Scanning extends LinearOpMode {
 
+    /*
+     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
+     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
+     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+     * web site at https://developer.vuforia.com/license-manager.
+     *
+     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
+     * random data. As an example, here is a example of a fragment of a valid key:
+     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
+     * Once you've obtained a license key, copy the string from the Vuforia web site
+     * and paste it in to your code on the next line, between the double quotes.
+     */
     private static final String VUFORIA_KEY =
             "Ae/tYNP/////AAABmWJ3jgvBrksYtYG8QcdbeqRWGQWezSnxje7FgEIzwTeFQ1hZ42y6YmaQ0h5p7aqN9x+q1QXf2zRRrh1Pxln3C2cR+ul6r9mHwHbTRgd3jyggk8tzc/ubgaPBdn1q+ufcYqCk6tqj7t8JNYM/UHLZjtpSQrr5RNVs227kQwBoOx6l4MLqWL7TCTnE2vUjgrHaEW1sP1hBsyf1D4SiyRl/Ab1Vksqkgv7hwR1c7J4+7+Nt3rDd16Fr2XToT87t0JlfOn6vszaPj10qvU7836U+/rx9cs1w53UPEdfF+AmDChhdW2TymZf+aS2QfnckyxdXKHjXUhdDw3f09BegsNdnVxXnvGkp0jhg9N7fjJa39k+8";
 
@@ -66,31 +84,16 @@ public class Earlyauton extends LinearOpMode {
 
     private boolean targetVisible       = false;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        leftBack  = hardwareMap.get(DcMotor.class, "leftBack"); // in config --> port 1 --> "leftBack"
-        rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // in config --> port 2 --> "rightBack
-        leftFront = hardwareMap.get(DcMotor.class, "leftFront"); // in config --> port 0 --> "leftFront"
-        rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // in config --> port 3 --> "rightFront"
-        touchy = hardwareMap.get(TouchSensor.class, "touchy");  // in config --> digital port 5 --> "touchy"
-        camera = hardwareMap.get(Servo.class, "camera"); // in config --> webcam1 --> camera
-        rightintake = hardwareMap.get(CRServo.class, "rightSpin"); // in config --> port 3 --> "rightintake"
-        leftintake = hardwareMap.get(CRServo.class, "leftSpin"); // in config --> port 4 --> "leftintake"
-        telemetry.addData("Status", "Initialized");
+    @Override public void runOpMode() {
+        // Connect to the camera we are to use.  This name must match what is set up in Robot Configuration
+        webcamName = hardwareMap.get(WebcamName.class, "camera");
 
-        webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        // stuff in init
-
-        if (touchy.isPressed()) {
-            camera.setPosition (0);
-
-        }
-        else; {
-            camera.setPosition(1);
-
-
-        }
-
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         * We can pass Vuforia the handle to a camera preview resource (on the RC screen);
+         * If no camera-preview is desired, use the parameter-less constructor instead (commented out below).
+         * Note: A preview window is required if you want to view the camera stream on the Driver Station Phone.
+         */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -216,6 +219,15 @@ public class Earlyauton extends LinearOpMode {
 
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
+                // express position (translation) of robot in inches.
+                VectorF translation = lastLocation.getTranslation();
+                telemetry.addData("Pos (inches)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+
+                // express the rotation of the robot in degrees.
+                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+
                 for (VuforiaTrackable trackable: allTrackables) {
                     if (trackable.getName().equals("chips")) {
                         signal = 2; // second parking lmao
@@ -233,7 +245,7 @@ public class Earlyauton extends LinearOpMode {
                 telemetry.addData("Visible Target", "none");
                 signal = 1;
             }
-            telemetry.addData("signal", signal);
+            telemetry.addData("barcode", signal);
             telemetry.update();
         }
 
@@ -241,46 +253,17 @@ public class Earlyauton extends LinearOpMode {
         targets.deactivate();
     }
 
-    //If button is not pressed camera 1 on the left will activate just like poofff
-
-    //If button is pressed camera 2 on the right will activate yayyyyy
-
-    //If button is not pressed, the multiplier will be 1 which gives us default directions wahooy
-
-    //If button is pressed, the multiplier will be -1  which gives us opposite directions
-
-    //Camera reading
-    
-    // ITS GO TIME LEVYYYYY aka start :)
-
-    
-    // If the image is one (continue with multiplier) back into wall, drive left to lower goal.
-
-    //}
-    // If image is 2 drive left until reaching mid
-    
-    //iF image is 3 drive forward 1 square and drive left until high.
-    
-    //End of code woohhoooooooooooo
-
-    public void drive (double lf, double rf, double lb, double rb, int time){
-        leftFront.setPower(lf);
-        rightFront.setPower(rf);
-        leftBack.setPower(lb);
-        rightBack.setPower(rb);
-        sleep(time);
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
-        sleep(10);
-    }
-
-    void identifyTarget(int targetIndex, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
+    /***
+     * Identify a target by naming it, and setting its position and orientation on the field
+     * @param targetIndex
+     * @param targetName
+     * @param dx, dy, dz  Target offsets in x,y,z axes
+     * @param rx, ry, rz  Target rotations in x,y,z axes
+     */
+    void    identifyTarget(int targetIndex, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
         VuforiaTrackable aTarget = targets.get(targetIndex);
         aTarget.setName(targetName);
         aTarget.setLocation(OpenGLMatrix.translation(dx, dy, dz)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
     }
 }
-
