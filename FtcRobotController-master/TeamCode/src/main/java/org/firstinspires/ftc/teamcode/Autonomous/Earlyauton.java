@@ -36,7 +36,7 @@ public class Earlyauton extends LinearOpMode {
 
         waitForStart();
         if (touchy.isPressed()) {
-            camera
+            //camera
         }
 
     }
