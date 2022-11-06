@@ -90,7 +90,7 @@ public class EarlySeasonDrive extends OpMode
         arm.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
         arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
 
-        leftSpin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
+        rightSpin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
 
         levels = ArmState.BOTTOM; // sets the current level according to finite state machine to the bottom.
         timer = new ElapsedTime(); // make a timer
@@ -400,19 +400,25 @@ public class EarlySeasonDrive extends OpMode
         telemetry.addData("Right Joystick (righty2)", righty2);
         telemetry.addData("leftSpin power", leftSpin.getPower());
         telemetry.addData("rightSpin power", rightSpin.getPower());
-        if (touchy.isPressed() || (Math.abs(righty2) <= DEAD_ZONE)) {
+        if (Math.abs(righty2) <= DEAD_ZONE) {
             // nothing - stop spinning!
             leftSpin.setPower(0);
             rightSpin.setPower(0);
         }
         else if (righty2 > DEAD_ZONE) {
             // intake
-            leftSpin.setPower(pow);
-            rightSpin.setPower(pow);
+            if (touchy.isPressed()) {
+                leftSpin.setPower(0);
+                rightSpin.setPower(0);
+            }
+            else {
+                leftSpin.setPower(REVERSE*pow);
+                rightSpin.setPower(REVERSE*pow);
+            }
         } else  {
             // outtake
-            leftSpin.setPower(REVERSE * pow);
-            rightSpin.setPower(REVERSE * pow);
+            leftSpin.setPower( pow);
+            rightSpin.setPower(pow);
         }
 
         telemetry.update(); // print output
