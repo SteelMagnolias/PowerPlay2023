@@ -41,7 +41,7 @@ public class Earlyauton extends LinearOpMode {
 
     private final static int REVERSE = -1;
     private final static double POWER = 0.3;
-    private final static int FORWARD;
+    private int FORWARD;
     private final static int STRAFE;
     private final static int ROTATE;
     private final static int one;
