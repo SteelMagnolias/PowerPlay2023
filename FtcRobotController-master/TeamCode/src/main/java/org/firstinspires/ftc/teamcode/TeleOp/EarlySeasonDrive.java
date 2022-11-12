@@ -407,18 +407,20 @@ public class EarlySeasonDrive extends OpMode
         }
         else if (righty2 > DEAD_ZONE) {
             // intake
+            leftSpin.setPower( REVERSE*pow);
+            rightSpin.setPower(REVERSE*pow);
+
+        } else  {
+            // outtake
             if (touchy.isPressed()) {
                 leftSpin.setPower(0);
                 rightSpin.setPower(0);
             }
             else {
-                leftSpin.setPower(REVERSE*pow);
-                rightSpin.setPower(REVERSE*pow);
+                leftSpin.setPower(pow);
+                rightSpin.setPower(pow);
             }
-        } else  {
-            // outtake
-            leftSpin.setPower( pow);
-            rightSpin.setPower(pow);
+
         }
 
         telemetry.update(); // print output
