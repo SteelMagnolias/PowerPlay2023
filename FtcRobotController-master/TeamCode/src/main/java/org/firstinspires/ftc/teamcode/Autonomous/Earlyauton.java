@@ -37,16 +37,18 @@ public class Earlyauton extends LinearOpMode {
     private Servo camera;
     private CRServo rightintake;
     private CRServo leftintake;
+    private DcMotor arm;
+    private DcMotor arm2;
     // wheelies!
 
     private final static int REVERSE = -1;
     private final static double POWER = 0.3;
     private int FORWARD;
-    private final static int STRAFE;
-    private final static int ROTATE;
-    private final static int one;
-    private final static int two;
-    private final static int three;
+    private int STRAFE;
+    private int ROTATE;
+    private int one;
+    private int two;
+    private int three;
 
     private static final String VUFORIA_KEY =
             "Ae/tYNP/////AAABmWJ3jgvBrksYtYG8QcdbeqRWGQWezSnxje7FgEIzwTeFQ1hZ42y6YmaQ0h5p7aqN9x+q1QXf2zRRrh1Pxln3C2cR+ul6r9mHwHbTRgd3jyggk8tzc/ubgaPBdn1q+ufcYqCk6tqj7t8JNYM/UHLZjtpSQrr5RNVs227kQwBoOx6l4MLqWL7TCTnE2vUjgrHaEW1sP1hBsyf1D4SiyRl/Ab1Vksqkgv7hwR1c7J4+7+Nt3rDd16Fr2XToT87t0JlfOn6vszaPj10qvU7836U+/rx9cs1w53UPEdfF+AmDChhdW2TymZf+aS2QfnckyxdXKHjXUhdDw3f09BegsNdnVxXnvGkp0jhg9N7fjJa39k+8";
@@ -69,6 +71,7 @@ public class Earlyauton extends LinearOpMode {
     private WebcamName webcamName       = null;
 
     private boolean targetVisible       = false;
+    double pow= 0.3;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -80,10 +83,14 @@ public class Earlyauton extends LinearOpMode {
         camera = hardwareMap.get(Servo.class, "camera"); // in config --> webcam1 --> camera
         rightintake = hardwareMap.get(CRServo.class, "rightSpin"); // in config --> port 3 --> "rightintake"
         leftintake = hardwareMap.get(CRServo.class, "leftSpin"); // in config --> port 4 --> "leftintake"
+        arm = hardwareMap.get(DcMotor.class, "arm");
+        arm2 = hardwareMap.get(DcMotor.class, "arm2");
         telemetry.addData("Status", "Initialized");
 
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         // stuff in init
+
+        telemetry.addData("ABBY AND ALLIE LISTEN UP", "blue closest to the audience touch button using cone\nblue farthest from audience dont have cone hit button\nred closest to the audience dont hit the button with cone\nred farthest from audience have cone hit button ");
 
         if (touchy.isPressed()) {
             // A2 F5
@@ -254,6 +261,31 @@ public class Earlyauton extends LinearOpMode {
 
         // Disable Tracking when we are done;
         targets.deactivate();
+        if (touchy.isPressed()){
+            drive(pow*REVERSE, pow*REVERSE, pow*REVERSE, pow*REVERSE, 2000);
+            drive(pow, pow*REVERSE,pow, pow*REVERSE, 2000);
+            drive(pow, pow, pow, pow, 2000);
+            arm.setPower(pow);
+            arm2.setPower(pow);
+            sleep(250);
+            arm.setPower(0);
+            arm2.setPower(0);
+            leftintake.setPower(REVERSE);
+            rightintake.setPower(REVERSE);
+
+            drive(pow, pow*REVERSE, pow,pow*REVERSE, 1000);
+            if (signal==1){
+                drive(pow,pow,pow,pow, one);
+            }
+            if (signal==2){
+                drive(pow,pow,pow,pow, two);
+            }
+            if (signal==3){
+                sleep(1000);
+            }
+
+        }
+
     }
 
     //If button is not pressed camera 1 on the left will activate just like poofff
@@ -296,6 +328,6 @@ public class Earlyauton extends LinearOpMode {
         aTarget.setName(targetName);
         aTarget.setLocation(OpenGLMatrix.translation(dx, dy, dz)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
-    }
-}
+    }}
+
 
