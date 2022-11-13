@@ -38,14 +38,11 @@ public class TestW extends OpMode
         leftback=hardwareMap.get(DcMotor.class, "leftback");
         rightback=hardwareMap.get(DcMotor.class, "rightback");
         claw1=hardwareMap.get(CRServo.class,"claw1");
-        claw2=hardwareMap.get(CRServo.class, "claw2")
+        claw2=hardwareMap.get(CRServo.class, "claw2");
 
         telemetry.addData("Status:", "initialized");
-    }
 
-    private static final int REVERSE = -1;
-    private static final double DEAD_ZONE = 0.1;
-    private static final double OFF = 0;
+
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -130,12 +127,6 @@ public class TestW extends OpMode
         telemetry.addData("x", x2);
         telemetry.addData("y", y2);
         telemetry.addData("rt", rt);
-
-        // Finite State Machine - Levels
-        final int lower = 100;
-        final int middle = 300;
-        final int upper = 600;
-
 
 
         double pow;
