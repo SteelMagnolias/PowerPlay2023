@@ -15,14 +15,14 @@ public class TestW extends OpMode
 
 
     // two motors of w lift
-    private DcMotor left; //arm
-    private DcMotor right; //arm
+    private DcMotor armleft; //arm
+    private DcMotor armright; //arm
     private DcMotor leftfront; //wheelies
     private DcMotor rightfront; //wheelies
     private DcMotor leftback; //wheelies
     private DcMotor rightback; //wheelies
-    private CRServo claw1;
-    private CRServo claw2;
+    private CRServo claw1;//servo on claw
+    private CRServo claw2;//servo on claw
 
 
     private static final int REVERSE = -1;
@@ -31,8 +31,8 @@ public class TestW extends OpMode
 
     @Override
     public void init() {
-        left = hardwareMap.get(DcMotor.class, "left");
-        right = hardwareMap.get(DcMotor.class, "right"); // initialize motors.  Device name is name in config
+        armleft = hardwareMap.get(DcMotor.class, "left");
+        armright = hardwareMap.get(DcMotor.class, "right"); // initialize motors.  Device name is name in config
         leftfront=hardwareMap.get(DcMotor.class, "leftfront"); //init motors
         rightfront=hardwareMap.get(DcMotor.class, "rightfront");
         leftback=hardwareMap.get(DcMotor.class, "leftback");
@@ -43,10 +43,9 @@ public class TestW extends OpMode
         telemetry.addData("Status:", "initialized");
     }
 
-    @Override
-    public void init() {
-        telemetry.addData("Status", "Initialized");
-
+    private static final int REVERSE = -1;
+    private static final double DEAD_ZONE = 0.1;
+    private static final double OFF = 0;
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -58,8 +57,8 @@ public class TestW extends OpMode
 
         // motors must move together.
 
-        left.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
-        right.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
+        armleft.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
+        armright.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
 
         claw1.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
         claw2.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -72,8 +71,8 @@ public class TestW extends OpMode
         rightback.setPower(OFF);
         leftfront.setPower(OFF);
         rightfront.setPower(OFF);
-        left.setPower(OFF);
-        right.setPower(OFF);
+        armleft.setPower(OFF);
+        armright.setPower(OFF);
 
         // set servos to 0
         claw1.setPower(OFF);
@@ -136,74 +135,6 @@ public class TestW extends OpMode
         final int lower = 100;
         final int middle = 300;
         final int upper = 600;
-
-        switch (levels) { // takes the state of the levels finite state machine
-            case BOTTOM: // bottom level
-                if (a2) { // if a pressed, reset and bring level to the lowest level
-                    timer.reset();
-                    levels = EarlySeasonDrive.ArmState.LOWER;
-                }
-                if (b2) { // if b pressed, reset and bring level to the middle level
-                    timer.reset();
-                    levels = EarlySeasonDrive.ArmState.MIDDLE;
-                }
-                if (y2) { // if y is pressed, reset and bring level to the top level
-                    timer.reset();
-                    levels = EarlySeasonDrive.ArmState.UPPER;
-                }
-                break;
-            case LOWER: // if we are already on the lower level
-                if (timer.milliseconds() < lower) { //  if timer is less than the time for lower
-                    arm.setPower(.8); // set power
-                    arm2.setPower(.8);
-                } else {
-                    arm.setPower(0); // if not, then make it 0
-                    arm2.setPower(0);
-                }
-                if (x2) { // if x is pressed, then let's reset
-                    levels = EarlySeasonDrive.ArmState.RESET;
-                }
-                break;
-            case MIDDLE:
-                if (timer.milliseconds() < middle) {
-                    arm.setPower(.8);
-                    arm2.setPower(.8);
-                } else {
-                    arm.setPower(0);
-                    arm2.setPower(0);
-                }
-                if (x2) {
-                    levels = EarlySeasonDrive.ArmState.RESET;
-                }
-                break;
-            case UPPER:
-                if (timer.milliseconds() < upper) {
-                    arm.setPower(.8);
-                    arm2.setPower(.8);
-                } else {
-                    arm.setPower(0);
-                    arm2.setPower(0);
-                }
-                if (x2) {
-                    levels = EarlySeasonDrive.ArmState.RESET;
-                }
-                break;
-
-                /*
-            case RESET:
-                if (!touch.isPressed()) {
-                    arm.setPower(-.8);
-                    arm2.setPower(-.8);
-                } else {
-                    levels = ArmState.BOTTOM;
-                }
-                break;
-
-                 */
-
-            default:
-                levels = EarlySeasonDrive.ArmState.BOTTOM;
-        }
 
 
 
@@ -277,122 +208,99 @@ public class TestW extends OpMode
         telemetry.addData("rbl", dir * ((theta - (3 * Math.PI / 4)) / (Math.PI / 4)));
         telemetry.addData("rbr", -dir * ((theta - (3 * Math.PI / 4)) / (Math.PI / 4)));
 
-        leftFront.setPower(fl + rightx1);
-        leftBack.setPower(bl + rightx1);
-        rightFront.setPower(fr - rightx1);
-        rightBack.setPower(br - rightx1);
+        leftfront.setPower(fl + rightx1);
+        leftback.setPower(bl + rightx1);
+        rightfront.setPower(fr - rightx1);
+        rightback.setPower(br - rightx1);
 
 
         if (Math.abs(lefty2) >= DEAD_ZONE) {
             if (lefty2 < 0) {
-                arm.setPower(lefty2 * pow);
-                arm2.setPower(lefty2 * pow);
+                armleft.setPower(lefty2 * pow);
+                armright.setPower(lefty2 * pow);
             }
             if (lefty2 > 0) {
-                arm.setPower(lefty2 * pow);
-                arm2.setPower(lefty2 * pow);
+                armleft.setPower(lefty2 * pow);
+                armright.setPower(lefty2 * pow);
             }
         } else if (buttonDown2) {
-            arm.setPower(-pow / 2);
-            arm2.setPower(-pow / 2);
+            armleft.setPower(-pow / 2);
+            armright.setPower(-pow / 2);
         } else if (buttonUp2) {
-            arm.setPower(pow / 2);
-            arm2.setPower(pow / 2);
+            armleft.setPower(pow / 2);
+            armright.setPower(pow / 2);
         } else {
-            arm.setPower(0);
-            arm2.setPower(0);
+            armleft.setPower(0);
+            armright.setPower(0);
         }
 
         // add information on arm powers
-        telemetry.addData("arm", arm.getPower());
-        telemetry.addData("arm2",arm2.getPower());
+        telemetry.addData("arm", armleft.getPower());
+        telemetry.addData("arm2",armright.getPower());
 
         // Below: precision (slower) movement
         pow *= 0.5;
         if (buttonUp) {
             // slowly moves forwards
-            leftFront.setPower(pow);
-            leftBack.setPower(pow);
-            rightFront.setPower(pow);
-            rightBack.setPower(pow);
+            leftfront.setPower(pow);
+            leftback.setPower(pow);
+            rightfront.setPower(pow);
+            rightback.setPower(pow);
         } else if (buttonDown) {
             // slowly moves backwards
-            leftFront.setPower(-pow);
-            leftBack.setPower(-pow);
-            rightFront.setPower(-pow);
-            rightBack.setPower(-pow);
+            leftfront.setPower(-pow);
+            leftback.setPower(-pow);
+            rightfront.setPower(-pow);
+            rightback.setPower(-pow);
         } else if (buttonRight) {
             // slowly moves right
-            leftFront.setPower(pow);
-            leftBack.setPower(-pow);
-            rightFront.setPower(-pow);
-            rightBack.setPower(pow);
+            leftfront.setPower(pow);
+            leftback.setPower(-pow);
+            rightfront.setPower(-pow);
+            rightback.setPower(pow);
         } else if (buttonLeft) {
             // slowly moves left
-            leftFront.setPower(-pow);
-            leftBack.setPower(pow);
-            rightFront.setPower(pow);
-            rightBack.setPower(-pow);
+            leftfront.setPower(-pow);
+            leftback.setPower(pow);
+            rightfront.setPower(pow);
+            rightback.setPower(-pow);
         } else {
             // stops movement
-            leftFront.setPower(0);
-            leftBack.setPower(0);
-            rightFront.setPower(0);
-            rightBack.setPower(0);
+            leftfront.setPower(0);
+            leftback.setPower(0);
+            rightfront.setPower(0);
+            rightback.setPower(0);
         }
 
         pow *= .6;
 
         if (rb) {
             // slowly moves clockwise
-            leftFront.setPower(pow);
-            leftBack.setPower(pow);
-            rightFront.setPower(-pow);
-            rightBack.setPower(-pow);
+            leftfront.setPower(pow);
+            leftback.setPower(pow);
+            rightfront.setPower(-pow);
+            rightback.setPower(-pow);
         } else if (lb) {
             // slowly moves counter-clockwise
-            leftFront.setPower(-pow);
-            leftBack.setPower(-pow);
-            rightFront.setPower(pow);
-            rightBack.setPower(pow);
+            leftfront.setPower(-pow);
+            leftback.setPower(-pow);
+            rightfront.setPower(pow);
+            rightback.setPower(pow);
         } else {
             // stops movement
-            leftFront.setPower(0);
-            leftBack.setPower(0);
-            rightFront.setPower(0);
-            rightBack.setPower(0);
+            leftfront.setPower(0);
+            leftback.setPower(0);
+            rightfront.setPower(0);
+            rightback.setPower(0);
         }
 
         pow = 1; // this is the speed in which we will turn the servos
 
-        telemetry.addData("Touchy", touchy.isPressed());
-        telemetry.addData("Right Joystick (righty2)", righty2);
-        telemetry.addData("leftSpin power", leftSpin.getPower());
-        telemetry.addData("rightSpin power", rightSpin.getPower());
-        if (Math.abs(righty2) <= DEAD_ZONE) {
-            // nothing - stop spinning!
-            leftSpin.setPower(0);
-            rightSpin.setPower(0);
-        }
-        else if (righty2 > DEAD_ZONE) {
-            // intake
-            leftSpin.setPower( REVERSE*pow);
-            rightSpin.setPower(REVERSE*pow);
 
-        } else  {
-            // outtake
-            if (touchy.isPressed()) {
-                leftSpin.setPower(0);
-                rightSpin.setPower(0);
-            }
-            else {
-                leftSpin.setPower(pow);
-                rightSpin.setPower(pow);
-            }
 
         }
 
-        telemetry.update(); // print output
+
     }
-    }
-}
+
+
