@@ -328,6 +328,7 @@ public class Earlyauton extends LinearOpMode {
         aTarget.setName(targetName);
         aTarget.setLocation(OpenGLMatrix.translation(dx, dy, dz)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
-    }}
+    }
+}
 
 
