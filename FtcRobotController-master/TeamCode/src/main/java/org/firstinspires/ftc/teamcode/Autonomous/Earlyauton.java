@@ -49,6 +49,17 @@ public class Earlyauton extends LinearOpMode {
     private int one;
     private int two;
     private int three;
+    private int tilef = __;
+    //tilef is time it takes to go one tile forwards or backwards
+    private int tiles = __;
+    //tiles if time it takes to go one tile while strafeing
+    private int low = __;
+    //low is time it takes to reach hight of low pole
+    private int med = __;
+    //med is time it takes to reach hight of medium pole
+    private int high = __;
+    //high is time it takes to reach hight of high pole
+    private int stpl;
 
     private static final String VUFORIA_KEY =
             "Ae/tYNP/////AAABmWJ3jgvBrksYtYG8QcdbeqRWGQWezSnxje7FgEIzwTeFQ1hZ42y6YmaQ0h5p7aqN9x+q1QXf2zRRrh1Pxln3C2cR+ul6r9mHwHbTRgd3jyggk8tzc/ubgaPBdn1q+ufcYqCk6tqj7t8JNYM/UHLZjtpSQrr5RNVs227kQwBoOx6l4MLqWL7TCTnE2vUjgrHaEW1sP1hBsyf1D4SiyRl/Ab1Vksqkgv7hwR1c7J4+7+Nt3rDd16Fr2XToT87t0JlfOn6vszaPj10qvU7836U+/rx9cs1w53UPEdfF+AmDChhdW2TymZf+aS2QfnckyxdXKHjXUhdDw3f09BegsNdnVxXnvGkp0jhg9N7fjJa39k+8";
@@ -261,30 +272,62 @@ public class Earlyauton extends LinearOpMode {
 
         // Disable Tracking when we are done;
         targets.deactivate();
-        if (touchy.isPressed()){
-            drive(pow*REVERSE, pow*REVERSE, pow*REVERSE, pow*REVERSE, 2000);
-            drive(pow, pow*REVERSE,pow, pow*REVERSE, 2000);
-            drive(pow, pow, pow, pow, 2000);
-            arm.setPower(pow);
-            arm2.setPower(pow);
-            sleep(250);
-            arm.setPower(0);
-            arm2.setPower(0);
-            leftintake.setPower(REVERSE);
-            rightintake.setPower(REVERSE);
+        if (___){
+            stpl=1;
+        };
+        else{
+            stpl=-1;
+        }
+
 
             drive(pow, pow*REVERSE, pow,pow*REVERSE, 1000);
             if (signal==1){
-                drive(pow,pow,pow,pow, one);
+                drive(-pow*stpl,-pow*stpl,-pow*stpl,-pow*stpl, tilef);
+                drive(-pow*stpl,pow*stpl,-pow*stpl,pow*stpl, tiles*1.5)
+                arm.setPower (0.3);
+                arm2.setPower (0.3);
+                sleep (low);
+                arm.setPower (0);
+                arm2.setPower (0);
+                //drop cone code here
+                arm.setPower (-0.3);
+                arm2.setPower (-0.3);
+                sleep (low);
+                arm.setPower (0);
+                arm2.setPower (0);
             }
             if (signal==2){
-                drive(pow,pow,pow,pow, two);
+                drive(-pow*stpl,pow*stpl,-pow*stpl,pow*stpl, tiles*1.5)
+                arm.setPower (0.3);
+                arm2.setPower (0.3);
+                sleep (high);
+                arm.setPower (0);
+                arm2.setPower (0);
+                //drop cone code here
+                arm.setPower (-0.3);
+                arm2.setPower (-0.3);
+                sleep (high);
+                arm.setPower (0);
+                arm2.setPower (0);
+                drive(pow*stpl,-pow*stpl,pow*stpl,-pow*stpl, tiles*1)
             }
             if (signal==3){
-                sleep(1000);
+                drive(pow*stpl,pow*stpl,pow*stpl,pow*stpl, tilef);
+                drive(-pow*stpl,pow*stpl,-pow*stpl,pow*stpl, tiles*1.5)
+                arm.setPower (0.3);
+                arm2.setPower (0.3);
+                sleep (high);
+                arm.setPower (0);
+                arm2.setPower (0);
+                //drop cone code here
+                arm.setPower (-0.3);
+                arm2.setPower (-0.3);
+                sleep (high);
+                arm.setPower (0);
+                arm2.setPower (0);
             }
 
-        }
+
 
     }
 
