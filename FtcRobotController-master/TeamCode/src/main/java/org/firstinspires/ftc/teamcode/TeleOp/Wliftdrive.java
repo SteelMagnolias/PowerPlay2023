@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="TestW", group="Iterative Opmode")
-public class TestW extends OpMode
+@TeleOp(name="Wliftdrive", group="Iterative Opmode")
+public class Wliftdrive extends OpMode
 {
 
 
@@ -227,7 +227,7 @@ public class TestW extends OpMode
 
         // add information on arm powers
         telemetry.addData("arm", armleft.getPower());
-        telemetry.addData("arm2",armright.getPower());
+        telemetry.addData("arm2", armright.getPower());
 
         // Below: precision (slower) movement
         pow *= 0.5;
@@ -286,17 +286,11 @@ public class TestW extends OpMode
         }
 
         pow = 1; // this is the speed in which we will turn the servos
+
+
         telemetry.addData("Right Joystick (righty2)", righty2);
         telemetry.addData("leftSpin power", claw1.getPower());
         telemetry.addData("rightSpin power", claw2.getPower());
-
-        if (Math.abs(righty2) <= DEAD_ZONE) {
-            // nothing - stop spinning!
-            claw1.setPower(0);
-            claw2.setPower(0);
-
-
-
 
 
         }
