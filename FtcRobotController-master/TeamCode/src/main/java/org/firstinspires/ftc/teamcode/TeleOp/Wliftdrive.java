@@ -84,31 +84,31 @@ public class Wliftdrive extends OpMode
     public void loop() {
         // Assigning & Data
         //Gamepad 1= wheels/spin/etc.   Gamepad 2=Arm and claw
-        double lefty1 = -(gamepad1.left_stick_y); // this is the value of gamepad1's left joystick y value-
-        double leftx1 = gamepad1.left_stick_x; // this is the value of gamepad1's left joystick x value
-        double rightx1 = gamepad1.right_stick_x; // this is the value of gamepad1's right joystick x value
-        double righty1 = (gamepad1.right_stick_y); // this the value of gamepad1's right joystick y value
+        double lefty1 = -(gamepad1.left_stick_y); // this is the value of gamepad1's left joystick y value-Wheel
+        double leftx1 = gamepad1.left_stick_x; // this is the value of gamepad1's left joystick x value- Wheel
+        double rightx1 = gamepad1.right_stick_x; // this is the value of gamepad1's right joystick x value- Wheel
+        double righty1 = (gamepad1.right_stick_y); // this the value of gamepad1's right joystick y value-Wheel
         double lefty2 = -(gamepad2.left_stick_y); // this is the value of gamepad2's left joystick y value- Arm
-        double leftx2 = gamepad2.left_stick_x; // this is the value of gamepad2's left joystick x value
+        double leftx2 = gamepad2.left_stick_x; // this is the value of gamepad2's left joystick x value- UNUSED
         double rightx2 = gamepad2.right_stick_x; // this the value of gamepad2's right joystick x value-Claw
-        double righty2 = (gamepad2.right_stick_y); // this is the value of gamepad2's right joystick y value-Spinner
-        boolean buttonUp = gamepad1.dpad_up; // this is the value of gamepad1's up button on the dpad
-        boolean buttonDown = gamepad1.dpad_down; // this is the value of gamepad1's down button on the dpad
-        boolean buttonLeft = gamepad1.dpad_left; // this is the value of the gamepad1's left button on the dpad
-        boolean buttonRight = gamepad1.dpad_right; // this is the value of the gamepad1's right button on the dpad
-        boolean lb = gamepad1.left_bumper; // this is the value of the gamepad1's left bumper
-        boolean rb = gamepad1.right_bumper; // this is the value of the gamepad1's right bumper
-        boolean a1 = gamepad1.a; // this is the value of the a button on gamepad1
-        boolean x1 = gamepad1.x; // this is the value of the x button on gamepad1
-        boolean y1 = gamepad1.y; // this is the value of the y button on gamepad1
-        boolean rt = gamepad1.right_stick_button; // this is the value of the button behind the right stick on gamepad1
+        double righty2 = (gamepad2.right_stick_y); // this is the value of gamepad2's right joystick y value UNUSED
+        boolean buttonUp = gamepad1.dpad_up; // this is the value of gamepad1's up button on the dpad-Slow wheels
+        boolean buttonDown = gamepad1.dpad_down; // this is the value of gamepad1's down button on the dpad-Slow wheels
+        boolean buttonLeft = gamepad1.dpad_left; // this is the value of the gamepad1's left button on the dpad-slow wheels
+        boolean buttonRight = gamepad1.dpad_right; // this is the value of the gamepad1's right button on the dpad- slow wheels
+        boolean lb = gamepad1.left_bumper; // this is the value of the gamepad1's left bumper- Unused
+        boolean rb = gamepad1.right_bumper; // this is the value of the gamepad1's right bumper-unused
+        boolean a1 = gamepad1.a; // this is the value of the a button on gamepad1-Turbo mode
+        boolean x1 = gamepad1.x; // this is the value of the x button on gamepad1- Unused
+        boolean y1 = gamepad1.y; // this is the value of the y button on gamepad1-UNUSED
+        boolean rt = gamepad1.right_stick_button; // this is the value of the button behind the right stick on gamepad1- UNUSED
 
-        boolean buttonUp2 = gamepad2.dpad_up; // this is the value of the up button on gamepad2
-        boolean buttonDown2 = gamepad2.dpad_down; // this is  the value of the down button on gamepad2
-        boolean b2 = gamepad2.b; // this is the value of the b button on gamepad2
-        boolean a2 = gamepad2.a; // this is the value of the a button on gamepad2
-        boolean y2 = gamepad2.y; // this is the value of the y button on gamepad2
-        boolean x2 = gamepad2.x; // this is the value of the x button on gamepad2
+        boolean buttonUp2 = gamepad2.dpad_up; // this is the value of the up button on gamepad2- SLow arm
+        boolean buttonDown2 = gamepad2.dpad_down; // this is  the value of the down button on gamepad2-slow arm
+        boolean b2 = gamepad2.b; // this is the value of the b button on gamepad2-UNUSED
+        boolean a2 = gamepad2.a; // this is the value of the a button on gamepad2-UNUSED
+        boolean y2 = gamepad2.y; // this is the value of the y button on gamepad2-UNUSED
+        boolean x2 = gamepad2.x; // this is the value of the x button on gamepad2-UNUSED
 
         // print values to console
         telemetry.addData("lefty1", lefty1);
