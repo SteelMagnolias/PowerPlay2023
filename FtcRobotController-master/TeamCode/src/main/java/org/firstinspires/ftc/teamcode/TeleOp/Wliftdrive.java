@@ -23,11 +23,22 @@ public class Wliftdrive extends OpMode
     private DcMotor rightback; //wheelies
     private CRServo claw1;//servo on claw
     private CRServo claw2;//servo on claw
+    private TouchSensor touch;// touch sensor for resetting levels
 
 
     private static final int REVERSE = -1;
     private static final double DEAD_ZONE = 0.1;
     private static final double OFF = 0;
+
+    ElapsedTime timer;
+    private enum ArmState {
+        BOTTOM,
+        LOW,
+        MIDDLE,
+        TALL,
+        RESET
+    };
+    ArmState levels;
 
     @Override
     public void init() {
@@ -39,9 +50,9 @@ public class Wliftdrive extends OpMode
         rightback=hardwareMap.get(DcMotor.class, "rightback");
         claw1=hardwareMap.get(CRServo.class,"claw1");
         claw2=hardwareMap.get(CRServo.class, "claw2");
+        touch= hardwareMap.get(TouchSensor.class, "touchy");
 
         telemetry.addData("Status:", "initialized");
-
 
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -74,7 +85,24 @@ public class Wliftdrive extends OpMode
         // set servos to 0
         claw1.setPower(OFF);
         claw2.setPower(OFF);
+
+
+        // used for timed movements
+        levels = ArmState.BOTTOM;
+        timer = new ElapsedTime();
+        timer.reset();
+        ElapsedTime timer;
+
+        boolean wasRBPressed = false;// Not sure if at the bottom(driver hasnt signaled if on bottom state) VERY IMPORTANT
+
     }
+    //Variables for automating arm position with push of button
+    // constant(s) for movement:
+
+
+
+    // finite state machine that defines the position of the arm in relation to certain events.
+    // bottom is the default
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -105,10 +133,12 @@ public class Wliftdrive extends OpMode
 
         boolean buttonUp2 = gamepad2.dpad_up; // this is the value of the up button on gamepad2- SLow arm
         boolean buttonDown2 = gamepad2.dpad_down; // this is  the value of the down button on gamepad2-slow arm
-        boolean b2 = gamepad2.b; // this is the value of the b button on gamepad2-UNUSED
-        boolean a2 = gamepad2.a; // this is the value of the a button on gamepad2-UNUSED
-        boolean y2 = gamepad2.y; // this is the value of the y button on gamepad2-UNUSED
-        boolean x2 = gamepad2.x; // this is the value of the x button on gamepad2-UNUSED
+        boolean b2 = gamepad2.b; // this is the value of the b button on gamepad2-Middle arm level (aka medium pole)
+        boolean a2 = gamepad2.a; // this is the value of the a button on gamepad2- Bottom arm level (aka ground junction)
+        boolean y2 = gamepad2.y; // this is the value of the y button on gamepad2- Tall arm level (aka tall pole)
+        boolean x2 = gamepad2.x; // this is the value of the x button on gamepad2-Low arm level (aka low pole)
+        boolean rb2 = gamepad2.right_bumper; //this is the value of right bumper on gamepad2- Reset arm level (aka go all the way down)
+
 
         // print values to console
         telemetry.addData("lefty1", lefty1);
@@ -128,7 +158,86 @@ public class Wliftdrive extends OpMode
         telemetry.addData("x", x2);
         telemetry.addData("y", y2);
         telemetry.addData("rt", rt);
+        //When RB is pushed code knows that the arm is in the lowest state, can only be pushed once
 
+        //When a certain button is pushed robot reacts fast and moves it's arm to level indicated by button
+        //A2 is pushed will bring to bottom level
+        //X2 is pushed will bring to low Level
+        //B2 is pushed will bring to middle level
+        //Y2 is pushed will bring to tall level
+
+        // Finite State Machine - Levels
+        final int low = 100;
+        final int middle = 300;
+        final int tall = 600;
+
+        switch (levels) {
+            // at bottom continue to bottom or respond to button push
+            case BOTTOM:
+                if (x2) {
+                    timer.reset();
+                    levels = ArmState.LOW;
+                }
+                if (b2) {
+                    timer.reset();
+                    levels = ArmState.MIDDLE;
+                }
+                if (y2) {
+                    timer.reset();
+                    levels = ArmState.TALL;
+                }
+                break;
+            // at low  continue to low or respond to button push
+            case LOW:
+                if (timer.milliseconds() < low) {
+                    armleft.setPower(.8);
+                    armright.setPower(.8);
+                } else {
+                    armleft.setPower(0);
+                    armright.setPower(0);
+                }
+                if (rb2) {
+                    levels = ArmState.RESET;
+                }
+                break;
+            // at middle  continue to middle or respond to button push
+            case MIDDLE:
+                if (timer.milliseconds() < middle) {
+                    armleft.setPower(.8);
+                    armright.setPower(.8);
+                } else {
+                    armleft.setPower(0);
+                    armright.setPower(0);
+                }
+                if (rb2) {
+                    levels = ArmState.RESET;
+                }
+                break;
+            // at Tall  continue to tall or respond to button push
+            case TALL:
+                if (timer.milliseconds() < tall) {
+                    armleft.setPower(.8);
+                    armright.setPower(.8);
+                } else {
+                    armleft.setPower(0);
+                    armright.setPower(0);
+                }
+                if (rb2) {
+                    levels = ArmState.RESET;
+                }
+                break;
+            // at reset  continue to reset or respond to button push
+            case RESET:
+                if (!touch.isPressed()) {
+                    armleft.setPower(-.8);
+                    armright.setPower(-.8);
+                } else {
+                    levels = ArmState.BOTTOM;
+                }
+                break;
+            default:
+                levels = ArmState.BOTTOM;
+        }
 
         double pow;
         if (a1) pow = 1; // turbo mode
