@@ -58,7 +58,7 @@ public class Wliftdrive extends OpMode
         armright.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
 
         claw1.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
-        claw2.setDirection(DcMotorSimple.Direction.REVERSE);
+        claw2.setDirection(CRServo.Direction.REVERSE);
 
 
         // Tell the driver that initialization is complete.
@@ -83,14 +83,15 @@ public class Wliftdrive extends OpMode
     // this is where we loop all of our code in teleop
     public void loop() {
         // Assigning & Data
-        double lefty1 = -(gamepad1.left_stick_y); // this is the value of gamepad1's left joystick y value
+        //Gamepad 1= wheels/spin/etc.   Gamepad 2=Arm and claw
+        double lefty1 = -(gamepad1.left_stick_y); // this is the value of gamepad1's left joystick y value-
         double leftx1 = gamepad1.left_stick_x; // this is the value of gamepad1's left joystick x value
         double rightx1 = gamepad1.right_stick_x; // this is the value of gamepad1's right joystick x value
         double righty1 = (gamepad1.right_stick_y); // this the value of gamepad1's right joystick y value
-        double lefty2 = -(gamepad2.left_stick_y); // this is the value of gamepad2's left joystick y value
+        double lefty2 = -(gamepad2.left_stick_y); // this is the value of gamepad2's left joystick y value- Arm
         double leftx2 = gamepad2.left_stick_x; // this is the value of gamepad2's left joystick x value
-        double rightx2 = gamepad2.right_stick_x; // this the value of gamepad2's right joystick x value
-        double righty2 = (gamepad2.right_stick_y); // this is the value of gamepad2's right joystick y value
+        double rightx2 = gamepad2.right_stick_x; // this the value of gamepad2's right joystick x value-Claw
+        double righty2 = (gamepad2.right_stick_y); // this is the value of gamepad2's right joystick y value-Spinner
         boolean buttonUp = gamepad1.dpad_up; // this is the value of gamepad1's up button on the dpad
         boolean buttonDown = gamepad1.dpad_down; // this is the value of gamepad1's down button on the dpad
         boolean buttonLeft = gamepad1.dpad_left; // this is the value of the gamepad1's left button on the dpad
@@ -204,7 +205,8 @@ public class Wliftdrive extends OpMode
         rightfront.setPower(fr - rightx1);
         rightback.setPower(br - rightx1);
 
-
+    // We think this code was for spinners
+        //lefty2=spinners?
         if (Math.abs(lefty2) >= DEAD_ZONE) {
             if (lefty2 < 0) {
                 armleft.setPower(lefty2 * pow);
@@ -289,13 +291,28 @@ public class Wliftdrive extends OpMode
 
 
         telemetry.addData("Right Joystick (righty2)", righty2);
-        telemetry.addData("leftSpin power", claw1.getPower());
-        telemetry.addData("rightSpin power", claw2.getPower());
+        telemetry.addData("leftclaw power", claw1.getPower());
+        telemetry.addData("rightclaw power", claw2.getPower());
 
+        if (Math.abs(righty2) <= DEAD_ZONE) {
+            // nothing - stop spinning!
+            claw1.setPower(0);
+            claw2.setPower(0);
+        }
+        else if (righty2 > DEAD_ZONE) {
+            // intake
+            claw1.setPower( REVERSE*pow);
+            claw2.setPower(REVERSE*pow);
 
         }
-
+        else {
+            claw1.setPower(pow);
+            claw2.setPower(pow);
+        }
 
     }
+
+
+}
 
 
