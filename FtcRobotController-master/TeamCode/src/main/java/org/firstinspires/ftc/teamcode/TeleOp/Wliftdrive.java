@@ -21,8 +21,8 @@ public class Wliftdrive extends OpMode
     private DcMotor rightfront; //wheelies
     private DcMotor leftback; //wheelies
     private DcMotor rightback; //wheelies
-    private CRServo claw1;//servo on claw
-    private CRServo claw2;//servo on claw
+    private CRServo clawl1;//servo on claw
+    private CRServo clawr2;//servo on claw
     private TouchSensor touch;// touch sensor for resetting levels
 
 
@@ -48,9 +48,9 @@ public class Wliftdrive extends OpMode
         rightfront=hardwareMap.get(DcMotor.class, "rightfront");
         leftback=hardwareMap.get(DcMotor.class, "leftback");
         rightback=hardwareMap.get(DcMotor.class, "rightback");
-        claw1=hardwareMap.get(CRServo.class,"claw1");
-        claw2=hardwareMap.get(CRServo.class, "claw2");
-        touch= hardwareMap.get(TouchSensor.class, "touchy");
+        clawl1=hardwareMap.get(CRServo.class,"claw1");
+        clawr2=hardwareMap.get(CRServo.class, "claw2");
+        touch= hardwareMap.get(TouchSensor.class, "touch");
 
         telemetry.addData("Status:", "initialized");
 
@@ -68,8 +68,8 @@ public class Wliftdrive extends OpMode
         armleft.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
         armright.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
 
-        claw1.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
-        claw2.setDirection(CRServo.Direction.REVERSE);
+        clawl1.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
+        clawr2.setDirection(CRServo.Direction.REVERSE);
 
 
         // Tell the driver that initialization is complete.
@@ -83,8 +83,8 @@ public class Wliftdrive extends OpMode
         armright.setPower(OFF);
 
         // set servos to 0
-        claw1.setPower(OFF);
-        claw2.setPower(OFF);
+        clawl1.setPower(OFF);
+        clawr2.setPower(OFF);
 
 
         // used for timed movements
@@ -400,23 +400,23 @@ public class Wliftdrive extends OpMode
 
 
         telemetry.addData("Right Joystick (righty2)", righty2);
-        telemetry.addData("leftclaw power", claw1.getPower());
-        telemetry.addData("rightclaw power", claw2.getPower());
+        telemetry.addData("leftclaw power", clawl1.getPower());
+        telemetry.addData("rightclaw power", clawr2.getPower());
 
         if (Math.abs(righty2) <= DEAD_ZONE) {
             // nothing - stop spinning!
-            claw1.setPower(0);
-            claw2.setPower(0);
+            clawl1.setPower(0);
+            clawr2.setPower(0);
         }
         else if (righty2 > DEAD_ZONE) {
             // intake
-            claw1.setPower( REVERSE*pow);
-            claw2.setPower(REVERSE*pow);
+            clawl1.setPower( REVERSE*pow);
+            clawr2.setPower(REVERSE*pow);
 
         }
         else {
-            claw1.setPower(pow);
-            claw2.setPower(pow);
+            clawl1.setPower(pow);
+            clawr2.setPower(pow);
         }
 
     }
