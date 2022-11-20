@@ -403,6 +403,7 @@ public class EarlySeasonDrive extends OpMode
         if (Math.abs(righty2) <= DEAD_ZONE) {
             // nothing - stop spinning!
             leftSpin.setPower(0);
+            leftSpin.setPower(0);
             rightSpin.setPower(0);
         }
         else if (righty2 > DEAD_ZONE) {

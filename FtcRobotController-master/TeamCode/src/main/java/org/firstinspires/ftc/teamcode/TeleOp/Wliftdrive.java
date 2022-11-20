@@ -10,8 +10,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Wliftdrive", group="Iterative Opmode")
-public class Wliftdrive extends OpMode
-{
+public class Wliftdrive extends OpMode {
 
 
     // two motors of w lift
@@ -30,27 +29,30 @@ public class Wliftdrive extends OpMode
     private static final double DEAD_ZONE = 0.1;
     private static final double OFF = 0;
 
+
+    // naming levels as so connect under time
     ElapsedTime timer;
+
     private enum ArmState {
         BOTTOM,
         LOW,
         MIDDLE,
         TALL,
         RESET
-    };
+    }
     ArmState levels;
 
     @Override
     public void init() {
-        armleft = hardwareMap.get(DcMotor.class, "left");
+        armleft = hardwareMap.get(DcMotor.class, "left"); //arm Dcmotor on left
         armright = hardwareMap.get(DcMotor.class, "right"); // initialize motors.  Device name is name in config
-        leftfront=hardwareMap.get(DcMotor.class, "leftfront"); //init motors
-        rightfront=hardwareMap.get(DcMotor.class, "rightfront");
-        leftback=hardwareMap.get(DcMotor.class, "leftback");
-        rightback=hardwareMap.get(DcMotor.class, "rightback");
-        clawl1=hardwareMap.get(CRServo.class,"claw1");
-        clawr2=hardwareMap.get(CRServo.class, "claw2");
-        touch= hardwareMap.get(TouchSensor.class, "touch");
+        leftfront = hardwareMap.get(DcMotor.class, "leftfront"); //init motors
+        rightfront = hardwareMap.get(DcMotor.class, "rightfront"); //right front DC motor wheels
+        leftback = hardwareMap.get(DcMotor.class, "leftback"); // left back wheels Dcmotor
+        rightback = hardwareMap.get(DcMotor.class, "rightback"); // right back wheels Dcmotor
+        clawl1 = hardwareMap.get(CRServo.class, "claw1"); // Claw left 1 Continues servo
+        clawr2 = hardwareMap.get(CRServo.class, "claw2"); // claw right 2 continues servo
+        touch = hardwareMap.get(TouchSensor.class, "touch"); // Touch senor bottom of robot for levels
 
         telemetry.addData("Status:", "initialized");
 
@@ -75,6 +77,8 @@ public class Wliftdrive extends OpMode
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
 
+
+        //Set initial powers to off
         leftback.setPower(OFF);
         rightback.setPower(OFF);
         leftfront.setPower(OFF);
@@ -93,12 +97,13 @@ public class Wliftdrive extends OpMode
         timer.reset();
         ElapsedTime timer;
 
+
+        //Right back button is pressed= reset
         boolean wasRBPressed = false;// Not sure if at the bottom(driver hasnt signaled if on bottom state) VERY IMPORTANT
 
     }
     //Variables for automating arm position with push of button
     // constant(s) for movement:
-
 
 
     // finite state machine that defines the position of the arm in relation to certain events.
@@ -147,6 +152,7 @@ public class Wliftdrive extends OpMode
         telemetry.addData("lefty2", lefty2);
         telemetry.addData("leftx2", leftx2);
         telemetry.addData("rightx2", rightx2);
+        telemetry.addData("righty1", righty1);
         telemetry.addData("buttonUp", buttonUp);
         telemetry.addData("buttonDown", buttonDown);
         telemetry.addData("buttonRight", buttonRight);
@@ -166,7 +172,7 @@ public class Wliftdrive extends OpMode
         //B2 is pushed will bring to middle level
         //Y2 is pushed will bring to tall level
 
-        // Finite State Machine - Levels
+        // Finite State Machine - Levels (need to edit distances on time once tested)
         final int low = 100;
         final int middle = 300;
         final int tall = 600;
@@ -314,7 +320,7 @@ public class Wliftdrive extends OpMode
         rightfront.setPower(fr - rightx1);
         rightback.setPower(br - rightx1);
 
-    // We think this code was for spinners
+        // We think this code was for spinners
         //lefty2=spinners?
         if (Math.abs(lefty2) >= DEAD_ZONE) {
             if (lefty2 < 0) {
@@ -407,14 +413,12 @@ public class Wliftdrive extends OpMode
             // nothing - stop spinning!
             clawl1.setPower(0);
             clawr2.setPower(0);
-        }
-        else if (righty2 > DEAD_ZONE) {
+        } else if (righty2 > DEAD_ZONE) {
             // intake
-            clawl1.setPower( REVERSE*pow);
-            clawr2.setPower(REVERSE*pow);
+            clawl1.setPower(REVERSE * pow);
+            clawr2.setPower(REVERSE * pow);
 
-        }
-        else {
+        } else {
             clawl1.setPower(pow);
             clawr2.setPower(pow);
         }
