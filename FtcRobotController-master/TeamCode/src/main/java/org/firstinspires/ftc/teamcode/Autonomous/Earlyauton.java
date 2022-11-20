@@ -33,12 +33,14 @@ public class Earlyauton extends LinearOpMode {
     private DcMotor rightFront;
     private DcMotor leftBack;
     private DcMotor rightBack;
-    private TouchSensor touchy;
+    private TouchSensor touch;
     private Servo camera;
     private CRServo rightintake;
     private CRServo leftintake;
     private DcMotor arm;
     private DcMotor arm2;
+    private CRServo claw1;
+    private CRServo claw2;
     // wheelies!
 
     private final static int REVERSE = -1;
@@ -49,6 +51,12 @@ public class Earlyauton extends LinearOpMode {
     private int one;
     private int two;
     private int three;
+    private int low = __;
+    private int high = __;
+    private int tilef = __;
+    private int tiles = __;
+    private int stpl;
+
 
     private static final String VUFORIA_KEY =
             "Ae/tYNP/////AAABmWJ3jgvBrksYtYG8QcdbeqRWGQWezSnxje7FgEIzwTeFQ1hZ42y6YmaQ0h5p7aqN9x+q1QXf2zRRrh1Pxln3C2cR+ul6r9mHwHbTRgd3jyggk8tzc/ubgaPBdn1q+ufcYqCk6tqj7t8JNYM/UHLZjtpSQrr5RNVs227kQwBoOx6l4MLqWL7TCTnE2vUjgrHaEW1sP1hBsyf1D4SiyRl/Ab1Vksqkgv7hwR1c7J4+7+Nt3rDd16Fr2XToT87t0JlfOn6vszaPj10qvU7836U+/rx9cs1w53UPEdfF+AmDChhdW2TymZf+aS2QfnckyxdXKHjXUhdDw3f09BegsNdnVxXnvGkp0jhg9N7fjJa39k+8";
@@ -79,7 +87,7 @@ public class Earlyauton extends LinearOpMode {
         rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // in config --> port 2 --> "rightBack
         leftFront = hardwareMap.get(DcMotor.class, "leftFront"); // in config --> port 0 --> "leftFront"
         rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // in config --> port 3 --> "rightFront"
-        touchy = hardwareMap.get(TouchSensor.class, "touchy");  // in config --> digital port 5 --> "touchy"
+        touch = hardwareMap.get(TouchSensor.class, "touchy");  // in config --> digital port 5 --> "touchy"
         camera = hardwareMap.get(Servo.class, "camera"); // in config --> webcam1 --> camera
         rightintake = hardwareMap.get(CRServo.class, "rightSpin"); // in config --> port 3 --> "rightintake"
         leftintake = hardwareMap.get(CRServo.class, "leftSpin"); // in config --> port 4 --> "leftintake"
@@ -92,25 +100,15 @@ public class Earlyauton extends LinearOpMode {
 
         telemetry.addData("ABBY AND ALLIE LISTEN UP", "blue closest to the audience touch button using cone\nblue farthest from audience dont have cone hit button\nred closest to the audience dont hit the button with cone\nred farthest from audience have cone hit button ");
 
-        if (touchy.isPressed()) {
+        if (touch.isPressed()) {
             // A2 F5
-            camera.setPosition (0);
-            FORWARD = 1;
-            STRAFE = 1;
-            ROTATE = 1;
-            one = 2000;
-            two = 1000;
-            three = 0;
+           stpl=1;
+           // use canera 1
         }
         else {
             // A5 F2
-            camera.setPosition(1);
-            FORWARD = 1;
-            STRAFE = -1;
-            ROTATE = -1;
-            one = 0;
-            two = 1000;
-            three = 2000;
+            stpl=-1;
+            //use camera 2
         }
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -261,30 +259,124 @@ public class Earlyauton extends LinearOpMode {
 
         // Disable Tracking when we are done;
         targets.deactivate();
-        if (touchy.isPressed()){
-            drive(pow*REVERSE, pow*REVERSE, pow*REVERSE, pow*REVERSE, 2000);
-            drive(pow, pow*REVERSE,pow, pow*REVERSE, 2000);
-            drive(pow, pow, pow, pow, 2000);
-            arm.setPower(pow);
-            arm2.setPower(pow);
-            sleep(250);
-            arm.setPower(0);
-            arm2.setPower(0);
-            leftintake.setPower(REVERSE);
-            rightintake.setPower(REVERSE);
 
-            drive(pow, pow*REVERSE, pow,pow*REVERSE, 1000);
+
+
+
             if (signal==1){
-                drive(pow,pow,pow,pow, one);
+                drive (-pow*stpl, -pow*stpl, -pow*stpl, -pow*stpl, tilef)
+                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*1.5)
+                drive (pow, pow, pow, pow, );
+                arm.setPower (0.3);
+                arm2.setPower (0.3);
+                if(touch.isPressed()) {
+                    sleep (low);
+                }
+                else {
+                    sleep (high);
+                }
+                arm.setPower (0);
+                arm2.setPower (0);
+                if (Math.abs(righty2) <= DEAD_ZONE) {
+                    // nothing - stop spinning!
+                    claw1.setPower(0);
+                    claw2.setPower(0);
+                }
+                else if (righty2 > DEAD_ZONE) {
+                    // intake
+                    claw1.setPower( REVERSE*pow);
+                    claw2.setPower(REVERSE*pow);
+
+                }
+                else {
+                    claw1.setPower(pow);
+                    claw2.setPower(pow);
+                }
+                arm.setPower (-0.3);
+                arm2.setPower (-0.3);
+                if(touch.isPressed()) {
+                    sleep (low);
+                }
+                else {
+                    sleep (high);
+                }
+                arm.setPower (0);
+                arm2.setPower (0);
+
             }
             if (signal==2){
-                drive(pow,pow,pow,pow, two);
+                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*2.5)
+                drive (pow, pow, pow, pow, );
+                arm.setPower (0.3);
+                arm2.setPower (0.3);
+                sleep (high);
+                arm.setPower (0);
+                arm2.setPower (0);
+                if (Math.abs(righty2) <= DEAD_ZONE) {
+                    // nothing - stop spinning!
+                    claw1.setPower(0);
+                    claw2.setPower(0);
+                }
+                else if (righty2 > DEAD_ZONE) {
+                    // intake
+                    claw1.setPower( REVERSE*pow);
+                    claw2.setPower(REVERSE*pow);
+
+                }
+                else {
+                    claw1.setPower(pow);
+                    claw2.setPower(pow);
+                }
+                arm.setPower (-0.3);
+                arm2.setPower (-0.3);
+                sleep (high);
+                arm.setPower (0);
+                arm2.setPower (0);
+                drive (-pow, -pow, -pow, -pow, );
+                drive (pow*stpl, -pow*stpl, pow*stpl, -pow*stpl, tiles)
             }
             if (signal==3){
-                sleep(1000);
+                drive (pow*stpl, pow*stpl, pow*stpl, pow*stpl, tilef)
+                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*1.5)
+                drive (pow, pow, pow, pow, );
+                arm.setPower (0.3);
+                arm2.setPower (0.3);
+                if(touch.isPressed()) {
+                    sleep (high);
+                }
+                else {
+                    sleep (low);
+                }
+                arm.setPower (0);
+                arm2.setPower (0);
+                if (Math.abs(righty2) <= DEAD_ZONE) {
+                    // nothing - stop spinning!
+                    claw1.setPower(0);
+                    claw2.setPower(0);
+                }
+                else if (righty2 > DEAD_ZONE) {
+                    // intake
+                    claw1.setPower( REVERSE*pow);
+                    claw2.setPower(REVERSE*pow);
+
+                }
+                else {
+                    claw1.setPower(pow);
+                    claw2.setPower(pow);
+                }
+                arm.setPower (-0.3);
+                arm2.setPower (-0.3);
+                if(touch.isPressed()) {
+                    sleep (high);
+                }
+                else {
+                    sleep (low);
+                }
+                arm.setPower (0);
+                arm2.setPower (0);
             }
 
-        }
+
 
     }
 
