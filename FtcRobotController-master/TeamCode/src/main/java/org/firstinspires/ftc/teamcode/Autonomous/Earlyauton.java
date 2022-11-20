@@ -265,7 +265,7 @@ public class Earlyauton extends LinearOpMode {
 
             if (signal==1){
                 drive (-pow*stpl, -pow*stpl, -pow*stpl, -pow*stpl, tilef);
-                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*1.5);
+                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, 15);
                 drive (pow, pow, pow, pow, 50);
                 arm.setPower (0.3);
                 arm2.setPower (0.3);
@@ -287,7 +287,7 @@ public class Earlyauton extends LinearOpMode {
 
             }
             if (signal==2){
-                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*2.5);
+                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, 25);
                 drive (pow, pow, pow, pow, 50);
                 arm.setPower (0.3);
                 arm2.setPower (0.3);
@@ -305,7 +305,7 @@ public class Earlyauton extends LinearOpMode {
             }
             if (signal==3){
                 drive (pow*stpl, pow*stpl, pow*stpl, pow*stpl, tilef);
-                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*1.5);
+                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, 15);
                 drive (pow, pow, pow, pow, 50);
                 arm.setPower (0.3);
                 arm2.setPower (0.3);

@@ -74,7 +74,7 @@ public class distance_test extends LinearOpMode {
 
 
 
-            drive(pow, pow, pow, pow, 1000);
+            drive(-pow, -pow, -pow, -pow, 1000);
 
     }
 
