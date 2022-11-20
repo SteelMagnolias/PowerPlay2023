@@ -294,12 +294,7 @@ public class Earlyauton extends LinearOpMode {
                 }
                 arm.setPower (-0.3);
                 arm2.setPower (-0.3);
-                if(touch.isPressed()) {
-                    sleep (low);
-                }
-                else {
-                    sleep (high);
-                }
+                //sleep untill toush if pressed
                 arm.setPower (0);
                 arm2.setPower (0);
 
@@ -329,7 +324,7 @@ public class Earlyauton extends LinearOpMode {
                 }
                 arm.setPower (-0.3);
                 arm2.setPower (-0.3);
-                sleep (high);
+                //sleep until touch is pressed
                 arm.setPower (0);
                 arm2.setPower (0);
                 drive (-pow, -pow, -pow, -pow, );
@@ -366,12 +361,7 @@ public class Earlyauton extends LinearOpMode {
                 }
                 arm.setPower (-0.3);
                 arm2.setPower (-0.3);
-                if(touch.isPressed()) {
-                    sleep (high);
-                }
-                else {
-                    sleep (low);
-                }
+                //sleep until touch is pressed
                 arm.setPower (0);
                 arm2.setPower (0);
             }
