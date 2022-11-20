@@ -51,10 +51,10 @@ public class Earlyauton extends LinearOpMode {
     private int one;
     private int two;
     private int three;
-    private int low = __;
-    private int high = __;
-    private int tilef = __;
-    private int tiles = __;
+    private int low = 1;
+    private int high = 3;
+    private int tilef = 1250;
+    private int tiles = 1250;
     private int stpl;
 
 
@@ -264,34 +264,21 @@ public class Earlyauton extends LinearOpMode {
 
 
             if (signal==1){
-                drive (-pow*stpl, -pow*stpl, -pow*stpl, -pow*stpl, tilef)
-                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*1.5)
-                drive (pow, pow, pow, pow, );
+                drive (-pow*stpl, -pow*stpl, -pow*stpl, -pow*stpl, tilef);
+                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*1.5);
+                drive (pow, pow, pow, pow, 50);
                 arm.setPower (0.3);
                 arm2.setPower (0.3);
                 if(touch.isPressed()) {
                     sleep (low);
                 }
                 else {
+                    //arm down untill touch is pressed
                     sleep (high);
                 }
                 arm.setPower (0);
                 arm2.setPower (0);
-                if (Math.abs(righty2) <= DEAD_ZONE) {
-                    // nothing - stop spinning!
-                    claw1.setPower(0);
-                    claw2.setPower(0);
-                }
-                else if (righty2 > DEAD_ZONE) {
-                    // intake
-                    claw1.setPower( REVERSE*pow);
-                    claw2.setPower(REVERSE*pow);
-
-                }
-                else {
-                    claw1.setPower(pow);
-                    claw2.setPower(pow);
-                }
+                //open claw
                 arm.setPower (-0.3);
                 arm2.setPower (-0.3);
                 //sleep untill toush if pressed
@@ -300,65 +287,38 @@ public class Earlyauton extends LinearOpMode {
 
             }
             if (signal==2){
-                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*2.5)
-                drive (pow, pow, pow, pow, );
+                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*2.5);
+                drive (pow, pow, pow, pow, 50);
                 arm.setPower (0.3);
                 arm2.setPower (0.3);
                 sleep (high);
                 arm.setPower (0);
                 arm2.setPower (0);
-                if (Math.abs(righty2) <= DEAD_ZONE) {
-                    // nothing - stop spinning!
-                    claw1.setPower(0);
-                    claw2.setPower(0);
-                }
-                else if (righty2 > DEAD_ZONE) {
-                    // intake
-                    claw1.setPower( REVERSE*pow);
-                    claw2.setPower(REVERSE*pow);
-
-                }
-                else {
-                    claw1.setPower(pow);
-                    claw2.setPower(pow);
-                }
+               //open claw
                 arm.setPower (-0.3);
                 arm2.setPower (-0.3);
                 //sleep until touch is pressed
                 arm.setPower (0);
                 arm2.setPower (0);
-                drive (-pow, -pow, -pow, -pow, );
-                drive (pow*stpl, -pow*stpl, pow*stpl, -pow*stpl, tiles)
+                drive (-pow, -pow, -pow, -pow, 50);
+                drive (pow*stpl, -pow*stpl, pow*stpl, -pow*stpl, tiles);
             }
             if (signal==3){
-                drive (pow*stpl, pow*stpl, pow*stpl, pow*stpl, tilef)
-                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*1.5)
-                drive (pow, pow, pow, pow, );
+                drive (pow*stpl, pow*stpl, pow*stpl, pow*stpl, tilef);
+                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, tiles*1.5);
+                drive (pow, pow, pow, pow, 50);
                 arm.setPower (0.3);
                 arm2.setPower (0.3);
                 if(touch.isPressed()) {
                     sleep (high);
                 }
                 else {
+                    //arm down untul touch is pressed
                     sleep (low);
                 }
                 arm.setPower (0);
                 arm2.setPower (0);
-                if (Math.abs(righty2) <= DEAD_ZONE) {
-                    // nothing - stop spinning!
-                    claw1.setPower(0);
-                    claw2.setPower(0);
-                }
-                else if (righty2 > DEAD_ZONE) {
-                    // intake
-                    claw1.setPower( REVERSE*pow);
-                    claw2.setPower(REVERSE*pow);
-
-                }
-                else {
-                    claw1.setPower(pow);
-                    claw2.setPower(pow);
-                }
+                //open claw
                 arm.setPower (-0.3);
                 arm2.setPower (-0.3);
                 //sleep until touch is pressed
