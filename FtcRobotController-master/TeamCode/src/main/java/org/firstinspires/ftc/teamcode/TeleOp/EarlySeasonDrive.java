@@ -408,8 +408,8 @@ public class EarlySeasonDrive extends OpMode
         }
         else if (righty2 > DEAD_ZONE) {
             // intake
-            leftSpin.setPower( REVERSE*pow);
-            rightSpin.setPower(REVERSE*pow);
+            leftSpin.setPower( pow);
+            rightSpin.setPower(pow);
 
         } else  {
             // outtake
@@ -418,8 +418,8 @@ public class EarlySeasonDrive extends OpMode
                 rightSpin.setPower(0);
             }
             else {
-                leftSpin.setPower(pow);
-                rightSpin.setPower(pow);
+                leftSpin.setPower(REVERSE*pow);
+                rightSpin.setPower(REVERSE*pow);
             }
 
         }
