@@ -31,7 +31,7 @@ public class CamerasTest extends LinearOpMode {
 
     private TouchSensor touchy;
 
-    private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
+    private static final String TFOD_MODEL_ASSET = "PowerPlayCustom.tflite";
     // this is where we can find the preset models
 
     private static final String[] LABELS = {
