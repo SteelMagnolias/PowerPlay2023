@@ -152,7 +152,6 @@ public class Wliftdrive extends OpMode {
         telemetry.addData("lefty2", lefty2);
         telemetry.addData("leftx2", leftx2);
         telemetry.addData("rightx2", rightx2);
-        telemetry.addData("righty1", righty1);
         telemetry.addData("buttonUp", buttonUp);
         telemetry.addData("buttonDown", buttonDown);
         telemetry.addData("buttonRight", buttonRight);
@@ -342,9 +341,9 @@ public class Wliftdrive extends OpMode {
             armright.setPower(0);
         }
 
-        // add information on arm powers
         telemetry.addData("arm", armleft.getPower());
         telemetry.addData("arm2", armright.getPower());
+        // add information on arm powers
 
         // Below: precision (slower) movement
         pow *= 0.5;
@@ -401,8 +400,10 @@ public class Wliftdrive extends OpMode {
             rightfront.setPower(0);
             rightback.setPower(0);
         }
-
-        pow = 1; // this is the speed in which we will turn the servos
+        //this code assumes that the controllers are within deadzone tolerance on startup with
+        //no controls activated. If this happens not to be the case, i.e. if the controllers
+        //are out of calibration, motors will try to spin on startup. this is poor behavior
+        pow = 0.75; // this is the speed in which we will turn the servos
 
 
         telemetry.addData("Right Joystick (righty2)", righty2);
@@ -416,11 +417,12 @@ public class Wliftdrive extends OpMode {
         } else if (righty2 > DEAD_ZONE) {
             // intake
             clawl1.setPower(REVERSE * pow);
-            clawr2.setPower(REVERSE * pow);
+            clawr2.setPower( pow);
 
         } else {
             clawl1.setPower(pow);
-            clawr2.setPower(pow);
+            clawr2.setPower(REVERSE *pow);
+
         }
 
     }

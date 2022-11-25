@@ -15,22 +15,23 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 @TeleOp(name="EarlySeasonDrive", group="Iterative Opmode")
 public class EarlySeasonDrive extends OpMode
 {
-    private DcMotor leftBack;
-    private DcMotor rightBack;
-    private DcMotor leftFront;
-    private DcMotor rightFront;
+    private DcMotor leftBack; //Motor
+    private DcMotor rightBack; //Motor
+    private DcMotor leftFront; // Motor
+    private DcMotor rightFront; //Motor
     // wheels lol
 
     // arm motors, one on each side
-    private DcMotor arm;
-    private DcMotor arm2;
+    private DcMotor arm; //Arm
+    private DcMotor arm2; //Arm
 
     // servos
     private CRServo leftSpin; // left on robot looking from the back
     private CRServo rightSpin; // right from the back perspective
 
     // touch sensors
-    private TouchSensor touchy;
+    private TouchSensor touchy; // Touch sensor on arm for intake system
+    private TouchSensor touch; // Touch sensor for levels for bottom of robot to hit for reset levels
 
     // used for timed movements
     ElapsedTime timer;
@@ -71,11 +72,12 @@ public class EarlySeasonDrive extends OpMode
         arm2 = hardwareMap.get(DcMotor.class, "arm2"); // in config --> port 3 --> "arm2"
 
         // intake
-        leftSpin = hardwareMap.get(CRServo.class, "leftSpin");
+        leftSpin = hardwareMap.get(CRServo.class, "leftSpin"); // intake system servo
         rightSpin = hardwareMap.get(CRServo.class, "rightSpin"); // initialize our servos
 
         //touch sensors
-        touchy = hardwareMap.get(TouchSensor.class, "touchy");
+        touchy = hardwareMap.get(TouchSensor.class, "touchy");//Touch sensor on intake system to stop spinning
+        touch = hardwareMap.get(TouchSensor.class, "touch"); // Touch sensor for levels to reset on bottom of robot
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -143,6 +145,7 @@ public class EarlySeasonDrive extends OpMode
         boolean a2 = gamepad2.a; // this is the value of the a button on gamepad2
         boolean y2 = gamepad2.y; // this is the value of the y button on gamepad2
         boolean x2 = gamepad2.x; // this is the value of the x button on gamepad2
+        boolean rb2 =gamepad2.right_bumper;// Reset
 
         // print values to console
         telemetry.addData("lefty1", lefty1);
@@ -163,38 +166,49 @@ public class EarlySeasonDrive extends OpMode
         telemetry.addData("y", y2);
         telemetry.addData("rt", rt);
 
-        // Finite State Machine - Levels
-        final int lower = 100;
-        final int middle = 300;
-        final int upper = 600;
+        //When a certain button is pushed robot reacts fast and moves it's arm to level indicated by button
+        //A2 is pushed will bring to bottom level
+        //X2 is pushed will bring to low Level
+        //B2 is pushed will bring to middle level
+        //Y2 is pushed will bring to tall level
 
-        switch (levels) { // takes the state of the levels finite state machine
-            case BOTTOM: // bottom level
-                if (a2) { // if a pressed, reset and bring level to the lowest level
+        // Finite State Machine - Levels (need to edit distances on time once tested)
+        final int low = 1000;
+        final int middle = 300;
+        final int tall = 600;
+
+        switch (levels) {
+            // at bottom continue to bottom or respond to button push
+            case BOTTOM:
+                arm.setPower(0);
+                arm2.setPower(0);
+                if (a2) {
                     timer.reset();
-                    levels = ArmState.LOWER;
+                    levels = EarlySeasonDrive.ArmState.LOWER;
                 }
-                if (b2) { // if b pressed, reset and bring level to the middle level
+                if (b2) {
                     timer.reset();
-                    levels = ArmState.MIDDLE;
+                    levels = EarlySeasonDrive.ArmState.MIDDLE;
                 }
-                if (y2) { // if y is pressed, reset and bring level to the top level
+                if (y2) {
                     timer.reset();
                     levels = ArmState.UPPER;
                 }
                 break;
-            case LOWER: // if we are already on the lower level
-                if (timer.milliseconds() < lower) { //  if timer is less than the time for lower
-                    arm.setPower(.8); // set power
+            // at low  continue to low or respond to button push
+            case LOWER:
+                if (timer.milliseconds() < low) {
+                    arm.setPower(.8);
                     arm2.setPower(.8);
                 } else {
-                    arm.setPower(0); // if not, then make it 0
+                    arm.setPower(0);
                     arm2.setPower(0);
                 }
-                if (x2) { // if x is pressed, then let's reset
-                    levels = ArmState.RESET;
+                if (rb2) {
+                    levels = EarlySeasonDrive.ArmState.RESET;
                 }
                 break;
+            // at middle  continue to middle or respond to button push
             case MIDDLE:
                 if (timer.milliseconds() < middle) {
                     arm.setPower(.8);
@@ -203,40 +217,35 @@ public class EarlySeasonDrive extends OpMode
                     arm.setPower(0);
                     arm2.setPower(0);
                 }
-                if (x2) {
-                    levels = ArmState.RESET;
+                if (rb2) {
+                    levels = EarlySeasonDrive.ArmState.RESET;
                 }
                 break;
+            // at Tall  continue to tall or respond to button push
             case UPPER:
-                if (timer.milliseconds() < upper) {
+                if (timer.milliseconds() < tall) {
                     arm.setPower(.8);
                     arm2.setPower(.8);
                 } else {
                     arm.setPower(0);
                     arm2.setPower(0);
                 }
-                if (x2) {
-                    levels = ArmState.RESET;
+                if (rb2) {
+                    levels = EarlySeasonDrive.ArmState.RESET;
                 }
                 break;
-
-                /*
+            // at reset  continue to reset or respond to button push
             case RESET:
                 if (!touch.isPressed()) {
                     arm.setPower(-.8);
                     arm2.setPower(-.8);
                 } else {
-                    levels = ArmState.BOTTOM;
+                    levels = EarlySeasonDrive.ArmState.BOTTOM;
                 }
                 break;
-
-                 */
-
             default:
-                levels = ArmState.BOTTOM;
+                levels = EarlySeasonDrive.ArmState.BOTTOM;
         }
-
-
 
         double pow;
         if (a1) pow = 1; // turbo mode
@@ -403,16 +412,10 @@ public class EarlySeasonDrive extends OpMode
         if (Math.abs(righty2) <= DEAD_ZONE) {
             // nothing - stop spinning!
             leftSpin.setPower(0);
-            leftSpin.setPower(0);
             rightSpin.setPower(0);
         }
         else if (righty2 > DEAD_ZONE) {
             // intake
-            leftSpin.setPower( REVERSE*pow);
-            rightSpin.setPower(REVERSE*pow);
-
-        } else  {
-            // outtake
             if (touchy.isPressed()) {
                 leftSpin.setPower(0);
                 rightSpin.setPower(0);
@@ -421,6 +424,11 @@ public class EarlySeasonDrive extends OpMode
                 leftSpin.setPower(pow);
                 rightSpin.setPower(pow);
             }
+
+        } else  {
+            // outtake
+            leftSpin.setPower(REVERSE * pow);
+            rightSpin.setPower(REVERSE * pow);
 
         }
 
