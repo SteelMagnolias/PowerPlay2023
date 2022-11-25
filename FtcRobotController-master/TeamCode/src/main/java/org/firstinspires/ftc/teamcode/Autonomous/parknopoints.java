@@ -24,8 +24,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "autonforsmallrobot", group="Iterative OpMode")
-public class autonforsmallrobot extends LinearOpMode {
+@Autonomous(name = "parknopoints", group="Iterative OpMode")
+public class parknopoints extends LinearOpMode {
 
     // declaration
     private DcMotor leftFront;
@@ -101,17 +101,6 @@ public class autonforsmallrobot extends LinearOpMode {
         // stuff in init
 
         telemetry.addData("ABBY AND ALLIE LISTEN UP", "blue closest to the audience touch button using cone\nblue farthest from audience dont have cone hit button\nred closest to the audience dont hit the button with cone\nred farthest from audience have cone hit button ");
-
-        if (touch.isPressed()) {
-            // A2 F5
-            STPL=1;
-            // use canera 1
-        }
-        else {
-            // A5 F2
-            STPL=-1;
-            //use camera 2
-        }
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -261,102 +250,18 @@ public class autonforsmallrobot extends LinearOpMode {
 
         // Disable Tracking when we are done;
         targets.deactivate();
-        //move arm down when button is not pressed
-
-        while (!touch.isPressed()){
-            arm.setPower(-0.3);
-            arm2.setPower(-0.3);
-        }
-        arm.setPower(0);
-        arm2.setPower(0);
 
         if (signal==3){
-            drive (-pow*STPL, -pow*STPL, -pow*STPL, -pow*STPL, tilef);
-            if(STPL==1) {
-                drive (-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*1.5);
-                drive (pow, pow, pow, pow, 50);
-                arm.setPower (0.3);
-                arm2.setPower (0.3);
-                sleep (low);
-                arm.setPower (0);
-                arm2.setPower (0);
-            }
-            else {
-                drive (-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
-                drive (pow, pow, pow, pow, 50);
-            }
-            leftSpin.setPower(REVERSE*pow);
-            rightSpin.setPower(REVERSE*pow);
-            //ajust time
-            sleep (1000);
-            leftSpin.setPower(0);
-            rightSpin.setPower(0);
-            drive (-pow, -pow, -pow, -pow, 50);
-            //move arm down when button is not pressed
-            while (!touch.isPressed()){
-                arm.setPower(-0.3);
-                arm2.setPower(-0.3);
-            }
-            arm.setPower(0);
-            arm2.setPower(0);
-
+            drive (-pow, -pow, -pow, -pow, tilef);
+            drive (-pow, pow, -pow, pow, tiles*1.5);
         }
         if (signal==2){
-            drive (-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
-            drive (pow, pow, pow, pow, 50);
-            arm.setPower (0.3);
-            arm2.setPower (0.3);
-            sleep (low);
-            arm.setPower (0);
-            arm2.setPower (0);
-            leftSpin.setPower(REVERSE*pow);
-            rightSpin.setPower(REVERSE*pow);
-            //ajust time
-            sleep (1000);
-            leftSpin.setPower(0);
-            rightSpin.setPower(0);
-            drive (-pow, -pow, -pow, -pow, 50);
-            drive (-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles);
-            //move arm down when button is not pressed
-            while (!touch.isPressed()){
-                arm.setPower(-0.3);
-                arm2.setPower(-0.3);
-            }
-            arm.setPower(0);
-            arm2.setPower(0);
+            drive (-pow, pow,-pow, pow, tiles*1.5);
         }
         if (signal==1){
-            drive (-pow*STPL, -pow*STPL, -pow*STPL, -pow*STPL, tilef);
-            if(STPL==1) {
-                drive (-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
-                drive (pow, pow, pow, pow, 50);
-            }
-            else {
-                drive (-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*1.5);
-                drive (pow, pow, pow, pow, 50);
-                arm.setPower (0.3);
-                arm2.setPower (0.3);
-                sleep (low);
-                arm.setPower (0);
-                arm2.setPower (0);
-            }
-            leftSpin.setPower(REVERSE*pow);
-            rightSpin.setPower(REVERSE*pow);
-            //ajust time
-            sleep (1000);
-            leftSpin.setPower(0);
-            rightSpin.setPower(0);
-            drive (-pow, -pow, -pow, -pow, 50);
-            //move arm down when button is not pressed
-            while (!touch.isPressed()){
-                arm.setPower(-0.3);
-                arm2.setPower(-0.3);
-            }
-            arm.setPower(0);
-            arm2.setPower(0);
+            drive (pow*STPL, pow*STPL, pow*STPL, pow*STPL, tilef);
+            drive (-pow, pow, -pow, pow, tiles*1.5);
         }
-
-
 
     }
 
@@ -387,7 +292,7 @@ public class autonforsmallrobot extends LinearOpMode {
         rightFront.setPower(rf);
         leftBack.setPower(lb);
         rightBack.setPower(rb);
-        sleep ((int)time);
+        sleep((int)time);
         leftFront.setPower(0);
         rightFront.setPower(0);
         leftBack.setPower(0);
