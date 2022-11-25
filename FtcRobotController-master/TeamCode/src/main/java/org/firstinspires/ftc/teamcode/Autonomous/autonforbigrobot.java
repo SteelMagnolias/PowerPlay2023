@@ -15,7 +15,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -25,8 +24,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "Earlyauton", group="Iterative OpMode")
-public class Earlyauton extends LinearOpMode {
+@Autonomous(name = "autonforbigrobot", group="Iterative OpMode")
+public class autonforbigrobot extends LinearOpMode {
 
     // declaration
     private DcMotor leftFront;
@@ -52,9 +51,8 @@ public class Earlyauton extends LinearOpMode {
     private int two;
     private int three;
     private int low = 1;
+    private int med = 2;
     private int high = 3;
-    private int tilef = 1250;
-    private int tiles = 1250;
     private int stpl;
 
 
@@ -80,6 +78,8 @@ public class Earlyauton extends LinearOpMode {
 
     private boolean targetVisible       = false;
     double pow= 0.3;
+    double tilef = 1250;
+    double tiles = 1250;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -102,8 +102,8 @@ public class Earlyauton extends LinearOpMode {
 
         if (touch.isPressed()) {
             // A2 F5
-           stpl=1;
-           // use canera 1
+            stpl=1;
+            // use canera 1
         }
         else {
             // A5 F2
@@ -263,68 +263,68 @@ public class Earlyauton extends LinearOpMode {
 
 
 
-            if (signal==1){
-                drive (-pow*stpl, -pow*stpl, -pow*stpl, -pow*stpl, tilef);
-                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, 15);
-                drive (pow, pow, pow, pow, 50);
-                arm.setPower (0.3);
-                arm2.setPower (0.3);
-                if(touch.isPressed()) {
-                    sleep (low);
-                }
-                else {
-                    //arm down untill touch is pressed
-                    sleep (high);
-                }
-                arm.setPower (0);
-                arm2.setPower (0);
-                //open claw
-                arm.setPower (-0.3);
-                arm2.setPower (-0.3);
-                //sleep untill toush if pressed
-                arm.setPower (0);
-                arm2.setPower (0);
-
+        if (signal==1){
+            drive (-pow*stpl, -pow*stpl, -pow*stpl, -pow*stpl, tilef);
+            drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, 15);
+            drive (pow, pow, pow, pow, 50);
+            arm.setPower (0.3);
+            arm2.setPower (0.3);
+            if(touch.isPressed()) {
+                sleep (low);
             }
-            if (signal==2){
-                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, 25);
-                drive (pow, pow, pow, pow, 50);
-                arm.setPower (0.3);
-                arm2.setPower (0.3);
+            else {
+                //arm down untill touch is pressed
                 sleep (high);
-                arm.setPower (0);
-                arm2.setPower (0);
-               //open claw
-                arm.setPower (-0.3);
-                arm2.setPower (-0.3);
-                //sleep until touch is pressed
-                arm.setPower (0);
-                arm2.setPower (0);
-                drive (-pow, -pow, -pow, -pow, 50);
-                drive (pow*stpl, -pow*stpl, pow*stpl, -pow*stpl, tiles);
             }
-            if (signal==3){
-                drive (pow*stpl, pow*stpl, pow*stpl, pow*stpl, tilef);
-                drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, 15);
-                drive (pow, pow, pow, pow, 50);
-                arm.setPower (0.3);
-                arm2.setPower (0.3);
-                if(touch.isPressed()) {
-                    sleep (high);
-                }
-                else {
-                    //arm down untul touch is pressed
-                    sleep (low);
-                }
-                arm.setPower (0);
-                arm2.setPower (0);
-                //open claw
-                arm.setPower (-0.3);
-                arm2.setPower (-0.3);
-                //sleep until touch is pressed
-                arm.setPower (0);
-                arm2.setPower (0);
+            arm.setPower (0);
+            arm2.setPower (0);
+            //open claw
+            arm.setPower (-0.3);
+            arm2.setPower (-0.3);
+            //sleep untill toush if pressed
+            arm.setPower (0);
+            arm2.setPower (0);
+
+        }
+        if (signal==2){
+            drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, 25);
+            drive (pow, pow, pow, pow, 50);
+            arm.setPower (0.3);
+            arm2.setPower (0.3);
+            sleep (high);
+            arm.setPower (0);
+            arm2.setPower (0);
+            //open claw
+            arm.setPower (-0.3);
+            arm2.setPower (-0.3);
+            //sleep until touch is pressed
+            arm.setPower (0);
+            arm2.setPower (0);
+            drive (-pow, -pow, -pow, -pow, 50);
+            drive (pow*stpl, -pow*stpl, pow*stpl, -pow*stpl, tiles);
+        }
+        if (signal==3){
+            drive (pow*stpl, pow*stpl, pow*stpl, pow*stpl, tilef);
+            drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, 15);
+            drive (pow, pow, pow, pow, 50);
+            arm.setPower (0.3);
+            arm2.setPower (0.3);
+            if(touch.isPressed()) {
+                sleep (high);
             }
+            else {
+                //arm down untul touch is pressed
+                sleep (low);
+            }
+            arm.setPower (0);
+            arm2.setPower (0);
+            //open claw
+            arm.setPower (-0.3);
+            arm2.setPower (-0.3);
+            //sleep until touch is pressed
+            arm.setPower (0);
+            arm2.setPower (0);
+        }
 
 
 
@@ -339,20 +339,20 @@ public class Earlyauton extends LinearOpMode {
     //If button is pressed, the multiplier will be -1  which gives us opposite directions
 
     //Camera reading
-    
+
     // ITS GO TIME LEVYYYYY aka start :)
 
-    
+
     // If the image is one (continue with multiplier) back into wall, drive left to lower goal.
 
     //}
     // If image is 2 drive left until reaching mid
-    
+
     //iF image is 3 drive forward 1 square and drive left until high.
-    
+
     //End of code woohhoooooooooooo
 
-    public void drive (double lf, double rf, double lb, double rb, int time){
+    public void drive (double lf, double rf, double lb, double rb, double time){
         leftFront.setPower(lf);
         rightFront.setPower(rf);
         leftBack.setPower(lb);
@@ -371,5 +371,7 @@ public class Earlyauton extends LinearOpMode {
         aTarget.setLocation(OpenGLMatrix.translation(dx, dy, dz)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
     }}
+
+
 
 

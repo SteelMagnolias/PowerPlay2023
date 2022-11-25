@@ -35,9 +35,9 @@ public class CamerasTest extends LinearOpMode {
     // this is where we can find the preset models
 
     private static final String[] LABELS = {
-            "1 Bolt",
-            "2 Bulb",
-            "3 Panel"
+            "1 star",
+            "2 triangle",
+            "3 circle"
     };
     // these are labels that can be used to define what items might be seen.
 
@@ -113,31 +113,23 @@ public class CamerasTest extends LinearOpMode {
                         telemetry.addData("bottom", recognition.getBottom());
                         // get what's in the bottom
 
-                        if (recognition.getLabel().equals("1 Bolt")){
+                        if (recognition.getLabel().equals("1 star")){
                             // do the first position stuff
                             signal = 1;
-                            arm.setPower(0.1);
-                            arm2.setPower(0.1);
-                            sleep(100);
-                            arm.setPower(0);
-                            arm2.setPower(0);
                         }
-                        else if (recognition.getLabel().equals("2 Bulb")) {
+                        else if (recognition.getLabel().equals("2 triangle")) {
                             // do the second position stuff
                             signal = 2;
-                            arm.setPower(-0.1);
-                            arm2.setPower(-0.1);
-                            sleep(100);
-                            arm.setPower(0);
-                            arm2.setPower(0);
                         }
                         else {
-                            // this means we've seen the third thing and should do that stuff
+                            // this means we've seen the third thing (triangle) and should do that stuff
+                            // 3 circle
                             signal = 3;
-                            drive(0.1,0.1,0.1,0.1,100);
                         }
                     }
 
+
+                    telemetry.addData("signal", signal);
                     telemetry.update();
                     // update telemetry.(aka update what it says in the console on phone!)
                 }
@@ -146,6 +138,7 @@ public class CamerasTest extends LinearOpMode {
 
         waitForStart();
 
+        telemetry.addData("signal", signal);
 
 
         telemetry.update();
