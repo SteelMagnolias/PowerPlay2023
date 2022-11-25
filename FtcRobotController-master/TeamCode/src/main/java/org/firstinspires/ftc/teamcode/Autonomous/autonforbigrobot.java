@@ -263,7 +263,7 @@ public class autonforbigrobot extends LinearOpMode {
 
 
 
-        if (signal==1){
+        if (signal==3){
             drive (-pow*stpl, -pow*stpl, -pow*stpl, -pow*stpl, tilef);
             drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, 15);
             drive (pow, pow, pow, pow, 50);
@@ -303,7 +303,7 @@ public class autonforbigrobot extends LinearOpMode {
             drive (-pow, -pow, -pow, -pow, 50);
             drive (pow*stpl, -pow*stpl, pow*stpl, -pow*stpl, tiles);
         }
-        if (signal==3){
+        if (signal==1){
             drive (pow*stpl, pow*stpl, pow*stpl, pow*stpl, tilef);
             drive (-pow*stpl, pow*stpl, -pow*stpl, pow*stpl, 15);
             drive (pow, pow, pow, pow, 50);
@@ -357,7 +357,7 @@ public class autonforbigrobot extends LinearOpMode {
         rightFront.setPower(rf);
         leftBack.setPower(lb);
         rightBack.setPower(rb);
-        sleep(time);
+        sleep((int)time);
         leftFront.setPower(0);
         rightFront.setPower(0);
         leftBack.setPower(0);
