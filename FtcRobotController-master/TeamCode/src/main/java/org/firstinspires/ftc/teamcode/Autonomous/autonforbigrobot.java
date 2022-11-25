@@ -32,7 +32,7 @@ public class autonforbigrobot extends LinearOpMode {
     private DcMotor rightFront;
     private DcMotor leftBack;
     private DcMotor rightBack;
-    private TouchSensor touch;
+    private TouchSensor armTouch;
     private Servo camera;
     private CRServo rightintake;
     private CRServo leftintake;
@@ -78,8 +78,8 @@ public class autonforbigrobot extends LinearOpMode {
 
     private boolean targetVisible       = false;
     double pow= 0.3;
-    double tilef = 1250;
-    double tiles = 1250;
+    int tilef = 1250;
+    int tiles = 1250;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -87,7 +87,7 @@ public class autonforbigrobot extends LinearOpMode {
         rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // in config --> port 2 --> "rightBack
         leftFront = hardwareMap.get(DcMotor.class, "leftFront"); // in config --> port 0 --> "leftFront"
         rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // in config --> port 3 --> "rightFront"
-        touch = hardwareMap.get(TouchSensor.class, "touchy");  // in config --> digital port 5 --> "touchy"
+        armTouch = hardwareMap.get(TouchSensor.class, "touchy");  // in config --> digital port 5 --> "touchy"
         camera = hardwareMap.get(Servo.class, "camera"); // in config --> webcam1 --> camera
         rightintake = hardwareMap.get(CRServo.class, "rightSpin"); // in config --> port 3 --> "rightintake"
         leftintake = hardwareMap.get(CRServo.class, "leftSpin"); // in config --> port 4 --> "leftintake"
@@ -100,7 +100,7 @@ public class autonforbigrobot extends LinearOpMode {
 
         telemetry.addData("ABBY AND ALLIE LISTEN UP", "blue closest to the audience touch button using cone\nblue farthest from audience dont have cone hit button\nred closest to the audience dont hit the button with cone\nred farthest from audience have cone hit button ");
 
-        if (touch.isPressed()) {
+        if (armTouch.isPressed()) {
             // A2 F5
             stpl=1;
             // use canera 1
@@ -269,7 +269,7 @@ public class autonforbigrobot extends LinearOpMode {
             drive (pow, pow, pow, pow, 50);
             arm.setPower (0.3);
             arm2.setPower (0.3);
-            if(touch.isPressed()) {
+            if(armTouch.isPressed()) {
                 sleep (low);
             }
             else {
@@ -309,7 +309,7 @@ public class autonforbigrobot extends LinearOpMode {
             drive (pow, pow, pow, pow, 50);
             arm.setPower (0.3);
             arm2.setPower (0.3);
-            if(touch.isPressed()) {
+            if(armTouch.isPressed()) {
                 sleep (high);
             }
             else {
@@ -352,7 +352,7 @@ public class autonforbigrobot extends LinearOpMode {
 
     //End of code woohhoooooooooooo
 
-    public void drive (double lf, double rf, double lb, double rb, double time){
+    public void drive (double lf, double rf, double lb, double rb, int time){
         leftFront.setPower(lf);
         rightFront.setPower(rf);
         leftBack.setPower(lb);
