@@ -78,8 +78,8 @@ public class autonforbigrobot extends LinearOpMode {
 
     private boolean targetVisible       = false;
     double pow= 0.3;
-    double tilef = 1250;
-    double tiles = 1250;
+    int tilef = 1250;
+    int tiles = 1250;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -352,7 +352,7 @@ public class autonforbigrobot extends LinearOpMode {
 
     //End of code woohhoooooooooooo
 
-    public void drive (double lf, double rf, double lb, double rb, double time){
+    public void drive (double lf, double rf, double lb, double rb, int time){
         leftFront.setPower(lf);
         rightFront.setPower(rf);
         leftBack.setPower(lb);

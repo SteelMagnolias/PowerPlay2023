@@ -10,7 +10,6 @@ import java.util.List;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
@@ -29,15 +28,15 @@ public class CamerasTest extends LinearOpMode {
     private DcMotor arm;
     private DcMotor arm2;
 
-    private TouchSensor touchy;
+    private TouchSensor intakeTouch;
 
     private static final String TFOD_MODEL_ASSET = "PowerPlayCustom.tflite";
     // this is where we can find the preset models
 
     private static final String[] LABELS = {
-            "1 star",
-            "2 triangle",
-            "3 circle"
+            "circle",
+            "star",
+            "triangle"
     };
     // these are labels that can be used to define what items might be seen.
 
@@ -74,7 +73,7 @@ public class CamerasTest extends LinearOpMode {
             tfod.activate();
             // turn the tensorflow on so it starts reading.
 
-            tfod.setZoom(1.0, 16.0/9.0);
+            tfod.setZoom(1.5, 16.0/9.0);
             // magnification must be at least 1.0
             // zooms into what tensor flow is seeing to mimic zooming with camera.  Makes everything more readable.
         }
@@ -113,11 +112,11 @@ public class CamerasTest extends LinearOpMode {
                         telemetry.addData("bottom", recognition.getBottom());
                         // get what's in the bottom
 
-                        if (recognition.getLabel().equals("1 star")){
+                        if (recognition.getLabel().equals("star")){
                             // do the first position stuff
                             signal = 1;
                         }
-                        else if (recognition.getLabel().equals("2 triangle")) {
+                        else if (recognition.getLabel().equals("triangle")) {
                             // do the second position stuff
                             signal = 2;
                         }

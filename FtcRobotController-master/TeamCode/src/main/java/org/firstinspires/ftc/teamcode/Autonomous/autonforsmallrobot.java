@@ -80,7 +80,7 @@ public class autonforsmallrobot extends LinearOpMode {
 
     private boolean targetVisible       = false;
     double pow= 0.3;
-    double tilef = 1250;
+    int tilef = 1250;
     double tiles = 1250;
 
     @Override
