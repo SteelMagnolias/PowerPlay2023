@@ -30,8 +30,8 @@ public class EarlySeasonDrive extends OpMode
     private CRServo rightSpin; // right from the back perspective
 
     // touch sensors
-    private TouchSensor touchy; // Touch sensor on arm for intake system
-    private TouchSensor touch; // Touch sensor for levels for bottom of robot to hit for reset levels
+    private TouchSensor intaketouch; // Touch sensor on arm for intake system
+    private TouchSensor armtouch; // Touch sensor for levels for bottom of robot to hit for reset levels
 
     // used for timed movements
     ElapsedTime timer;
@@ -76,8 +76,8 @@ public class EarlySeasonDrive extends OpMode
         rightSpin = hardwareMap.get(CRServo.class, "rightSpin"); // initialize our servos
 
         //touch sensors
-        touchy = hardwareMap.get(TouchSensor.class, "touchy");//Touch sensor on intake system to stop spinning
-        touch = hardwareMap.get(TouchSensor.class, "touch"); // Touch sensor for levels to reset on bottom of robot
+        intaketouch = hardwareMap.get(TouchSensor.class, "intaketouch");//Touch sensor on intake system to stop spinning
+        armtouch = hardwareMap.get(TouchSensor.class, "armtouch"); // Touch sensor for levels to reset on bottom of robot
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -173,9 +173,9 @@ public class EarlySeasonDrive extends OpMode
         //Y2 is pushed will bring to tall level
 
         // Finite State Machine - Levels (need to edit distances on time once tested)
-        final int low = 1000;
-        final int middle = 300;
-        final int tall = 600;
+        final int low = 800;
+        final int middle = 1000;
+        final int tall = 1200;
 
         switch (levels) {
             // at bottom continue to bottom or respond to button push
@@ -236,7 +236,7 @@ public class EarlySeasonDrive extends OpMode
                 break;
             // at reset  continue to reset or respond to button push
             case RESET:
-                if (!touch.isPressed()) {
+                if (!armtouch.isPressed()) {
                     arm.setPower(-.8);
                     arm2.setPower(-.8);
                 } else {
@@ -405,7 +405,7 @@ public class EarlySeasonDrive extends OpMode
 
         pow = 1; // this is the speed in which we will turn the servos
 
-        telemetry.addData("Touchy", touchy.isPressed());
+        telemetry.addData("Touchy", intaketouch.isPressed());
         telemetry.addData("Right Joystick (righty2)", righty2);
         telemetry.addData("leftSpin power", leftSpin.getPower());
         telemetry.addData("rightSpin power", rightSpin.getPower());
@@ -416,7 +416,7 @@ public class EarlySeasonDrive extends OpMode
         }
         else if (righty2 > DEAD_ZONE) {
             // intake
-            if (touchy.isPressed()) {
+            if (armtouch.isPressed()) {
                 leftSpin.setPower(0);
                 rightSpin.setPower(0);
             }
