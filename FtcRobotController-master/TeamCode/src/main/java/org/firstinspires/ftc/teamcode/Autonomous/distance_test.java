@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -29,9 +30,8 @@ public class distance_test extends LinearOpMode {
     private DcMotor rightFront;
     private DcMotor leftBack;
     private DcMotor rightBack;
-    private Servo camera;
-    private CRServo rightintake;
-    private CRServo leftintake;
+    private CRServo rightSpin;
+    private CRServo leftSpin;
     private DcMotor arm;
     private DcMotor arm2;
     // wheelies!
@@ -55,6 +55,7 @@ public class distance_test extends LinearOpMode {
 
     // Class Members
     double pow= 0.3;
+    double intakePow = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -62,17 +63,24 @@ public class distance_test extends LinearOpMode {
         rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // in config --> port 2 --> "rightBack
         leftFront = hardwareMap.get(DcMotor.class, "leftFront"); // in config --> port 0 --> "leftFront"
         rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // in config --> port 3 --> "rightFront"
-         rightintake = hardwareMap.get(CRServo.class, "rightSpin"); // in config --> port 3 --> "rightintake"
-        leftintake = hardwareMap.get(CRServo.class, "leftSpin"); // in config --> port 4 --> "leftintake"
+         rightSpin = hardwareMap.get(CRServo.class, "rightSpin"); // in config --> port 3 --> "rightintake"
+        leftSpin = hardwareMap.get(CRServo.class, "leftSpin"); // in config --> port 4 --> "leftintake"
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        arm2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
 
 
 
-            drive(pow, pow, pow, pow, 1500);
+        leftSpin.setPower(intakePow);
+        rightSpin.setPower(intakePow);
+        //ajust time
+        sleep (5000);
+        leftSpin.setPower(0);
+        rightSpin.setPower(0);
 
     }
 

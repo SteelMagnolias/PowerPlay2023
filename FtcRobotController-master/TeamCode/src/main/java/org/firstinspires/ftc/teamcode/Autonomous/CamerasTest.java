@@ -151,7 +151,7 @@ public class CamerasTest extends LinearOpMode {
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY; // sets the vuforia key, which gives us access
 
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 2");
         // sets up a camera that will be used with this program
 
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
