@@ -421,14 +421,14 @@ public class EarlySeasonDrive extends OpMode
                 rightSpin.setPower(0);
             }
             else {
-                leftSpin.setPower(pow);
-                rightSpin.setPower(pow);
+                leftSpin.setPower(REVERSE * pow);
+                rightSpin.setPower(REVERSE * pow);
             }
 
         } else  {
             // outtake
-            leftSpin.setPower(REVERSE * pow);
-            rightSpin.setPower(REVERSE * pow);
+            leftSpin.setPower(pow);
+            rightSpin.setPower(pow);
 
         }
 
