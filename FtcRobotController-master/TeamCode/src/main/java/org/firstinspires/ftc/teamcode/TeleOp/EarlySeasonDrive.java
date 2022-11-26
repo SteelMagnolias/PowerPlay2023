@@ -173,7 +173,7 @@ public class EarlySeasonDrive extends OpMode
         //Y2 is pushed will bring to tall level
 
         // Finite State Machine - Levels (need to edit distances on time once tested)
-        final int low = 800;
+        final int low = 1000;
         final int middle = 1000;
         final int tall = 1200;
 
@@ -405,7 +405,8 @@ public class EarlySeasonDrive extends OpMode
 
         pow = 1; // this is the speed in which we will turn the servos
 
-        telemetry.addData("Touchy", intaketouch.isPressed());
+        telemetry.addData("Intake", intaketouch.isPressed());
+        telemetry.addData("armtouch", armtouch.isPressed());
         telemetry.addData("Right Joystick (righty2)", righty2);
         telemetry.addData("leftSpin power", leftSpin.getPower());
         telemetry.addData("rightSpin power", rightSpin.getPower());
@@ -416,7 +417,7 @@ public class EarlySeasonDrive extends OpMode
         }
         else if (righty2 > DEAD_ZONE) {
             // intake
-            if (armtouch.isPressed()) {
+            if (intaketouch.isPressed()) {
                 leftSpin.setPower(0);
                 rightSpin.setPower(0);
             }

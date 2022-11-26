@@ -50,8 +50,8 @@ public class Wliftdrive extends OpMode {
         rightfront = hardwareMap.get(DcMotor.class, "rightfront"); //right front DC motor wheels
         leftback = hardwareMap.get(DcMotor.class, "leftback"); // left back wheels Dcmotor
         rightback = hardwareMap.get(DcMotor.class, "rightback"); // right back wheels Dcmotor
-        clawl1 = hardwareMap.get(CRServo.class, "claw1"); // Claw left 1 Continues servo
-        clawr2 = hardwareMap.get(CRServo.class, "claw2"); // claw right 2 continues servo
+        clawl1 = hardwareMap.get(CRServo.class, "clawl1"); // Claw left 1 Continues servo
+        clawr2 = hardwareMap.get(CRServo.class, "clawr2"); // claw right 2 continues servo
         touch = hardwareMap.get(TouchSensor.class, "touch"); // Touch senor bottom of robot for levels
 
         telemetry.addData("Status:", "initialized");
