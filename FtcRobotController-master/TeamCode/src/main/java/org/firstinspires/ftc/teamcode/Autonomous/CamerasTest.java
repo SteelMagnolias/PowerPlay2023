@@ -73,7 +73,7 @@ public class CamerasTest extends LinearOpMode {
             tfod.activate();
             // turn the tensorflow on so it starts reading.
 
-            tfod.setZoom(1.5, 16.0/9.0);
+            tfod.setZoom(2.0, 16.0/9.0);
             // magnification must be at least 1.0
             // zooms into what tensor flow is seeing to mimic zooming with camera.  Makes everything more readable.
         }
