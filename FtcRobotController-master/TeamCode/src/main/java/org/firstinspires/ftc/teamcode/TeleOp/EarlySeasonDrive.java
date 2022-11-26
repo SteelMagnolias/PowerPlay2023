@@ -325,9 +325,15 @@ public class EarlySeasonDrive extends OpMode
 
         if (Math.abs(lefty2) >= DEAD_ZONE) {
             if (lefty2 < 0) {
-                arm.setPower(lefty2 * pow);
-                arm2.setPower(lefty2 * pow);
-            }
+                if (armtouch.isPressed()) {
+                    // if button is pressed, stop moving
+                    arm.setPower(0);
+                    arm2.setPower(0);
+                }
+                else {
+                    arm.setPower(lefty2 * pow);
+                    arm2.setPower(lefty2 * pow);
+                }            }
             if (lefty2 > 0) {
                 arm.setPower(lefty2 * pow);
                 arm2.setPower(lefty2 * pow);
@@ -416,19 +422,20 @@ public class EarlySeasonDrive extends OpMode
         }
         else if (righty2 > DEAD_ZONE) {
             // intake
-            if (armtouch.isPressed()) {
+            leftSpin.setPower(REVERSE * pow);
+            rightSpin.setPower(REVERSE * pow);
+
+        } else  {
+            // outtake
+
+            if (intaketouch.isPressed()) {
                 leftSpin.setPower(0);
                 rightSpin.setPower(0);
             }
             else {
-                leftSpin.setPower(REVERSE * pow);
-                rightSpin.setPower(REVERSE * pow);
+                leftSpin.setPower(pow);
+                rightSpin.setPower(pow);
             }
-
-        } else  {
-            // outtake
-            leftSpin.setPower(pow);
-            rightSpin.setPower(pow);
 
         }
 
