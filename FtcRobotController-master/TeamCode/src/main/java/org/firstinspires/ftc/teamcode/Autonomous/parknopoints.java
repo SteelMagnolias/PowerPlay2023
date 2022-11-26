@@ -259,7 +259,7 @@ public class parknopoints extends LinearOpMode {
             drive (-pow, pow,-pow, pow, tiles*1.5);
         }
         if (signal==1){
-            drive (pow*STPL, pow*STPL, pow*STPL, pow*STPL, tilef);
+            drive (pow, pow, pow, pow, tilef);
             drive (-pow, pow, -pow, pow, tiles*1.5);
         }
 

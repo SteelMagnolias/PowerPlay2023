@@ -97,7 +97,7 @@ public class autonforsmallrobot extends LinearOpMode {
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
         telemetry.addData("Status", "Initialized");
 
-        telemetry.addData("ABBY AND ALLIE LISTEN UP", "blue closest to the audience touch button using cone\nblue farthest from audience dont have cone hit button\nred closest to the audience dont hit the button with cone\nred farthest from audience have cone hit button ");
+        telemetry.addData("ABBY AND ALLIE LISTEN UP", "blue closest to the audience touch arm button\nblue farthest from audience don't have arm button hit\nred closest to the audience dont hit the arm button\nred farthest from audience have arm hit button ");
 
         if (armTouch.isPressed()) {
             // A2 F5
