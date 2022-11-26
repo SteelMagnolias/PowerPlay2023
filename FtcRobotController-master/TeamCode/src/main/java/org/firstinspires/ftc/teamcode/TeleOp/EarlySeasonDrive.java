@@ -146,6 +146,7 @@ public class EarlySeasonDrive extends OpMode
         boolean y2 = gamepad2.y; // this is the value of the y button on gamepad2
         boolean x2 = gamepad2.x; // this is the value of the x button on gamepad2
         boolean rb2 =gamepad2.right_bumper;// Reset
+        boolean lb2 = gamepad2.left_bumper; // stop all movement whatsoever in the arm
 
         // print values to console
         telemetry.addData("lefty1", lefty1);
@@ -437,6 +438,13 @@ public class EarlySeasonDrive extends OpMode
                 rightSpin.setPower(pow);
             }
 
+        }
+
+        if (lb2) {
+            arm.setPower(0);
+            arm2.setPower(0);
+            leftSpin.setPower(0);
+            rightSpin.setPower(0);
         }
 
         telemetry.update(); // print output
