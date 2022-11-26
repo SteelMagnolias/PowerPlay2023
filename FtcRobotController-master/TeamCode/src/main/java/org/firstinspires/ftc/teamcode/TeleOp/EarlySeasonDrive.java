@@ -250,7 +250,7 @@ public class EarlySeasonDrive extends OpMode
 
         double pow;
         if (a1) pow = 1; // turbo mode
-        else pow = .8;
+        else pow = .5;
         double c = Math.hypot(leftx1, lefty1);
         double perct = pow * c;
         if (c <= .1) perct = 0;
