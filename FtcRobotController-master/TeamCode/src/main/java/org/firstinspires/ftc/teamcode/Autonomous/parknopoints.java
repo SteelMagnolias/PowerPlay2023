@@ -97,7 +97,14 @@ public class parknopoints extends LinearOpMode {
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
         telemetry.addData("Status", "Initialized");
 
-        webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        if (touch.isPressed()) {
+            //a2 - a5
+            webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        }
+        else {
+            //f2 - f5
+            webcamName = hardwareMap.get(WebcamName.class, "Webcam 2");
+        }
         // stuff in init
 
         telemetry.addData("ABBY AND ALLIE LISTEN UP", "blue closest to the audience touch button using cone\nblue farthest from audience dont have cone hit button\nred closest to the audience dont hit the button with cone\nred farthest from audience have cone hit button ");
