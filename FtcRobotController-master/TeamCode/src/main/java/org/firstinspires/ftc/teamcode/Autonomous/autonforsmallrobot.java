@@ -61,7 +61,7 @@ public class autonforsmallrobot extends LinearOpMode {
     private int one;
     private int two;
     private int three;
-    private int low = 1800;
+    private int low = 2100;
     private int med = 2;
     private int high = 3;
     private int STPL;
@@ -89,7 +89,7 @@ public class autonforsmallrobot extends LinearOpMode {
     private TFObjectDetector tfod;
     // this will later allow you to use TensorFlow.  This is a particular instance of the TensorFlow engine.
 
-    private int signal = -1; // holds the true false value of whether a duck is present.
+    private int signal;
    /*
    Vuforia will feed its information and pictures it finds into TensorFlow for further analysis!
     */
@@ -154,7 +154,7 @@ public class autonforsmallrobot extends LinearOpMode {
             tfod.activate();
             // turn the tensorflow on so it starts reading.
 
-            tfod.setZoom(2.0, 16.0/9.0);
+            tfod.setZoom(1.0, 16.0/9.0);
             // magnification must be at least 1.0
             // zooms into what tensor flow is seeing to mimic zooming with camera.  Makes everything more readable.
         }
@@ -162,7 +162,6 @@ public class autonforsmallrobot extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             // while we are still running (time hasn't run out!)
 
-            signal=3;
 
             if (tfod != null) {
                 // tensor flow is still running.
@@ -203,10 +202,13 @@ public class autonforsmallrobot extends LinearOpMode {
                             // do the second position stuff
                             signal = 2;
                         }
-                        else {
+                        else if (recognition.getLabel().equals("circle")){
                             // this means we've seen the third thing (triangle) and should do that stuff
                             // 3 circle
                             signal = 3;
+                        }
+                        else {
+                            signal = 1;
                         }
                     }
 
@@ -237,9 +239,9 @@ public class autonforsmallrobot extends LinearOpMode {
         leftSpin.setPower(0);
         rightSpin.setPower(0);
 
-        if (signal==3){
-            drive (-pow*STPL, -pow*STPL, -pow*STPL, -pow*STPL, tilef*1.2);
-            if(STPL==1) {
+        if (signal==1) {
+            drive (pow*STPL, pow*STPL, pow*STPL, pow*STPL, tilef*1.2);
+            if(STPL==-1) {
                 drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*1.25);
                 arm.setPower(0.3);
                 arm2.setPower(0.3);
@@ -304,23 +306,23 @@ public class autonforsmallrobot extends LinearOpMode {
             rightSpin.setPower(0);
             drive(-pow, -pow, -pow, -pow, 100);
             //move arm down when button is not pressed
+            arm.setPower(0);
+            arm2.setPower(0);
+            sleep(10);
+            drive(-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
+            sleep(10);
+            drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, 1400);
+            sleep(10);
+            drive(-pow, -pow, -pow, -pow, tilef*1.5);
             while(!armTouch.isPressed()){
                 arm.setPower(-0.3);
                 arm2.setPower(-0.3);
             }
-            arm.setPower(0);
-            arm2.setPower(0);
-            sleep(10);
-            drive(-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.75);
-            sleep(10);
-            drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, 1500);
-            sleep(10);
-            drive(pow, pow, pow, pow, tilef*1.5);
         }
-        else if (signal==1){
-            drive (pow*STPL, pow*STPL, pow*STPL, pow*STPL, tilef);
-            if(STPL==-1) {
-                drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*1.3);
+        else if (signal==3){
+            drive (-pow*STPL, -pow*STPL, -pow*STPL, -pow*STPL, tilef*1.2);
+            if(STPL==1) {
+                drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*1.4);
                 arm.setPower(0.3);
                 arm2.setPower(0.3);
                 sleep(low);
@@ -368,8 +370,55 @@ public class autonforsmallrobot extends LinearOpMode {
             }
         }
         else {
-            telemetry.addData("Camera Status", "CAMERAS FAILED");
-            drive(pow * STPL, -pow * STPL, -pow * STPL, pow*STPL, 1.5 * tiles);
+            drive (-pow*STPL, -pow*STPL, -pow*STPL, -pow*STPL, tilef*1.2);
+            if(STPL==1) {
+                drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*1.25);
+                arm.setPower(0.3);
+                arm2.setPower(0.3);
+                sleep(low);
+                arm.setPower(0);
+                arm2.setPower(0);
+                drive(pow, pow, pow, pow, 250);
+                leftSpin.setPower(intakePow*REVERSE);
+                rightSpin.setPower(intakePow*REVERSE);
+                //adjust time
+                sleep(dropTime);
+                leftSpin.setPower(0);
+                rightSpin.setPower(0);
+                drive(-pow, -pow, -pow, -pow, 250);
+                //move arm down when button is not pressed
+                while(!armTouch.isPressed()){
+                    arm.setPower(-0.3);
+                    arm2.setPower(-0.3);
+                    arm.setPower(0);
+                }
+                arm2.setPower(0);
+            }
+            else {
+                drive(pow * STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 0.5);
+                drive(pow, pow, pow, pow, 150);
+                leftSpin.setPower(intakePow * REVERSE);
+                rightSpin.setPower(intakePow * REVERSE);
+                //ajust time
+                sleep(dropTime);
+                leftSpin.setPower(0);
+                rightSpin.setPower(0);
+                arm.setPower(0.3);
+                arm2.setPower(0.3);
+                sleep(low);
+                arm.setPower(0);
+                arm2.setPower(0);
+                drive(-pow, -pow, -pow, -pow, 150);
+                //move arm down when button is not pressed
+                drive(pow * STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 0.9);
+                while (!armTouch.isPressed()) {
+                    arm.setPower(-0.3);
+                    arm2.setPower(-0.3);
+                }
+                arm.setPower(0);
+                arm2.setPower(0);
+            }
+
         }
 
 
