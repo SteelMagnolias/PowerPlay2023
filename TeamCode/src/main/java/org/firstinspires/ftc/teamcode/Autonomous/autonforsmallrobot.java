@@ -61,8 +61,8 @@ public class autonforsmallrobot extends LinearOpMode {
     private int one;
     private int two;
     private int three;
-    private int low = 2100
-            // time it tales for arm at pow 0.3 to raise to height of low pole
+    private int low = 2100;
+    // time it tales for arm at pow 0.3 to raise to height of low pole
     private int STPL;
     //starting place
     private int dropTime = 5000;
