@@ -61,11 +61,12 @@ public class autonforsmallrobot extends LinearOpMode {
     private int one;
     private int two;
     private int three;
-    private int low = 2100;
-    private int med = 2;
-    private int high = 3;
+    private int low = 2100
+            // time it tales for arm at pow 0.3 to raise to height of low pole
     private int STPL;
+    //starting place
     private int dropTime = 5000;
+    //time it takes to release cone definitetly way extra but if something goes wrong we need ti to go longer so.d
 
     private static final String TFOD_MODEL_ASSET = "PowerPlayCustomV2.tflite";
     // this is where we can find the preset models
@@ -104,8 +105,11 @@ public class autonforsmallrobot extends LinearOpMode {
 
     double pow= 0.3;
     double intakePow= 1;
+    //power for the intake
     double tilef = 1400;
+    //time it takes to go forward or backwards a tile
     double tiles = 2600;
+    //time it takes to stafe a tile
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -126,7 +130,6 @@ public class autonforsmallrobot extends LinearOpMode {
         if (armTouch.isPressed()) {
             // A2 F5
             STPL=1;
-            //starting place
             //use camera 1
             webcamName = webcamName1;
         }
@@ -231,7 +234,6 @@ public class autonforsmallrobot extends LinearOpMode {
 
         waitForStart();
 
-
         while (!armTouch.isPressed()){
             arm.setPower(-0.3);
             arm2.setPower(-0.3);
@@ -239,6 +241,7 @@ public class autonforsmallrobot extends LinearOpMode {
         arm.setPower(0);
         arm2.setPower(0);
         //arm goes down until arm button is pressed
+
         while (!intakeTouch.isPressed()){
             leftSpin.setPower(intakePow);
             rightSpin.setPower(intakePow);
@@ -246,6 +249,7 @@ public class autonforsmallrobot extends LinearOpMode {
         leftSpin.setPower(0);
         rightSpin.setPower(0);
         //intake spins until cone is picked up
+
         if ((signal==1 && STPL==1) || (signal==3 && STPL==-1)) {
             //signal 1 staring a2 or f5 or signal 3 startin a5 or f2
             drive (pow, pow, pow, pow, tilef*1.2);
@@ -343,54 +347,9 @@ public class autonforsmallrobot extends LinearOpMode {
             arm2.setPower(0);
             //lower arm
             }
-        else {
-            //else is 3 but both stpls
-            drive (-pow*STPL, -pow*STPL, -pow*STPL, -pow*STPL, tilef*1.2);
-            if(STPL==1) {
-                drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*1.25);
-                arm.setPower(0.3);
-                arm2.setPower(0.3);
-                sleep(low);
-                arm.setPower(0);
-                arm2.setPower(0);
-                drive(pow, pow, pow, pow, 250);
-                leftSpin.setPower(intakePow*REVERSE);
-                rightSpin.setPower(intakePow*REVERSE);
-                sleep(dropTime);
-                leftSpin.setPower(0);
-                rightSpin.setPower(0);
-                drive(-pow, -pow, -pow, -pow, 250);
-                while(!armTouch.isPressed()){
-                    arm.setPower(-0.3);
-                    arm2.setPower(-0.3);
-                    arm.setPower(0);
-                }
-                arm2.setPower(0);
-            }
-            else {
-                drive(pow * STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 0.5);
-                drive(pow, pow, pow, pow, 150);
-                leftSpin.setPower(intakePow * REVERSE);
-                rightSpin.setPower(intakePow * REVERSE);
-                sleep(dropTime);
-                leftSpin.setPower(0);
-                rightSpin.setPower(0);
-                arm.setPower(0.3);
-                arm2.setPower(0.3);
-                sleep(low);
-                arm.setPower(0);
-                arm2.setPower(0);
-                drive(-pow, -pow, -pow, -pow, 150);
-                drive(pow * STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 0.9);
-                while (!armTouch.isPressed()) {
-                    arm.setPower(-0.3);
-                    arm2.setPower(-0.3);
-                }
-                arm.setPower(0);
-                arm2.setPower(0);
-            }
-        }
     }
+
+
     public void drive (double lf, double rf, double lb, double rb, double time){
         leftFront.setPower(lf);
         rightFront.setPower(rf);
