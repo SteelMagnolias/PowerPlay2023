@@ -61,7 +61,7 @@ public class autonforsmallrobot extends LinearOpMode {
     private int one;
     private int two;
     private int three;
-    private int low = 2100;
+    private int low = 1800;
     // time it tales for arm at pow 0.3 to raise to height of low pole
     private int STPL;
     //starting place
@@ -165,7 +165,6 @@ public class autonforsmallrobot extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             // while we are still running (time hasn't run out!)
 
-
             if (tfod != null) {
                 // tensor flow is still running.
 
@@ -252,11 +251,17 @@ public class autonforsmallrobot extends LinearOpMode {
 
         if ((signal==1 && STPL==1) || (signal==3 && STPL==-1)) {
             //signal 1 staring a2 or f5 or signal 3 startin a5 or f2
-            drive (pow, pow, pow, pow, tilef*1.2);
+            if (STPL==-1){
+                drive (-pow, pow, -pow, pow, 25);
+                //turn so drift is acounted for only problem here idk why
+            }
+            else {
+            }
+            drive (pow, pow, pow, pow, tilef*0.975);
             //drive forward to line up with park zone
-            drive(pow*STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 0.5);
+            drive(pow*STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 0.55);
             //strafe to line up with ground junction
-            drive(pow, pow, pow, pow, 150);
+            drive(pow, pow, pow, pow, 100);
             //get closer to ground junction
             leftSpin.setPower(intakePow * REVERSE);
             rightSpin.setPower(intakePow * REVERSE);
@@ -270,7 +275,13 @@ public class autonforsmallrobot extends LinearOpMode {
             arm.setPower(0);
             arm2.setPower(0);
             //raise arm
-            drive(-pow, -pow, -pow, -pow, 150);
+            drive(pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, 100);
+            //bump into place side
+            drive(-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, 200);
+            //bump other side
+            drive(pow, pow, pow, pow, 100);
+            //bump into place
+            drive(-pow, -pow, -pow, -pow, 225);
             //back up so we dont hit cone off
             drive(pow * STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 0.9);
             //move to middle of park zone
@@ -284,7 +295,7 @@ public class autonforsmallrobot extends LinearOpMode {
         }
         else if (signal==2){
             //park in signal 2 height of pole doesn't change on each side
-            drive(pow*STPL,-pow*STPL,-pow*STPL,pow*STPL,tiles*0.6);
+            drive(pow*STPL,-pow*STPL,-pow*STPL,pow*STPL,tiles*0.55);
             //strafe to line up with low pole
             arm.setPower(0.3);
             arm2.setPower(0.3);
@@ -292,7 +303,7 @@ public class autonforsmallrobot extends LinearOpMode {
             arm.setPower(0);
             arm2.setPower(0);
             //raise arm
-            drive(pow, pow, pow, pow, 100);
+            drive(pow, pow, pow, pow, 150);
             //get closer to pole
             leftSpin.setPower(intakePow*REVERSE);
             rightSpin.setPower(intakePow*REVERSE);
@@ -300,11 +311,11 @@ public class autonforsmallrobot extends LinearOpMode {
             leftSpin.setPower(0);
             rightSpin.setPower(0);
             //drop cone
-            drive(-pow, -pow, -pow, -pow, 100);
+            drive(-pow, -pow, -pow, -pow, 150);
             //back away from pole
-            drive(-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
+            drive(-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.3);
             //strafe twords wall
-            drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, 1400);
+            drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, 1150);
             //turn so back is facing signal cone
             drive(-pow, -pow, -pow, -pow, tilef*1.5);
             //back up till in park zone
@@ -317,6 +328,43 @@ public class autonforsmallrobot extends LinearOpMode {
             //lower arm till all the way down
         }
         else if ((signal==3 && STPL==1) || (signal==1 && STPL==-1)){
+            //signal 3 stpl is 1 a2 or f5 or signal 1 and stpl -1 a5  or f2
+            if (STPL==-1){
+                drive (pow, -pow, pow, -pow, 100);
+                //turn so drift is acounted nvm also prob here
+            }
+            else {
+            }
+            drive (-pow, -pow, -pow, -pow, tilef);
+            //back up to be in line with park zone
+            drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*1.4);
+            //strafe to line up with low pole
+            arm.setPower(0.3);
+            arm2.setPower(0.3);
+            sleep(low);
+            arm.setPower(0);
+            arm2.setPower(0);
+            //raise arm
+            drive(pow, pow, pow, pow, 200);
+            //get closer to pole
+            leftSpin.setPower(intakePow*REVERSE);
+            rightSpin.setPower(intakePow*REVERSE);
+            //adjust time
+            sleep(dropTime);
+            leftSpin.setPower(0);
+            rightSpin.setPower(0);
+            //drop cone
+            drive(-pow, -pow, -pow, -pow, 200);
+            //back away from pole
+            while(!armTouch.isPressed()){
+                arm.setPower(-0.3);
+                arm2.setPower(-0.3);
+            }
+            arm.setPower(0);
+            arm2.setPower(0);
+            //lower arm
+            }
+        else {
             //signal 3 stpl is 1 a2 or f5 or signal 1 and stpl -1 a5  or f2
             drive (-pow, -pow, -pow, -pow, tilef);
             //back up to be in line with park zone
@@ -346,7 +394,7 @@ public class autonforsmallrobot extends LinearOpMode {
             arm.setPower(0);
             arm2.setPower(0);
             //lower arm
-            }
+        }
     }
 
 
