@@ -259,7 +259,7 @@ public class autonforsmallrobot extends LinearOpMode {
             }
             drive (pow, pow, pow, pow, tilef*0.975);
             //drive forward to line up with park zone
-            drive(pow*STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 0.55);
+            drive(pow*STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 0.5);
             //strafe to line up with ground junction
             drive(pow, pow, pow, pow, 100);
             //get closer to ground junction
@@ -337,7 +337,7 @@ public class autonforsmallrobot extends LinearOpMode {
             }
             drive (-pow, -pow, -pow, -pow, tilef);
             //back up to be in line with park zone
-            drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*1.4);
+            drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*1.3);
             //strafe to line up with low pole
             arm.setPower(0.3);
             arm2.setPower(0.3);
