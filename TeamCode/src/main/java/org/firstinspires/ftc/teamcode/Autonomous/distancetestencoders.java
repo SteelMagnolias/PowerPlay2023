@@ -63,7 +63,6 @@ public class basic_encoder extends LinearOpMode {
         leftBack.setTargetPosition(leftBackPos);
         rightBack.setTargetPosition(rightBackPos);
 
-
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
