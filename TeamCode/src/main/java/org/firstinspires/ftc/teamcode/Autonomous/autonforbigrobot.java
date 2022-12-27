@@ -254,11 +254,17 @@ public class autonforbigrobot extends LinearOpMode {
             drive (-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
             //move to line up with gap
             drive (-pow, -pow, -pow, -pow, tilef);
+            //line up with parking zone
+            drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
+            //move to middle
         }
         else if ((signal==3 && STPL==1) || (signal==1 && STPL==-1)){
             drive (-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
             //move to line up with gap
             drive (-pow, -pow, -pow, -pow, tilef*2);
+            //line up with parking zone
+            drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
+            //move to middle
         }
     }
 
