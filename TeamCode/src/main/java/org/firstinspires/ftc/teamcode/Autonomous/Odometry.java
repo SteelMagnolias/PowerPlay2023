@@ -29,6 +29,10 @@ public class Odometry extends LinearOpMode {
     // describing the robot's position {x, y, angle}
     int[] pose = {0, 0, 0};
 
+    int changeX = 0; // change in x
+    int changeY = 0; // change in y
+    int changeTheta = 0; // change in angle
+
     @Override
     public void runOpMode() {
         // this is what happens in the autonomous code.
@@ -41,9 +45,12 @@ public class Odometry extends LinearOpMode {
         rightEncoder = rightFront; // i could access the motor, and try to remember which is which encoder, but this is easier
         backEncoder = rightBack;
 
-        waitForStart();
+        // reset encoders
+        leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // update pose
+        waitForStart();
 
         // change in x
 
@@ -52,5 +59,7 @@ public class Odometry extends LinearOpMode {
         // change in angle
 
         // pose = old data + new data
+
+        // update pose
     }
 }
