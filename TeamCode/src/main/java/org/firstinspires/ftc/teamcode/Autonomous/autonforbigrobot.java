@@ -221,11 +221,10 @@ public class autonforbigrobot extends LinearOpMode {
         waitForStart();
 
         while (!armTouch.isPressed()){
-            lift(10);
+            lift(-pow,10);
         }
-        lift(0);
         //arm goes down until arm button is pressed
-       claw();
+       claw(clawPow);
         //claw picks up cone
         if (STPL==-1){
             drive (-pow, pow, -pow, pow, 25);
@@ -237,18 +236,17 @@ public class autonforbigrobot extends LinearOpMode {
         //drive forward to line up with park zone
         drive(pow*STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 1.75);
         //strafe to line up with ground junction
-        lift (high);
+        lift (pow, high);
         //raise arm
         drive(pow, pow, pow, pow, 100);
         //get closer to ground junction
-        claw();
+        claw(-clawPow);
         //drop cone
         drive (-pow, -pow, -pow, -pow, 100);
         //move to middle of park zone
         while (!armTouch.isPressed()){
-            lift(10);
+            lift(-pow,10);
         }
-        lift(0);
         //lower arm
         if (signal==2){
             drive (-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
@@ -275,18 +273,18 @@ public class autonforbigrobot extends LinearOpMode {
     if it doesnt read anything it still puts a cone on a high pole and parks in the middlemost zone.
      */
 
-    public void claw() {
-        rightClaw.setPower (clawPow);
-        leftClaw.setPower (clawPow);
+    public void claw(double COO) {
+        rightClaw.setPower (COO);
+        leftClaw.setPower (COO);
         sleep ((int) clawClose);
         rightClaw.setPower(0);
         leftClaw.setPower(0);
         sleep (10);
     }
 
-    public void lift(double time) {
-        arm.setPower(pow);
-        arm2.setPower(pow);
+    public void lift(double LP, double time) {
+        arm.setPower(LP);
+        arm2.setPower(LP);
         sleep ((int) time);
         arm.setPower(0);
         arm2.setPower(0);
