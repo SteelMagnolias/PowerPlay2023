@@ -12,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
+//https://gm0.org/en/latest/docs/software/concepts/odometry.html
+
 @Autonomous(name = "Odometry", group = "IterativeOpMode")
 
 public class Odometry extends LinearOpMode {
@@ -29,9 +31,19 @@ public class Odometry extends LinearOpMode {
     // describing the robot's position {x, y, angle}
     int[] pose = {0, 0, 0};
 
+    int prevLeft = 0; // previous left encoder position
+    int prevRight = 0; // previous right encoder position
+    int prevBack = 0; // previous back encoder position
+
+    int changeLeft = 0; // change in left encoder
+    int changeRight = 0; // change in right encoder
+    int changeBack = 0; // change in back encoder
+
     int changeX = 0; // change in x
     int changeY = 0; // change in y
-    int changeTheta = 0; // change in angle
+    int theta = 0; // what angle is robot at?
+
+    int trackWidth = 0; // this is the distance between the two encoders in inches?
 
     @Override
     public void runOpMode() {
@@ -50,13 +62,24 @@ public class Odometry extends LinearOpMode {
         rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        // robot did not move, so no change
+        prevLeft = 0;
+        prevRight = 0;
+        prevBack = 0;
+
         waitForStart();
+
+        // find change in each encoder
+        changeLeft = leftEncoder.getCurrentPosition() - prevLeft;
+        changeRight = rightEncoder.getCurrentPosition() - prevRight;
+        changeBack = backEncoder.getCurrentPosition() - prevBack;
 
         // change in x
 
         // change in y
 
-        // change in angle
+        // angle of robot
+        theta = (changeLeft - changeRight) / trackWidth;
 
         // pose = old data + new data
 
