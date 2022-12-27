@@ -22,6 +22,13 @@ public class Odometry extends LinearOpMode {
     private DcMotor rightFront;
     // wheels lol
 
+    private DcMotor leftEncoder;
+    private DcMotor rightEncoder;
+    private DcMotor backEncoder;
+
+    // describing the robot's position {x, y, angle}
+    int[] pose = {0, 0, 0};
+
     @Override
     public void runOpMode() {
         // this is what happens in the autonomous code.
@@ -30,6 +37,20 @@ public class Odometry extends LinearOpMode {
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
 
+        leftEncoder = leftFront; // basically, we just need to tie each of these to a port, which happens to be with a motor.
+        rightEncoder = rightFront; // i could access the motor, and try to remember which is which encoder, but this is easier
+        backEncoder = rightBack;
+
         waitForStart();
+
+        // update pose
+
+        // change in x
+
+        // change in y
+
+        // change in angle
+
+        // pose = old data + new data
     }
 }
