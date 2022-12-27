@@ -250,7 +250,7 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
         }
         //arm goes down until arm button is pressed
         while (!intakeTouch.isPressed()){
-            intake( intakePow, intakePow, 10);
+            intake(10);
         }
         //intake spins until cone is picked up
 
@@ -268,7 +268,7 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
             //strafe to line up with ground junction
             drive(4, 4, 4, 4, pow);
             //get closer to ground junction
-            intake(intakePow, intakePow, dropTime);
+            intake(dropTime);
             //drop cone
             lift(pow, pow, low);
             //raise arm
@@ -297,7 +297,7 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
             drive(4, 4, 4, 4, pow);
             //get closer to pole
             //change value
-            intake(intakePow, intakePow,dropTime);
+            intake(dropTime);
             //drop cone
             drive(-4, -4, -4, -4, pow);
             //back away from pole
@@ -331,9 +331,9 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
             drive(4, 4, 4, 4, pow);
             //get closer to pole
             //change value
-            intake(intakePow, intakePow, dropTime);
+            intake(dropTime);
             //drop cone
-            drive(-4,-4,-4,-4, pow):
+            drive(-4,-4,-4,-4, pow);
             //back away from pole
             while (!armTouch.isPressed()){
                 lift(pow, pow, 10);
@@ -342,23 +342,23 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
         }
         else {
             //park in signal 2 height of pole doesn't change on each side
-            drive(tilef*0.5*STPL, -tilef*0.5*STPL, -tilef*0.5*STPL, tilef*0.5*STPL, pow);
+            drive(tilef * 0.5 * STPL, -tilef * 0.5 * STPL, -tilef * 0.5 * STPL, tilef * 0.5 * STPL, pow);
             //strafe to line up with low pole
-            lift(pow,pow, low);
+            lift(pow, pow, low);
             //raise arm
             drive(4, 4, 4, 4, pow);
             //get closer to pole
             //change value
-            intake(intakePow, intakePow,dropTime);
+            intake(dropTime);
             //drop cone
             drive(-4, -4, -4, -4, pow);
             //back away from pole
-            drive(-tilef*0.3*STPL, tilef*0.3*STPL, tilef*0.3*STPL, -tilef*0.3*STPL, pow);
+            drive(-tilef * 0.3 * STPL, tilef * 0.3 * STPL, tilef * 0.3 * STPL, -tilef * 0.3 * STPL, pow);
             //strafe twords wall
-            drive(-35*STPL, 35*STPL, -35*STPL, 35*STPL, pow);
+            drive(-35 * STPL, 35 * STPL, -35 * STPL, 35 * STPL, pow);
             //change value
             //turn so back is facing signal cone
-            drive(-tilef*1.5, -tilef*1.5, -tilef*1.5, -tilef*1.5, pow);
+            drive(-tilef * 1.5, -tilef * 1.5, -tilef * 1.5, -tilef * 1.5, pow);
             //back up till in park zone
             while (!armTouch.isPressed()) {
                 lift(pow, pow, 10);
@@ -367,9 +367,9 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
         }
     }
 
-    public void intake(double itl, double itr, double time) {
-        leftSpin.setPower (itl);
-        rightSpin.setPower (itr);
+    public void intake(double time) {
+        leftSpin.setPower (intakePow);
+        rightSpin.setPower (intakePow);
         sleep ((int) time);
         leftSpin.setPower(0);
         rightSpin.setPower(0);
