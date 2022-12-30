@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name = "basic_encoder", group="Iterative OpMode")
-public class basic_encoder extends LinearOpMode {
+@Autonomous(name = "distancetestencoders", group="Iterative OpMode")
+public class distancetestencoders extends LinearOpMode {
 
     private DcMotor leftFront;
     private DcMotor rightFront;

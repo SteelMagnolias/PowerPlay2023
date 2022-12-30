@@ -231,169 +231,78 @@ public class autonforsmallrobot extends LinearOpMode {
         waitForStart();
 
         while (!armTouch.isPressed()){
-            arm.setPower(-0.3);
-            arm2.setPower(-0.3);
+            lift (-pow, 10);
         }
-        arm.setPower(0);
-        arm2.setPower(0);
         //arm goes down until arm button is pressed
-
         while (!intakeTouch.isPressed()){
-            leftSpin.setPower(intakePow);
-            rightSpin.setPower(intakePow);
+            intake(pow, 10);
         }
-        leftSpin.setPower(0);
-        rightSpin.setPower(0);
-        //intake spins until cone is picked up
+        //intake untill cone is picked up
 
-        if ((signal==1 && STPL==1) || (signal==3 && STPL==-1)) {
-            //signal 1 staring a2 or f5 or signal 3 startin a5 or f2
-            if (STPL==-1){
-                drive (-pow, pow, -pow, pow, 25);
-                //turn so drift is acounted for only problem here idk why
-            }
-            else {
-            }
-            drive (pow, pow, pow, pow, tilef*0.975);
-            //drive forward to line up with park zone
-            drive(pow*STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 0.5);
-            //strafe to line up with ground junction
-            drive(pow, pow, pow, pow, 100);
-            //get closer to ground junction
-            leftSpin.setPower(intakePow * REVERSE);
-            rightSpin.setPower(intakePow * REVERSE);
-            sleep(dropTime);
-            leftSpin.setPower(0);
-            rightSpin.setPower(0);
-            //drop cone
-            arm.setPower(0.3);
-            arm2.setPower(0.3);
-            sleep(low);
-            arm.setPower(0);
-            arm2.setPower(0);
-            //raise arm
-            drive(pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, 100);
-            //bump into place side
-            drive(-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, 200);
-            //bump other side
-            drive(pow, pow, pow, pow, 100);
-            //bump into place
-            drive(-pow, -pow, -pow, -pow, 225);
-            //back up so we dont hit cone off
-            drive(pow * STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 0.9);
-            //move to middle of park zone
-            while (!armTouch.isPressed()) {
-                arm.setPower(-0.3);
-                arm2.setPower(-0.3);
-            }
-            arm.setPower(0);
-            arm2.setPower(0);
-            //lower arm
+        if (STPL==-1){
+            drive (-pow, pow, -pow, pow, 25);
+            //turn so drift is acounted
         }
-        else if (signal==2){
-            //park in signal 2 height of pole doesn't change on each side
-            drive(pow*STPL,-pow*STPL,-pow*STPL,pow*STPL,tiles*0.55);
-            //strafe to line up with low pole
-            arm.setPower(0.3);
-            arm2.setPower(0.3);
-            sleep(low);
-            arm.setPower(0);
-            arm2.setPower(0);
-            //raise arm
-            drive(pow, pow, pow, pow, 150);
-            //get closer to pole
-            leftSpin.setPower(intakePow*REVERSE);
-            rightSpin.setPower(intakePow*REVERSE);
-            sleep(dropTime);
-            leftSpin.setPower(0);
-            rightSpin.setPower(0);
-            //drop cone
-            drive(-pow, -pow, -pow, -pow, 150);
-            //back away from pole
-            drive(-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.3);
-            //strafe twords wall
-            drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, 1150);
-            //turn so back is facing signal cone
-            drive(-pow, -pow, -pow, -pow, tilef*1.5);
-            //back up till in park zone
-            while(!armTouch.isPressed()){
-                arm.setPower(-0.3);
-                arm2.setPower(-0.3);
-            }
-            arm.setPower(0);
-            arm2.setPower(0);
-            //lower arm till all the way down
-        }
-        else if ((signal==3 && STPL==1) || (signal==1 && STPL==-1)){
-            //signal 3 stpl is 1 a2 or f5 or signal 1 and stpl -1 a5  or f2
-            if (STPL==-1){
-                drive (pow, -pow, pow, -pow, 100);
-                //turn so drift is acounted nvm also prob here
-            }
-            else {
-            }
-            drive (-pow, -pow, -pow, -pow, tilef);
-            //back up to be in line with park zone
-            drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*1.3);
-            //strafe to line up with low pole
-            arm.setPower(0.3);
-            arm2.setPower(0.3);
-            sleep(low);
-            arm.setPower(0);
-            arm2.setPower(0);
-            //raise arm
-            drive(pow, pow, pow, pow, 200);
-            //get closer to pole
-            leftSpin.setPower(intakePow*REVERSE);
-            rightSpin.setPower(intakePow*REVERSE);
-            //adjust time
-            sleep(dropTime);
-            leftSpin.setPower(0);
-            rightSpin.setPower(0);
-            //drop cone
-            drive(-pow, -pow, -pow, -pow, 200);
-            //back away from pole
-            while(!armTouch.isPressed()){
-                arm.setPower(-0.3);
-                arm2.setPower(-0.3);
-            }
-            arm.setPower(0);
-            arm2.setPower(0);
-            //lower arm
-            }
         else {
-            //signal 3 stpl is 1 a2 or f5 or signal 1 and stpl -1 a5  or f2
-            drive (-pow, -pow, -pow, -pow, tilef);
-            //back up to be in line with park zone
-            drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*1.4);
-            //strafe to line up with low pole
-            arm.setPower(0.3);
-            arm2.setPower(0.3);
-            sleep(low);
-            arm.setPower(0);
-            arm2.setPower(0);
-            //raise arm
-            drive(pow, pow, pow, pow, 150);
-            //get closer to pole
-            leftSpin.setPower(intakePow*REVERSE);
-            rightSpin.setPower(intakePow*REVERSE);
-            //adjust time
-            sleep(dropTime);
-            leftSpin.setPower(0);
-            rightSpin.setPower(0);
-            //drop cone
-            drive(-pow, -pow, -pow, -pow, 200);
-            //back away from pole
-            while(!armTouch.isPressed()){
-                arm.setPower(-0.3);
-                arm2.setPower(-0.3);
-            }
-            arm.setPower(0);
-            arm2.setPower(0);
-            //lower arm
+        }
+        drive(-pow, -pow, -pow, -pow, tilef);
+        //drive forward to line up with high pole
+        drive(pow*STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 1.75);
+        //strafe to line up with high pole
+        lift(pow, low);
+        //raise arm
+        drive(pow, pow, pow, pow, 200);
+        //get closer to pole
+        intake(-pow, dropTime);
+        //drop cone
+        drive(-pow, -pow, -pow, -pow, 200);
+        //move to middle of park zone
+        while (!armTouch.isPressed()){
+            lift(-pow,10);
+        }
+        //lower arm
+        if (signal==2){
+            drive (-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
+            //move to line up with gap
+            drive (pow, pow, pow, pow, tilef);
+            //line up with parking zone
+            drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
+            //move to middle
+        }
+        else if ((signal==3 && STPL==-1) || (signal==1 && STPL==1)){
+            drive (-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
+            //move to line up with gap
+            drive (pow, pow, pow, pow, tilef*2);
+            //line up with parking zone
+            drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
+            //move to middle
         }
     }
 
+    /*
+    move into parking zone closest to the middle and drop cone on high pole
+    if not in the correct zone move over to between poles and back up
+    move back into middle of zone
+    if it doesnt read anything it still puts a cone on a high pole and parks in the middlemost zone.
+     */
+
+    public void intake(double IP, double time) {
+        rightintake.setPower (IP);
+        leftintake.setPower (IP);
+        sleep ((int) time);
+        rightintake.setPower(0);
+        leftintake.setPower(0);
+        sleep (10);
+    }
+
+    public void lift(double AP, double time) {
+        arm.setPower(AP);
+        arm2.setPower(AP);
+        sleep ((int) time);
+        arm.setPower(0);
+        arm2.setPower(0);
+        sleep (10);
+    }
 
     public void drive (double lf, double rf, double lb, double rb, double time){
         leftFront.setPower(lf);

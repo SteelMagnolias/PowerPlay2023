@@ -233,13 +233,13 @@ public class autonforbigrobot extends LinearOpMode {
         else {
         }
         drive(pow, pow, pow, pow, tilef);
-        //drive forward to line up with park zone
+        //drive forward to line up with high pole
         drive(pow*STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 1.75);
-        //strafe to line up with ground junction
+        //strafe to line up with high pole
         lift (pow, high);
         //raise arm
         drive(pow, pow, pow, pow, 100);
-        //get closer to ground junction
+        //get closer to pole
         claw(-clawPow);
         //drop cone
         drive (-pow, -pow, -pow, -pow, 100);
@@ -273,18 +273,18 @@ public class autonforbigrobot extends LinearOpMode {
     if it doesnt read anything it still puts a cone on a high pole and parks in the middlemost zone.
      */
 
-    public void claw(double COO) {
-        rightClaw.setPower (COO);
-        leftClaw.setPower (COO);
+    public void claw(double IP) {
+        rightClaw.setPower (IP);
+        leftClaw.setPower (IP);
         sleep ((int) clawClose);
         rightClaw.setPower(0);
         leftClaw.setPower(0);
         sleep (10);
     }
 
-    public void lift(double LP, double time) {
-        arm.setPower(LP);
-        arm2.setPower(LP);
+    public void lift(double AP, double time) {
+        arm.setPower(AP);
+        arm2.setPower(AP);
         sleep ((int) time);
         arm.setPower(0);
         arm2.setPower(0);

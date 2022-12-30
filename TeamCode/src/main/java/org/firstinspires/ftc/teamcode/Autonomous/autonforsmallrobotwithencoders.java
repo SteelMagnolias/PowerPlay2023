@@ -246,125 +246,48 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
         waitForStart();
 
         while (!armTouch.isPressed()) {
-            lift( -pow, -pow,10);
+            lift( -pow, 10);
         }
         //arm goes down until arm button is pressed
         while (!intakeTouch.isPressed()){
             intake(10);
         }
         //intake spins until cone is picked up
-
-        if ((signal==1 && STPL==1) || (signal==3 && STPL==-1)) {
-            //signal 1 staring a2 or f5 or signal 3 startin a5 or f2
-            if (STPL==-1){
-                drive(-10, 10, -10, 10, pow);
-                //turn so drift is acounted
-            }
-            else {
-            }
-            drive(tilef, tilef, tilef, tilef, pow);
-            //drive forward to line up with park zone
-            drive(tiles*0.5*STPL, -tiles*0.5*STPL, -tiles*0.5*STPL, tiles*0.5*STPL, pow);
-            //strafe to line up with ground junction
-            drive(4, 4, 4, 4, pow);
-            //get closer to ground junction
-            intake(dropTime);
-            //drop cone
-            lift(pow, pow, low);
-            //raise arm
-            drive(1*STPL, -1*STPL, -1*STPL, 1*STPL,pow);
-            //bump into place side
-            drive(-1*STPL, 1*STPL, 1*STPL, -1*STPL,pow);
-            //bump other side
-            drive(1, 1, 1, 1, pow);
-            //bump into place
-            drive(-5, -5, -5, -5, pow);
-            //back up so we dont hit cone off
-            //change these distances
-            drive(tilef*0.5*STPL, -tilef*0.5*STPL, -tilef*0.5*STPL, tilef*0.5*STPL, pow);
-            //move to middle of park zone
-           while (!armTouch.isPressed()){
-               lift(-pow, -pow, 10);
-           }
-            //lower arm
-        }
-        else if (signal==2){
-            //park in signal 2 height of pole doesn't change on each side
-            drive(tilef*0.5*STPL, -tilef*0.5*STPL, -tilef*0.5*STPL, tilef*0.5*STPL, pow);
-            //strafe to line up with low pole
-            lift(pow,pow, low);
-            //raise arm
-            drive(4, 4, 4, 4, pow);
-            //get closer to pole
+        if (STPL==-1){
+            drive(30, -30,30, -30, pow);
+            //turn so drift is acounted
             //change value
-            intake(dropTime);
-            //drop cone
-            drive(-4, -4, -4, -4, pow);
-            //back away from pole
-            drive(-tilef*0.3*STPL, tilef*0.3*STPL, tilef*0.3*STPL, -tilef*0.3*STPL, pow);
-            //strafe twords wall
-            drive(-35*STPL, 35*STPL, -35*STPL, 35*STPL, pow);
-            //change value
-            //turn so back is facing signal cone
-            drive(-tilef*1.5, -tilef*1.5, -tilef*1.5, -tilef*1.5, pow);
-            //back up till in park zone
-            while (!armTouch.isPressed()) {
-                lift(pow, pow, 10);
-            }
-            //lower arm till all the way down
-        }
-        else if ((signal==3 && STPL==1) || (signal==1 && STPL==-1)){
-            //signal 3 stpl is 1 a2 or f5 or signal 1 and stpl -1 a5  or f2
-            if (STPL==-1){
-                drive(30, -30,30, -30, pow);
-                //turn so drift is acounted
-                //change value
-            }
-            else {
-            }
-            drive(-tilef,-tilef,-tilef,-tilef,pow);
-            //back up to be in line with park zone
-            drive(tiles*STPL, -tiles*STPL, -tiles*STPL, tiles*STPL, pow);
-            //strafe to line up with low pole
-            lift(pow, pow, low);
-            //raise arm
-            drive(4, 4, 4, 4, pow);
-            //get closer to pole
-            //change value
-            intake(dropTime);
-            //drop cone
-            drive(-4,-4,-4,-4, pow);
-            //back away from pole
-            while (!armTouch.isPressed()){
-                lift(pow, pow, 10);
-            }
-            //lower arm
         }
         else {
-            //park in signal 2 height of pole doesn't change on each side
-            drive(tilef * 0.5 * STPL, -tilef * 0.5 * STPL, -tilef * 0.5 * STPL, tilef * 0.5 * STPL, pow);
-            //strafe to line up with low pole
-            lift(pow, pow, low);
-            //raise arm
-            drive(4, 4, 4, 4, pow);
-            //get closer to pole
-            //change value
-            intake(dropTime);
-            //drop cone
-            drive(-4, -4, -4, -4, pow);
-            //back away from pole
-            drive(-tilef * 0.3 * STPL, tilef * 0.3 * STPL, tilef * 0.3 * STPL, -tilef * 0.3 * STPL, pow);
-            //strafe twords wall
-            drive(-35 * STPL, 35 * STPL, -35 * STPL, 35 * STPL, pow);
-            //change value
-            //turn so back is facing signal cone
-            drive(-tilef * 1.5, -tilef * 1.5, -tilef * 1.5, -tilef * 1.5, pow);
-            //back up till in park zone
-            while (!armTouch.isPressed()) {
-                lift(pow, pow, 10);
-            }
-            //lower arm till all the way down
         }
+        drive(-tilef,-tilef,-tilef,-tilef,pow);
+        //back up to be in line with park zone
+        drive(tiles*STPL, -tiles*STPL, -tiles*STPL, tiles*STPL, pow);
+        //strafe to line up with low pole
+        lift(pow, low);
+        //raise arm
+        drive(4, 4, 4, 4, pow);
+        //get closer to pole
+        //change value
+        intake(dropTime);
+        //drop cone
+        drive(-4,-4,-4,-4, pow);
+        //back away from pole
+        while (!armTouch.isPressed()){
+            lift(pow, 10);
+        }
+        //lower arm
+
+        if ((signal==1 && STPL==1) || (signal==3 && STPL==-1)) {
+            drive(tiles*STPL, -tiles*STPL, -tiles*STPL, tiles*STPL, pow);
+            drive(tilef*2,tilef*2,tilef*2,tilef*2,pow);
+        }
+        else if (signal==2){
+
+        }
+
+
+
     }
 
     public void intake(double time) {
@@ -376,9 +299,9 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
         sleep (10);
     }
 
-    public void lift(double ap, double ap2, double time) {
+    public void lift(double ap, double time) {
         arm.setPower(ap);
-        arm2.setPower(ap2);
+        arm2.setPower(ap);
         sleep ((int) time);
         arm.setPower(0);
         arm2.setPower(0);
