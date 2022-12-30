@@ -58,7 +58,8 @@ public class autonforsmallrobot extends LinearOpMode {
     private int FORWARD;
     private int STRAFE;
     private int low = 1800;
-    // time it tales for arm at pow 0.3 to raise to height of low pole
+    private int med = 300;
+    // time it tales for arm at pow 0.3 to raise to height of the poles pole
     private int STPL;
     //starting place
     private int dropTime = 5000;
@@ -249,7 +250,7 @@ public class autonforsmallrobot extends LinearOpMode {
         //drive forward to line up with high pole
         drive(pow*STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 1.75);
         //strafe to line up with high pole
-        lift(pow, low);
+        lift(pow, med);
         //raise arm
         drive(pow, pow, pow, pow, 200);
         //get closer to pole

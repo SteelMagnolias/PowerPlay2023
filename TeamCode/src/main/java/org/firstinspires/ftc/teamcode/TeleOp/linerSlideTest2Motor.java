@@ -26,7 +26,7 @@ public class linerSlideTest2Motor extends OpMode {
             motor.setPower(0.5);
             motor2.setPower(0.5);
         }
-        else if (leftY1 <= 0.1) {
+        else if (leftY1 <= -0.1) {
             // down
             motor.setPower(-0.5);
             motor2.setPower(-0.5);
