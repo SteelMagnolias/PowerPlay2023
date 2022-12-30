@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name = "linearSlideTest2Motor", group = "Iterative Opmode")
-public class linearSlideTest2Motor extends OpMode {
+public class linerSlideTest2Motor extends OpMode {
 
     private DcMotor motor;
     private DcMotor motor2;
