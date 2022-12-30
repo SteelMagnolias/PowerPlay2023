@@ -280,10 +280,19 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
 
         if ((signal==1 && STPL==1) || (signal==3 && STPL==-1)) {
             drive(tiles*STPL, -tiles*STPL, -tiles*STPL, tiles*STPL, pow);
+            //move in line with gap
             drive(tilef*2,tilef*2,tilef*2,tilef*2,pow);
+            //get in park zone
+            drive(-tiles*STPL, tiles*STPL, tiles*STPL, -tiles*STPL, pow);
+            //move in middle of park zone
         }
         else if (signal==2){
-
+            drive(tiles*STPL, -tiles*STPL, -tiles*STPL, tiles*STPL, pow);
+            //move in line with gap
+            drive(tilef,tilef,tilef,tilef,pow);
+            //get in park zone
+            drive(-tiles*STPL, tiles*STPL, tiles*STPL, -tiles*STPL, pow);
+            //move in middle of park zone
         }
 
 
