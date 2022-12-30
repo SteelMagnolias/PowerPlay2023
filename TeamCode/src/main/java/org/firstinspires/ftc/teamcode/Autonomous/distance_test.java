@@ -54,7 +54,7 @@ public class distance_test extends LinearOpMode {
     private static final float oneAndHalfTile   = 36 * mmPerInch;
 
     // Class Members
-    double pow= 0.3;
+    double pow= 0.5;
     double intakePow = 1;
 
     @Override
@@ -75,12 +75,7 @@ public class distance_test extends LinearOpMode {
 
 
 
-        leftSpin.setPower(intakePow);
-        rightSpin.setPower(intakePow);
-        //ajust time
-        sleep (5000);
-        leftSpin.setPower(0);
-        rightSpin.setPower(0);
+        drive (pow, pow, pow, pow, 5000);
 
     }
 

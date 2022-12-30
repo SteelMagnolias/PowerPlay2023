@@ -177,7 +177,7 @@ public class EarlySeasonDrive extends OpMode
         //Y2 is pushed will bring to tall level
 
         // Finite State Machine - Levels (need to edit distances on time once tested)
-        final int ground = 500;
+        final int ground = 200;
         final int low = 800;
         final int tall = 1200;
 
@@ -254,7 +254,7 @@ public class EarlySeasonDrive extends OpMode
 
         double pow;
         if (a1) pow = 1; // turbo mode
-        else pow = .5;
+        else pow =0.5;
         double c = Math.hypot(leftx1, lefty1);
         double perct = pow * c;
         if (c <= .1) perct = 0;
