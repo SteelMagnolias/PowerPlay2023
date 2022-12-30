@@ -37,8 +37,9 @@ public class autonforbigrobot extends LinearOpMode {
     private DcMotor leftBack;
     private DcMotor rightBack;
     private TouchSensor armTouch;
-    private CRServo rightClaw;
-    private CRServo leftClaw;
+    private TouchSensor intakeTouch;
+    private CRServo rightintake;
+    private CRServo leftintake;
     private DcMotor arm;
     private DcMotor arm2;
     // wheelies!
@@ -59,8 +60,8 @@ public class autonforbigrobot extends LinearOpMode {
 
     private int STPL;
     //starting place
-    private int clawClose = 5000;
-    //time it takes claw to close need to change
+    private int dropTime = 5000;
+    //time it takes to drop cone
 
     private static final String TFOD_MODEL_ASSET = "PowerPlayCustomV2.tflite";
     // this is where we can find the preset models
@@ -99,7 +100,7 @@ public class autonforbigrobot extends LinearOpMode {
 
     double pow= 0.3;
     //power
-    double clawPow= 1;
+    double intakePow= 1;
     //power for the intake
     double tilef = 1400;
     //time it takes to go forward or backwards a tile
@@ -113,8 +114,8 @@ public class autonforbigrobot extends LinearOpMode {
         leftFront = hardwareMap.get(DcMotor.class, "leftFront"); // in config --> port 0 --> "leftFront"
         rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // in config --> port 3 --> "rightFront"
         armTouch = hardwareMap.get(TouchSensor.class, "armTouch");  // in config --> digital port 5 --> "touchy"
-        rightClaw = hardwareMap.get(CRServo.class, "rightClaw"); // in config --> port 3 --> "rightintake"
-        leftClaw = hardwareMap.get(CRServo.class, "leftClaw"); // in config --> port 4 --> "leftintake"
+        rightintake = hardwareMap.get(CRServo.class, "rightClaw"); // in config --> port 3 --> "rightintake"
+        leftintake = hardwareMap.get(CRServo.class, "leftClaw"); // in config --> port 4 --> "leftintake"
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
 
@@ -224,7 +225,9 @@ public class autonforbigrobot extends LinearOpMode {
             lift(-pow,10);
         }
         //arm goes down until arm button is pressed
-       claw(clawPow);
+       while (!intakeTouch.isPressed()){
+           intake(pow, 10);
+       }
         //claw picks up cone
         if (STPL==-1){
             drive (-pow, pow, -pow, pow, 25);
@@ -240,7 +243,7 @@ public class autonforbigrobot extends LinearOpMode {
         //raise arm
         drive(pow, pow, pow, pow, 100);
         //get closer to pole
-        claw(-clawPow);
+        intake(-intakePow, dropTime);
         //drop cone
         drive (-pow, -pow, -pow, -pow, 100);
         //move to middle of park zone
@@ -273,12 +276,12 @@ public class autonforbigrobot extends LinearOpMode {
     if it doesnt read anything it still puts a cone on a high pole and parks in the middlemost zone.
      */
 
-    public void claw(double IP) {
-        rightClaw.setPower (IP);
-        leftClaw.setPower (IP);
-        sleep ((int) clawClose);
-        rightClaw.setPower(0);
-        leftClaw.setPower(0);
+    public void intake(double IP, double time) {
+        rightintake.setPower (IP);
+        leftintake.setPower (IP);
+        sleep ((int) time);
+        rightintake.setPower(0);
+        leftintake.setPower(0);
         sleep (10);
     }
 
