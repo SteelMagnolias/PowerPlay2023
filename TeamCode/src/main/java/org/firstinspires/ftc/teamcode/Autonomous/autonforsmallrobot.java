@@ -231,14 +231,15 @@ public class autonforsmallrobot extends LinearOpMode {
 
         waitForStart();
 
+        //arm goes down until arm button is pressed
         while (!armTouch.isPressed()){
             lift (-pow, 10);
         }
-        //arm goes down until arm button is pressed
+
+        //intake untill cone is picked up
         while (!intakeTouch.isPressed()){
             intake(pow, 10);
         }
-        //intake untill cone is picked up
 
         if (STPL==-1){
             drive (-pow, pow, -pow, pow, 25);

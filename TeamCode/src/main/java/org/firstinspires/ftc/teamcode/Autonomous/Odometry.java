@@ -28,22 +28,31 @@ public class Odometry extends LinearOpMode {
     private DcMotor rightEncoder;
     private DcMotor backEncoder;
 
-    // describing the robot's position {x, y, angle}
-    int[] pose = {0, 0, 0};
+    // describing the robot's position {x, y, heading}
+    double[] pose = {0, 0, 0};
 
-    int prevLeft = 0; // previous left encoder position
-    int prevRight = 0; // previous right encoder position
-    int prevBack = 0; // previous back encoder position
+    double prevLeft = 0; // previous left encoder position
+    double prevRight = 0; // previous right encoder position
+    double prevBack = 0; // previous back encoder position
 
-    int changeLeft = 0; // change in left encoder
-    int changeRight = 0; // change in right encoder
-    int changeBack = 0; // change in back encoder
+    double curLeft = 0; // current left encoder position
+    double curRight = 0; // current right encoder position
+    double curBack = 0; // current back encoder position
 
-    int changeX = 0; // change in x
-    int changeY = 0; // change in y
-    int theta = 0; // what angle is robot at?
+    double changeLeft = 0; // change in left encoder
+    double changeRight = 0; // change in right encoder
+    double changeBack = 0; // change in back encoder
 
-    int trackWidth = 0; // this is the distance between the two encoders in inches?
+    double changeMiddlePosition = 0; // this is measuring how the center of the robot has changed position based off the average of the left and right encoder readings
+    double changeBackEncoderPos = 0; // change in the back encoder position
+
+    double changeX = 0; // change in x
+    double changeY = 0; // change in y
+    double theta = 0; // what angle is robot at?
+
+    double trackWidth = 0; // this is the distance between the two encoders in inches?
+    double forwardOffset = 0; // this is the distance from the perpendicular encoder to the center of robot in inches
+
 
     @Override
     public void runOpMode() {
@@ -69,20 +78,40 @@ public class Odometry extends LinearOpMode {
 
         waitForStart();
 
+        // get current encoder readings
+        curLeft = leftEncoder.getCurrentPosition();
+        curRight = rightEncoder.getCurrentPosition();
+        curBack = backEncoder.getCurrentPosition();
+
         // find change in each encoder
-        changeLeft = leftEncoder.getCurrentPosition() - prevLeft;
-        changeRight = rightEncoder.getCurrentPosition() - prevRight;
-        changeBack = backEncoder.getCurrentPosition() - prevBack;
-
-        // change in x
-
-        // change in y
+        changeLeft = curLeft - prevLeft;
+        changeRight = curRight - prevRight;
+        changeBack = curBack - prevBack;
 
         // angle of robot
         theta = (changeLeft - changeRight) / trackWidth;
 
-        // pose = old data + new data
+        // change in middle position of robot
+        changeMiddlePosition = (changeLeft + changeRight)/2;
 
-        // update pose
+        // change in backEncoder's Position
+        changeBackEncoderPos = changeBack - forwardOffset * theta;
+
+        // change in x - basically using triangles to figure out the length of change in x
+        changeX = changeMiddlePosition * Math.cos(pose[2]) - changeBackEncoderPos * Math.sin(pose[2]);
+
+        // change in y - basically using triangles to figure out the length of change in y
+        changeY = changeMiddlePosition * Math.sin(pose[2]) - changeBackEncoderPos * Math.cos(pose[2]);
+
+        // updated pose = old data + new data
+        pose[0] += changeX; // update the x position
+        pose[1] += changeY; // update the y position
+        pose[2] += theta; // update the angle the robot is pointing
+
+        // update previous values
+        prevLeft = curLeft;
+        prevRight = curRight;
+        prevBack = curBack;
+
     }
 }
