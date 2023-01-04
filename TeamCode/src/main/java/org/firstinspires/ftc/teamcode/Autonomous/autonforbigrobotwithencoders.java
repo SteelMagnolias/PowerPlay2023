@@ -28,8 +28,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
-@Autonomous(name = "autonforsmallrobotwithencoders", group="Iterative OpMode")
-public class autonforsmallrobotwithencoders extends LinearOpMode {
+@Autonomous(name = "autonforbigrobotwithencoders", group="Iterative OpMode")
+public class autonforbigrobotwithencoders extends LinearOpMode {
 
     // declaration
     private DcMotor leftFront;
@@ -62,7 +62,10 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
     private int rightBackPos;
     private int rightFrontPos;
     private int low = 1800;
-    // time it tales for arm at pow 0.3 to raise to height of low pole
+    private int med = 3133;
+    private int high = 4466;
+    // might need to change
+    // time it tales for arm at pow 0.3 to raise to height poles
     private int STPL;
     //starting place
     private int dropTime = 5000;
@@ -245,26 +248,27 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
 
         waitForStart();
 
-        while (!armTouch.isPressed()) {
-            lift( -pow, 10);
+        while (!armTouch.isPressed()){
+            lift(-pow,10);
         }
         //arm goes down until arm button is pressed
         while (!intakeTouch.isPressed()){
             intake(intakePow, 10);
         }
-        //intake spins until cone is picked up
+        //claw picks up cone
         if (STPL==-1){
             drive(30, -30,30, -30, pow);
             //turn so drift is acounted
             //change value
+            //might not need with new robot
         }
         else {
         }
-        drive(-tilef,-tilef,-tilef,-tilef,pow);
-        //back up to be in line with park zone
-        drive(tiles*STPL, -tiles*STPL, -tiles*STPL, tiles*STPL, pow);
-        //strafe to line up with low pole
-        lift(pow, low);
+        drive(tilef,tilef,tilef,tilef,pow);
+        //drive forward to line up with high pole
+        drive(tiles*STPL*1.5, -tiles*STPL*1.5, -tiles*STPL*1.5, tiles*STPL*1.5, pow);
+        //strafe to line up with high pole
+        lift(pow, high);
         //raise arm
         drive(4, 4, 4, 4, pow);
         //get closer to pole
@@ -277,16 +281,7 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
             lift(-pow, 10);
         }
         //lower arm
-
-        if ((signal==1 && STPL==1) || (signal==3 && STPL==-1)) {
-            drive(tiles*STPL, -tiles*STPL, -tiles*STPL, tiles*STPL, pow);
-            //move in line with gap
-            drive(tilef*2,tilef*2,tilef*2,tilef*2,pow);
-            //get in park zone
-            drive(-tiles*STPL, tiles*STPL, tiles*STPL, -tiles*STPL, pow);
-            //move in middle of park zone
-        }
-        else if (signal==2){
+        if (signal==2){
             drive(tiles*STPL, -tiles*STPL, -tiles*STPL, tiles*STPL, pow);
             //move in line with gap
             drive(tilef,tilef,tilef,tilef,pow);
@@ -294,10 +289,22 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
             drive(-tiles*STPL, tiles*STPL, tiles*STPL, -tiles*STPL, pow);
             //move in middle of park zone
         }
-
-
-
+        else if ((signal==3 && STPL==1) || (signal==1 && STPL==-1)){
+            drive(tiles*STPL, -tiles*STPL, -tiles*STPL, tiles*STPL, pow);
+            //move in line with gap
+            drive(tilef*2,tilef*2,tilef*2,tilef*2,pow);
+            //get in park zone
+            drive(-tiles*STPL, tiles*STPL, tiles*STPL, -tiles*STPL, pow);
+            //move in middle of park zone
+        }
     }
+
+    /*
+    move into parking zone closest to the middle and drop cone on high pole
+    if not in the correct zone move over to between poles and back up
+    move back into middle of zone
+    if it doesnt read anything it still puts a cone on a high pole and parks in the middlemost zone.
+     */
 
     public void intake(double ip, double time) {
         leftSpin.setPower (ip);
