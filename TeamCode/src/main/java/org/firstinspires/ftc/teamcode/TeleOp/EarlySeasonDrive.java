@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+
 // teleop - driver controlled
 @TeleOp(name="EarlySeasonDrive", group="Iterative Opmode")
 public class EarlySeasonDrive extends OpMode
@@ -36,7 +37,6 @@ public class EarlySeasonDrive extends OpMode
     // used for timed movements
     ElapsedTime timer;
 
-
     // finite state machine that defines the position of the arm in relation to certain events.
     // bottom is the default
     public enum ArmState {
@@ -46,7 +46,7 @@ public class EarlySeasonDrive extends OpMode
         UPPER,
         RESET ,
         GROUND, // Ground Junctions
-    };
+    }
     ArmState levels;
 
     // constant(s) for movement:
@@ -322,11 +322,13 @@ public class EarlySeasonDrive extends OpMode
         telemetry.addData("rbl", dir * ((theta - (3 * Math.PI / 4)) / (Math.PI / 4)));
         telemetry.addData("rbr", -dir * ((theta - (3 * Math.PI / 4)) / (Math.PI / 4)));
 
+
         leftFront.setPower(fl + rightx1);
         leftBack.setPower(bl + rightx1);
         rightFront.setPower(fr - rightx1);
         rightBack.setPower(br - rightx1);
 
+        telemetry.addData("rightBack", rightBack.getPower());
 
         if (Math.abs(lefty2) >= DEAD_ZONE) {
             if (lefty2 < 0) {
