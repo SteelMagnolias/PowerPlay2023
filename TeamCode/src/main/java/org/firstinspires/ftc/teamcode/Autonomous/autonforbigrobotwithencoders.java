@@ -28,8 +28,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
-@Autonomous(name = "autonforsmallrobot", group="Iterative OpMode")
-public class autonforsmallrobot extends LinearOpMode {
+@Autonomous(name = "autonforbigrobotwithencoders", group="Iterative OpMode")
+public class autonforbigrobotwithencoders extends LinearOpMode {
 
     // declaration
     private DcMotor leftFront;
@@ -57,13 +57,24 @@ public class autonforsmallrobot extends LinearOpMode {
     private final static double POWER = 0.3;
     private int FORWARD;
     private int STRAFE;
+    private int leftBackPos;
+    private int leftFrontPos;
+    private int rightBackPos;
+    private int rightFrontPos;
     private int low = 1800;
-    private int med = 300;
-    // time it tales for arm at pow 0.3 to raise to height of the poles pole
+    private int med = 3133;
+    private int high = 4466;
+    // might need to change
+    // time it tales for arm at pow 0.3 to raise to height poles
     private int STPL;
     //starting place
     private int dropTime = 5000;
-    //time it takes to release cone definitetly way extra but if something goes wrong we need ti to go longer so.d
+    //time it takes to release cone definitetly way extra but if something goes wrong we need ti to go longer so.
+    private int tilef = 56;
+    //ticks it takes to go forward or backwards a tile
+    private int tiles = 112;
+    //need to change
+    //ticks it takes to stafe a tile
 
     private static final String TFOD_MODEL_ASSET = "PowerPlayCustomV2.tflite";
     // this is where we can find the preset models
@@ -104,10 +115,6 @@ public class autonforsmallrobot extends LinearOpMode {
     //power
     double intakePow= 1;
     //power for the intake
-    double tilef = 1400;
-    //time it takes to go forward or backwards a tile
-    double tiles = 2600;
-    //time it takes to stafe a tile
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -124,6 +131,11 @@ public class autonforsmallrobot extends LinearOpMode {
 
         webcamName1 = hardwareMap.get(WebcamName.class, "Webcam 2");
         webcamName2 = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         if (armTouch.isPressed()) {
             // A2 F5
@@ -229,55 +241,61 @@ public class autonforsmallrobot extends LinearOpMode {
 
         telemetry.addData("signal", signal);
 
+        leftBackPos = 0;
+        leftFrontPos = 0;
+        rightFrontPos = 0;
+        rightBackPos = 0;
+
         waitForStart();
 
-        //arm goes down until arm button is pressed
-        while (!armTouch.isPressed()){
-            lift (-pow, 10);
-        }
-
-        //intake untill cone is picked up
-        while (!intakeTouch.isPressed()){
-            intake(pow, 10);
-        }
-
-        if (STPL==-1){
-            drive (-pow, pow, -pow, pow, 25);
-            //turn so drift is acounted
-        }
-        else {
-        }
-        drive(-pow, -pow, -pow, -pow, tilef);
-        //drive forward to line up with high pole
-        drive(pow*STPL, -pow * STPL, -pow * STPL, pow * STPL, tiles * 1.75);
-        //strafe to line up with high pole
-        lift(pow, med);
-        //raise arm
-        drive(pow, pow, pow, pow, 200);
-        //get closer to pole
-        intake(-pow, dropTime);
-        //drop cone
-        drive(-pow, -pow, -pow, -pow, 200);
-        //move to middle of park zone
         while (!armTouch.isPressed()){
             lift(-pow,10);
         }
+        //arm goes down until arm button is pressed
+        while (!intakeTouch.isPressed()){
+            intake(intakePow, 10);
+        }
+        //claw picks up cone
+        if (STPL==-1){
+            drive(30, -30,30, -30, pow);
+            //turn so drift is acounted
+            //change value
+            //might not need with new robot
+        }
+        else {
+        }
+        drive(tilef,tilef,tilef,tilef,pow);
+        //drive forward to line up with high pole
+        drive(tiles*STPL*1.5, -tiles*STPL*1.5, -tiles*STPL*1.5, tiles*STPL*1.5, pow);
+        //strafe to line up with high pole
+        lift(pow, high);
+        //raise arm
+        drive(4, 4, 4, 4, pow);
+        //get closer to pole
+        //change value
+        intake(-intakePow, dropTime);
+        //drop cone
+        drive(-4,-4,-4,-4, pow);
+        //back away from pole
+        while (!armTouch.isPressed()){
+            lift(-pow, 10);
+        }
         //lower arm
         if (signal==2){
-            drive (-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
-            //move to line up with gap
-            drive (pow, pow, pow, pow, tilef);
-            //line up with parking zone
-            drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
-            //move to middle
+            drive(tiles*STPL, -tiles*STPL, -tiles*STPL, tiles*STPL, pow);
+            //move in line with gap
+            drive(tilef,tilef,tilef,tilef,pow);
+            //get in park zone
+            drive(-tiles*STPL, tiles*STPL, tiles*STPL, -tiles*STPL, pow);
+            //move in middle of park zone
         }
-        else if ((signal==3 && STPL==-1) || (signal==1 && STPL==1)){
-            drive (-pow*STPL, pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
-            //move to line up with gap
-            drive (pow, pow, pow, pow, tilef*2);
-            //line up with parking zone
-            drive (pow*STPL, -pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
-            //move to middle
+        else if ((signal==3 && STPL==1) || (signal==1 && STPL==-1)){
+            drive(tiles*STPL, -tiles*STPL, -tiles*STPL, tiles*STPL, pow);
+            //move in line with gap
+            drive(tilef*2,tilef*2,tilef*2,tilef*2,pow);
+            //get in park zone
+            drive(-tiles*STPL, tiles*STPL, tiles*STPL, -tiles*STPL, pow);
+            //move in middle of park zone
         }
     }
 
@@ -288,35 +306,45 @@ public class autonforsmallrobot extends LinearOpMode {
     if it doesnt read anything it still puts a cone on a high pole and parks in the middlemost zone.
      */
 
-    public void intake(double IP, double time) {
-        rightintake.setPower (IP);
-        leftintake.setPower (IP);
+    public void intake(double ip, double time) {
+        leftSpin.setPower (ip);
+        rightSpin.setPower (ip);
         sleep ((int) time);
-        rightintake.setPower(0);
-        leftintake.setPower(0);
+        leftSpin.setPower(0);
+        rightSpin.setPower(0);
         sleep (10);
     }
 
-    public void lift(double AP, double time) {
-        arm.setPower(AP);
-        arm2.setPower(AP);
+    public void lift(double ap, double time) {
+        arm.setPower(ap);
+        arm2.setPower(ap);
         sleep ((int) time);
         arm.setPower(0);
         arm2.setPower(0);
         sleep (10);
     }
 
-    public void drive (double lf, double rf, double lb, double rb, double time){
-        leftFront.setPower(lf);
-        rightFront.setPower(rf);
-        leftBack.setPower(lb);
-        rightBack.setPower(rb);
-        sleep ((int)time);
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
-        sleep(10);
+    public void drive(double leftFrontTarget, double rightFrontTarget, double leftBackTarget, double rightBackTarget, double speed) {
+        leftFrontPos += leftFrontTarget;
+        rightFrontPos += rightFrontTarget;
+        leftBackPos += leftBackTarget;
+        rightBackPos += rightBackTarget;
+        leftFront.setTargetPosition(leftFrontPos);
+        rightFront.setTargetPosition(rightFrontPos);
+        leftBack.setTargetPosition(leftBackPos);
+        rightBack.setTargetPosition(rightBackPos);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setPower(speed);
+        rightFront.setPower(speed);
+        leftBack.setPower(speed);
+        rightBack.setPower(speed);
+        while (opModeIsActive() && leftFront.isBusy() && rightFront.isBusy() && leftBack.isBusy() && rightBack.isBusy()) {
+            idle();
+        }
+        sleep (10);
     }
 
     private void initVuforia() {

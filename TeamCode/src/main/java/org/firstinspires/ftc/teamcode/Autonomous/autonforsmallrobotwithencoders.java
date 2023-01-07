@@ -250,7 +250,7 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
         }
         //arm goes down until arm button is pressed
         while (!intakeTouch.isPressed()){
-            intake(10);
+            intake(intakePow, 10);
         }
         //intake spins until cone is picked up
         if (STPL==-1){
@@ -269,12 +269,12 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
         drive(4, 4, 4, 4, pow);
         //get closer to pole
         //change value
-        intake(dropTime);
+        intake(-intakePow, dropTime);
         //drop cone
         drive(-4,-4,-4,-4, pow);
         //back away from pole
         while (!armTouch.isPressed()){
-            lift(pow, 10);
+            lift(-pow, 10);
         }
         //lower arm
 
@@ -299,9 +299,9 @@ public class autonforsmallrobotwithencoders extends LinearOpMode {
 
     }
 
-    public void intake(double time) {
-        leftSpin.setPower (intakePow);
-        rightSpin.setPower (intakePow);
+    public void intake(double ip, double time) {
+        leftSpin.setPower (ip);
+        rightSpin.setPower (ip);
         sleep ((int) time);
         leftSpin.setPower(0);
         rightSpin.setPower(0);
