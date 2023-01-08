@@ -92,7 +92,7 @@ public class EarlySeasonDrive extends OpMode
         // motors must move together.
 
         arm.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
-        arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
+        //arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
 
         rightSpin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
 

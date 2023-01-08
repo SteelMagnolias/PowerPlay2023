@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -89,7 +90,6 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
         // these are labels that can be used to define what items might be seen.
 
 
-
         private static final String VUFORIA_KEY =
                 "Ae/tYNP/////AAABmWJ3jgvBrksYtYG8QcdbeqRWGQWezSnxje7FgEIzwTeFQ1hZ42y6YmaQ0h5p7aqN9x+q1QXf2zRRrh1Pxln3C2cR+ul6r9mHwHbTRgd3jyggk8tzc/ubgaPBdn1q+ufcYqCk6tqj7t8JNYM/UHLZjtpSQrr5RNVs227kQwBoOx6l4MLqWL7TCTnE2vUjgrHaEW1sP1hBsyf1D4SiyRl/Ab1Vksqkgv7hwR1c7J4+7+Nt3rDd16Fr2XToT87t0JlfOn6vszaPj10qvU7836U+/rx9cs1w53UPEdfF+AmDChhdW2TymZf+aS2QfnckyxdXKHjXUhdDw3f09BegsNdnVxXnvGkp0jhg9N7fjJa39k+8";
 
@@ -107,15 +107,15 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
         // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
         // We will define some constants and conversions here
-        private static final float mmPerInch        = 25.4f;
-        private static final float mmTargetHeight   = 6 * mmPerInch;          // the height of the center of the target image above the floor
-        private static final float halfField        = 72 * mmPerInch;
-        private static final float halfTile         = 12 * mmPerInch;
-        private static final float oneAndHalfTile   = 36 * mmPerInch;
+        private static final float mmPerInch = 25.4f;
+        private static final float mmTargetHeight = 6 * mmPerInch;          // the height of the center of the target image above the floor
+        private static final float halfField = 72 * mmPerInch;
+        private static final float halfTile = 12 * mmPerInch;
+        private static final float oneAndHalfTile = 36 * mmPerInch;
 
-        double pow= 0.3;
+        double pow = 0.3;
         //power
-        double intakePow= 1;
+        double intakePow = 1;
         //power for the intake
         double tilef = 1400;
         //time it takes to go forward or backwards a tile
@@ -124,7 +124,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
         @Override
         public void runOpMode() throws InterruptedException {
-            leftBack  = hardwareMap.get(DcMotor.class, "leftBack"); // in config --> port 1 --> "leftBack"
+            leftBack = hardwareMap.get(DcMotor.class, "leftBack"); // in config --> port 1 --> "leftBack"
             rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // in config --> port 2 --> "rightBack
             leftFront = hardwareMap.get(DcMotor.class, "leftFront"); // in config --> port 0 --> "leftFront"
             rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // in config --> port 3 --> "rightFront"
@@ -139,13 +139,12 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
             if (armTouch.isPressed()) {
                 // A2 F5
-                STPL=1;
+                STPL = 1;
                 //use camera 1
                 webcamName = webcamName1;
-            }
-            else {
+            } else {
                 // A5 F2
-                STPL=-1;
+                STPL = -1;
                 //use camera 2
                 webcamName = webcamName2;
             }
@@ -166,7 +165,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
                 tfod.activate();
                 // turn the tensorflow on so it starts reading.
 
-                tfod.setZoom(1.0, 16.0/9.0);
+                tfod.setZoom(1.0, 16.0 / 9.0);
                 // magnification must be at least 1.0
                 // zooms into what tensor flow is seeing to mimic zooming with camera.  Makes everything more readable.
             }
@@ -205,20 +204,17 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
                             telemetry.addData("bottom", recognition.getBottom());
                             // get what's in the bottom
 
-                            if (recognition.getLabel().equals("star")){
+                            if (recognition.getLabel().equals("star")) {
                                 // do the first position stuff
                                 signal = 1;
-                            }
-                            else if (recognition.getLabel().equals("triangle")) {
+                            } else if (recognition.getLabel().equals("triangle")) {
                                 // do the second position stuff
                                 signal = 2;
-                            }
-                            else if (recognition.getLabel().equals("circle")){
+                            } else if (recognition.getLabel().equals("circle")) {
                                 // this means we've seen the third thing (triangle) and should do that stuff
                                 // 3 circle
                                 signal = 3;
-                            }
-                            else {
+                            } else {
                                 signal = 3;
                                 // do 3 because it dont like reading circle
                             }
@@ -230,13 +226,13 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
                         // update telemetry.(aka update what it says in the console on phone!)
                     }
                 }
-            waitForStart();
-                {
+                waitForStart();
+            }
+        }
 
 
                     private void initVuforia () {
                     // this will initialize vuforia.
-
                     VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
                     // creates a parameter object to collect necessary paramters and set to our vuforia localizer.
 
@@ -247,9 +243,10 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
                     vuforia = ClassFactory.getInstance().createVuforia(parameters);
                     // makes vuforia object with said paramters
-                }
 
-                    private void initTFOD {
+                     }
+
+                    private void initTFOD () {
                     // this will initialize tensor flow lite
 
                     int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -267,3 +264,5 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
                     tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS); // loads the objects that can be detected.;
                 }
+
+    }
