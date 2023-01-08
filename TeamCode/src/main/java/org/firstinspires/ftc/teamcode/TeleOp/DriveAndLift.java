@@ -11,10 +11,9 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-
 // teleop - driver controlled
-@TeleOp(name="EarlySeasonDrive", group="Iterative Opmode")
-public class EarlySeasonDrive extends OpMode
+@TeleOp(name="DriveAndLift", group="Iterative Opmode")
+public class DriveAndLift extends OpMode
 {
     private DcMotor leftBack; //Motor
     private DcMotor rightBack; //Motor
@@ -34,8 +33,12 @@ public class EarlySeasonDrive extends OpMode
     private TouchSensor intakeTouch; // Touch sensor on arm for intake system
     private TouchSensor armTouch; // Touch sensor for levels for bottom of robot to hit for reset levels
 
+    //Lift  Right
+    private DcMotor motor;
+
     // used for timed movements
     ElapsedTime timer;
+
 
     // finite state machine that defines the position of the arm in relation to certain events.
     // bottom is the default
@@ -46,7 +49,7 @@ public class EarlySeasonDrive extends OpMode
         UPPER,
         RESET ,
         GROUND, // Ground Junctions
-    }
+    };
     ArmState levels;
 
     // constant(s) for movement:
@@ -188,11 +191,11 @@ public class EarlySeasonDrive extends OpMode
                 arm2.setPower(0);
                 if (a2) {
                     timer.reset();
-                    levels = EarlySeasonDrive.ArmState.LOWER;
+                    levels = DriveAndLift.ArmState.LOWER;
                 }
                 if (b2) {
                     timer.reset();
-                    levels = EarlySeasonDrive.ArmState.GROUND;
+                    levels = DriveAndLift.ArmState.GROUND;
                 }
                 if (y2) {
                     timer.reset();
@@ -210,7 +213,7 @@ public class EarlySeasonDrive extends OpMode
                     arm2.setPower(0);
                 }
                 if (rb2) {
-                    levels = EarlySeasonDrive.ArmState.RESET;
+                    levels = DriveAndLift.ArmState.RESET;
                 }
                 break;
             // at middle  continue to middle or respond to button push
@@ -223,7 +226,7 @@ public class EarlySeasonDrive extends OpMode
                     arm2.setPower(0);
                 }
                 if (rb2) {
-                    levels = EarlySeasonDrive.ArmState.RESET;
+                    levels = DriveAndLift.ArmState.RESET;
                 }
                 break;
             // at Tall  continue to tall or respond to button push
@@ -236,7 +239,7 @@ public class EarlySeasonDrive extends OpMode
                     arm2.setPower(0);
                 }
                 if (rb2) {
-                    levels = EarlySeasonDrive.ArmState.RESET;
+                    levels = DriveAndLift.ArmState.RESET;
                 }
                 break;
             // at reset  continue to reset or respond to button push
@@ -245,11 +248,11 @@ public class EarlySeasonDrive extends OpMode
                     arm.setPower(-.8);
                     arm2.setPower(-.8);
                 } else {
-                    levels = EarlySeasonDrive.ArmState.BOTTOM;
+                    levels = DriveAndLift.ArmState.BOTTOM;
                 }
                 break;
             default:
-                levels = EarlySeasonDrive.ArmState.BOTTOM;
+                levels = DriveAndLift.ArmState.BOTTOM;
         }
 
         double pow;
@@ -322,29 +325,20 @@ public class EarlySeasonDrive extends OpMode
         telemetry.addData("rbl", dir * ((theta - (3 * Math.PI / 4)) / (Math.PI / 4)));
         telemetry.addData("rbr", -dir * ((theta - (3 * Math.PI / 4)) / (Math.PI / 4)));
 
-
         leftFront.setPower(fl + rightx1);
         leftBack.setPower(bl + rightx1);
         rightFront.setPower(fr - rightx1);
         rightBack.setPower(br - rightx1);
 
-        telemetry.addData("rightBack", rightBack.getPower());
-
-        if (Math.abs(lefty2) >= DEAD_ZONE) {
-            if (lefty2 < 0) {
-                if (armTouch.isPressed()) {
-                    // if button is pressed, stop moving
-                    arm.setPower(0);
-                    arm2.setPower(0);
-                }
-                else {
-                    arm.setPower(lefty2 * pow);
-                    arm2.setPower(lefty2 * pow);
-                }            }
-            if (lefty2 > 0) {
-                arm.setPower(lefty2 * pow);
-                arm2.setPower(lefty2 * pow);
-            }
+        if (lefty2 >= 0.1) {
+            // up
+            arm.setPower(0.5);
+            arm2.setPower(0.5);
+        }
+        else if (lefty2 <= -0.1) {
+            // down
+            arm.setPower(-0.5);
+            arm2.setPower(-0.5);
         } else if (buttonDown2) {
             arm.setPower(-pow / 2);
             arm2.setPower(-pow / 2);
