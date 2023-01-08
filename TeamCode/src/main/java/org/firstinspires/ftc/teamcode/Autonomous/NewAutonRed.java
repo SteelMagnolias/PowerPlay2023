@@ -225,6 +225,10 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                 }
 
                 // preload
+                while(!intakeTouch.isPressed()) {
+                    // intake
+                    intake(pow, 10);
+                }
 
                 // drive backwards until reaching terminal
                 while (colorBack.red() < targetColor) {
@@ -235,6 +239,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                 drive(STPL * pow, STPL * -pow, STPL * -pow, STPL * pow, 1000);
 
                 // raise arm
+                lift(pow, med); // lift until medium goal
             }
         }
 
