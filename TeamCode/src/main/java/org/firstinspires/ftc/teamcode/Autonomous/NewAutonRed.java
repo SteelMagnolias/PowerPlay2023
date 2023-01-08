@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -15,37 +16,11 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-
-    import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-
-    @Autonomous(name = "NEWautonplan", group="Iterative OpMode")
-    public class NEWautonplan extends LinearOpMode {
+@Autonomous(name = "NewAutonRed", group="Iterative OpMode")
+    public class NewAutonRed extends LinearOpMode {
 
         // declaration
         private DcMotor leftFront;
@@ -59,6 +34,11 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
         private DcMotor arm;
         private DcMotor arm2;
         // wheelies!
+
+        // color sensors
+        private ColorSensor colorBack;
+        private ColorSensor colorLeft;
+        private ColorSensor colorRight;
 
         private WebcamName webcamName; // webcam
         private WebcamName webcamName1;
@@ -122,6 +102,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
         double tiles = 2600;
         //time it takes to stafe a tile
 
+        int targetColor = 250; // this is minimum magnitude of color
+
         @Override
         public void runOpMode() throws InterruptedException {
             leftBack = hardwareMap.get(DcMotor.class, "leftBack"); // in config --> port 1 --> "leftBack"
@@ -172,6 +154,15 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
             while (!opModeIsActive() && !isStopRequested()) {
                 // while we are still running (time hasn't run out!)
+
+                if (armTouch.isPressed()) {
+                    // if the arm button is pressed, we are on the right side of alliance
+                    STPL = 1;
+                }
+                else {
+                    // if the arm button is not pressed, we are on the left side of the alliance
+                    STPL = -1;
+                }
 
                 if (tfod != null) {
                     // tensor flow is still running.
@@ -227,6 +218,23 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
                     }
                 }
                 waitForStart();
+
+                // lower arm if not there
+                while (!armTouch.isPressed()) {
+                    lift(-pow, 10);
+                }
+
+                // preload
+
+                // drive backwards until reaching terminal
+                while (colorBack.red() < targetColor) {
+                    drive(-pow, -pow, -pow, -pow, 500);
+                }
+
+                // now strafe until at line with cones on it.
+                drive(STPL * pow, STPL * -pow, STPL * -pow, STPL * pow, 1000);
+
+                // raise arm
             }
         }
 
@@ -265,4 +273,34 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
                     tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS); // loads the objects that can be detected.;
                 }
 
+    public void intake(double IP, double time) {
+        rightintake.setPower (IP);
+        leftintake.setPower (IP);
+        sleep ((int) time);
+        rightintake.setPower(0);
+        leftintake.setPower(0);
+        sleep (10);
+    }
+
+    public void lift(double AP, double time) {
+        arm.setPower(AP);
+        arm2.setPower(AP);
+        sleep ((int) time);
+        arm.setPower(0);
+        arm2.setPower(0);
+        sleep (10);
+    }
+
+    public void drive (double lf, double rf, double lb, double rb, double time){
+        leftFront.setPower(lf);
+        rightFront.setPower(rf);
+        leftBack.setPower(lb);
+        rightBack.setPower(rb);
+        sleep ((int)time);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+        sleep(10);
+    }
     }
