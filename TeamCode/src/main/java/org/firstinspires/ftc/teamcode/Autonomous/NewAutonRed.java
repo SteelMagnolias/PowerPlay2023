@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -29,8 +31,13 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
         private DcMotor rightBack;
         private TouchSensor armTouch;
         private TouchSensor intakeTouch;
+        private TouchSensor straightenRight;
+        private TouchSensor straitenLeft;
+        private DistanceSensor armHeight;
         private CRServo rightintake;
         private CRServo leftintake;
+        private CRServo rightTurnSensor;
+        private CRServo leftTurnSensor;
         private DcMotor arm;
         private DcMotor arm2;
         // wheelies!
@@ -48,16 +55,13 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
         private final static double POWER = 0.3;
         private int FORWARD;
         private int STRAFE;
-        private int low = 1800;
-        private int med = 3133;
-        private int high = 4466;
-        // might need to change
-        // time it tales for arm at pow 0.3 to raise to height poles
 
         private int STPL;
         //starting place
         private int dropTime = 5000;
         //time it takes to drop cone
+        private int loopCounter;
+        private int sum = (loopCounter+1);
 
         private static final String TFOD_MODEL_ASSET = "PowerPlayCustomV2.tflite";
         // this is where we can find the preset models
@@ -95,12 +99,16 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 
         double pow = 0.3;
         //power
-        double intakePow = 1;
+        double fullPow = 1;
         //power for the intake
+        double lowPow = 0.1;
         double tilef = 1400;
         //time it takes to go forward or backwards a tile
         double tiles = 2600;
         //time it takes to stafe a tile
+        double low = 13.5;
+        double med = 23.5;
+        double high = 33.5;
 
         int targetColor = 250; // this is minimum magnitude of color
 
@@ -110,11 +118,17 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
             rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // in config --> port 2 --> "rightBack
             leftFront = hardwareMap.get(DcMotor.class, "leftFront"); // in config --> port 0 --> "leftFront"
             rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // in config --> port 3 --> "rightFront"
+            intakeTouch = hardwareMap.get(TouchSensor.class, "intakeTouch");
             armTouch = hardwareMap.get(TouchSensor.class, "armTouch");  // in config --> digital port 5 --> "touchy"
             rightintake = hardwareMap.get(CRServo.class, "rightClaw"); // in config --> port 3 --> "rightintake"
             leftintake = hardwareMap.get(CRServo.class, "leftClaw"); // in config --> port 4 --> "leftintake"
+            straightenRight = hardwareMap.get(TouchSensor.class, "straitenRight");
+            straitenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
+            rightTurnSensor= hardwareMap.get(CRServo.class, "rightTurnSensor");
+            leftTurnSensor = hardwareMap.get(CRServo.class, "leftTurnSensor");
             arm = hardwareMap.get(DcMotor.class, "arm");
             arm2 = hardwareMap.get(DcMotor.class, "arm2");
+            armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
 
             webcamName1 = hardwareMap.get(WebcamName.class, "Webcam 2");
             webcamName2 = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -220,9 +234,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                 waitForStart();
 
                 // lower arm if not there
-                while (!armTouch.isPressed()) {
-                    lift(-pow, 10);
-                }
+                lower();
 
                 // preload
                 while(!intakeTouch.isPressed()) {
@@ -236,12 +248,122 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                 }
 
                 // now strafe until at line with cones on it.
-                drive(STPL * pow, STPL * -pow, STPL * -pow, STPL * pow, 1000);
+                drive(STPL * pow, STPL * -pow, STPL * -pow, STPL * pow, tiles*3.75);
 
                 // raise arm
-                lift(pow, med); // lift until medium goal
+                lift(high);
+
+                //drop cone
+                intake(-fullPow, dropTime);
+
+                //lower arm
+                lower();
+
+                //set loop counter to 0
+                loopCounter=0;
+
+                //start loop
+                while(loopCounter!=2){
+                    //strafe to line up with cone stack
+                    //overshoot
+                    drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.4);
+
+                    //touch sensor down
+                    turnSensor(-fullPow);
+
+                    //raise arm
+                    lift(15);
+
+                    //aproach stack
+                    drive(pow, pow, pow, pow, tilef*2);
+
+                    //line up with line
+                    while(colorLeft.red() < targetColor && colorRight.red() < targetColor) {
+                        if (colorLeft.red() < targetColor && colorRight.red() > targetColor) {
+                            drive(lowPow * STPL, -lowPow * STPL, lowPow * STPL, -lowPow * STPL, 100);
+                        } else if (colorLeft.red() > targetColor && colorRight.red() < targetColor) {
+                            drive(-lowPow * STPL, lowPow * STPL, -lowPow * STPL, lowPow * STPL, 100);
+                        }
+                        else{
+                            drive(lowPow * STPL, -lowPow * STPL, lowPow * STPL, -lowPow * STPL, 100);
+                        }
+                    }
+
+                    //straiten robot
+                    while(!straitenLeft.isPressed()&&!straightenRight.isPressed()) {
+                        if (!straitenLeft.isPressed() && !straightenRight.isPressed()) {
+                            //both not pressed drive forward
+                            drive(pow, pow, pow, pow, 1000);
+                        }
+                        else if (!straitenLeft.isPressed() && straightenRight.isPressed()){
+                            //right pressed power left wheeles
+                            drive(lowPow, 0, lowPow, 0, 1000);
+                        }
+                        else if (straitenLeft.isPressed() && !straightenRight.isPressed()){
+                            //left pressed power left wheeles
+                            drive(0, lowPow, 0, lowPow, 1000);
+                        }
+                    }
+
+                    //lower arm to hit cone
+                    arm.setPower(lowPow);
+                    arm2.setPower(lowPow);
+                    if (loopCounter==0){
+                        sleep(500);
+                    }
+                    else if( loopCounter==1){
+                        sleep(1000);
+                    }
+                    arm.setPower(0);
+                    arm2.setPower(0);
+
+                    //intake
+                    intake(fullPow, dropTime);
+
+                    //raise arm pole height
+                    lift(high);
+
+                    //back up
+                    drive(-pow, -pow, -pow, -pow,tiles*2);
+
+                    //turn sensor up
+                    turnSensor(fullPow);
+
+                    //line up with pole
+                    drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.7);
+
+                    //move closer to pole
+                    drive(pow, pow, pow, pow, 50);
+
+                    //drop cone
+                    intake(fullPow, dropTime);
+
+                    //back away from pole
+                    drive(-pow, -pow, -pow, -pow, 50);
+
+                    //lower arm
+                    lower();
+
+                    //update loop counter
+                    sum=loopCounter;
+                }
+
+                if ((signal==1 && STPL==-1)||(signal==3 &&STPL==1)){
+                    drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
+                    drive(pow, pow, pow, pow, tilef*2);
+                    drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
+                }
+                else if (signal==2){
+                    drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
+                    drive(pow, pow, pow, pow, tilef*1);
+                    drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
+                }
+                else{
+                }
+
+                }
             }
-        }
+
 
 
                     private void initVuforia () {
@@ -278,6 +400,8 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                     tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS); // loads the objects that can be detected.;
                 }
 
+
+
     public void intake(double IP, double time) {
         rightintake.setPower (IP);
         leftintake.setPower (IP);
@@ -287,13 +411,33 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
         sleep (10);
     }
 
-    public void lift(double AP, double time) {
-        arm.setPower(AP);
-        arm2.setPower(AP);
-        sleep ((int) time);
+    public void turnSensor(double TP) {
+        rightintake.setPower (TP);
+        leftintake.setPower (TP);
+        sleep ((int) 10);
+        rightintake.setPower(0);
+        leftintake.setPower(0);
+        sleep (10);
+    }
+
+    public void lower() {
+    while(!armTouch.isPressed()) {
+        arm.setPower(-pow);
+        arm2.setPower(-pow);
+    }
         arm.setPower(0);
         arm2.setPower(0);
         sleep (10);
+    }
+
+    public void lift(double AH){
+            while (armHeight.getDistance(DistanceUnit.INCH)<AH){
+                arm.setPower(0.3);
+                arm2.setPower(0.3);
+            }
+            arm.setPower(0);
+            arm2.setPower(0);
+            sleep(10);
     }
 
     public void drive (double lf, double rf, double lb, double rb, double time){
