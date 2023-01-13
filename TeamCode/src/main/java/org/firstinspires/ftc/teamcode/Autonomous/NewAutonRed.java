@@ -239,7 +239,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                 // preload
                 while(!intakeTouch.isPressed()) {
                     // intake
-                    intake(pow, 10);
+                    intake(fullPow, 10);
                 }
 
                 // drive backwards until reaching terminal
@@ -247,7 +247,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                     drive(-pow, -pow, -pow, -pow, 500);
                 }
 
-                // now strafe until at line with cones on it.
+                // now strafe until in line with pole
                 drive(STPL * pow, STPL * -pow, STPL * -pow, STPL * pow, tiles*3.75);
 
                 // raise arm
@@ -265,7 +265,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                 //start loop
                 while(loopCounter!=2){
                     //strafe to line up with cone stack
-                    //overshoot
+                    //undershoot
                     drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.4);
 
                     //touch sensor down
@@ -278,7 +278,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                     drive(pow, pow, pow, pow, tilef*2);
 
                     //line up with line
-                    while(colorLeft.red() < targetColor && colorRight.red() < targetColor) {
+                    while(colorLeft.red() < targetColor || colorRight.red() < targetColor) {
                         if (colorLeft.red() < targetColor && colorRight.red() > targetColor) {
                             drive(lowPow * STPL, -lowPow * STPL, lowPow * STPL, -lowPow * STPL, 100);
                         } else if (colorLeft.red() > targetColor && colorRight.red() < targetColor) {
@@ -306,8 +306,8 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                     }
 
                     //lower arm to hit cone
-                    arm.setPower(lowPow);
-                    arm2.setPower(lowPow);
+                    arm.setPower(pow);
+                    arm2.setPower(pow);
                     if (loopCounter==0){
                         sleep(500);
                     }
@@ -318,7 +318,9 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                     arm2.setPower(0);
 
                     //intake
-                    intake(fullPow, dropTime);
+                    while (!intakeTouch.isPressed()) {
+                        intake(fullPow, 10);
+                    }
 
                     //raise arm pole height
                     lift(high);
@@ -348,12 +350,17 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                     sum=loopCounter;
                 }
 
+                //move to middke of park zone
+                drive(pow, -pow, pow, -pow, tiles*2);
+
                 if ((signal==1 && STPL==-1)||(signal==3 &&STPL==1)){
+                    //zone closest to wall
                     drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
                     drive(pow, pow, pow, pow, tilef*2);
                     drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
                 }
                 else if (signal==2){
+                    //middle zone
                     drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
                     drive(pow, pow, pow, pow, tilef*1);
                     drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
@@ -414,7 +421,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
     public void turnSensor(double TP) {
         rightintake.setPower (TP);
         leftintake.setPower (TP);
-        sleep ((int) 10);
+        sleep (10);
         rightintake.setPower(0);
         leftintake.setPower(0);
         sleep (10);
