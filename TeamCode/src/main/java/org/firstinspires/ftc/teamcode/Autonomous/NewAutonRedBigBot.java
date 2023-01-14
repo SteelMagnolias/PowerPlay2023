@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.SerialNumber;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -50,7 +51,8 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
         private DcMotor arm2;
 
         // color sensors
-        private ColorSensor colorBack;
+        private ColorSensor colorPinkSide;
+        private ColorSensor colorYellowSide;
         private ColorSensor colorLeft;
         private ColorSensor colorRight;
 
@@ -138,7 +140,10 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
             arm = hardwareMap.get(DcMotor.class, "arm");
             arm2 = hardwareMap.get(DcMotor.class, "arm2");
             armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
-
+            colorYellowSide = hardwareMap.get(ColorSensor.class, "colorYellowSide");
+            colorPinkSide = hardwareMap.get(ColorSensor.class, "colorPinkSide");
+            colorLeft = hardwareMap.get(ColorSensor.class, "colorLeft");
+            colorRight = hardwareMap.get(ColorSensor.class, "colorRight");
             webcamName1 = hardwareMap.get(WebcamName.class, "Webcam 2");
             webcamName2 = hardwareMap.get(WebcamName.class, "Webcam 1");
 
@@ -249,8 +254,15 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                 }
 
                 // drive backwards until reaching terminal
-                while (colorBack.red() < targetColor) {
-                    backwards(500);
+                if(STPL==1) {
+                    while (colorPinkSide.red() < targetColor) {
+                        backwards(500);
+                    }
+                }
+                else if (STPL==-1){
+                    while (colorYellowSide.red()<targetColor){
+                        backwards(500);
+                    }
                 }
 
                 // now strafe until in line with  high pole

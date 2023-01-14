@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.SerialNumber;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -21,8 +22,8 @@ import java.util.List;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 // hiiiiiiiiiiiii
-@Autonomous(name = "NewAutonBlueBigBot", group="Iterative OpMode")
-public class NewAutonBlueBigBot extends LinearOpMode {
+@Autonomous(name = "NewAutonMultiColored", group="Iterative OpMode")
+public class NewAutonMultiColored extends LinearOpMode {
 
     // wheels
     private DcMotor leftFront;
@@ -50,7 +51,8 @@ public class NewAutonBlueBigBot extends LinearOpMode {
     private DcMotor arm2;
 
     // color sensors
-    private ColorSensor colorBack;
+    private ColorSensor colorPinkSide;
+    private ColorSensor colorYellowSide;
     private ColorSensor colorLeft;
     private ColorSensor colorRight;
 
@@ -92,8 +94,9 @@ public class NewAutonBlueBigBot extends LinearOpMode {
     private TFObjectDetector tfod;
     // this will later allow you to use TensorFlow.  This is a particular instance of the TensorFlow engine.
 
-    //this should be hardest to detect
-    private int signal = 2;
+    //this should be the hardest to detect
+    private int signal=2;
+
   /*
   Vuforia will feed its information and pictures it finds into TensorFlow for further analysis!
    */
@@ -120,6 +123,8 @@ public class NewAutonBlueBigBot extends LinearOpMode {
     double high = 39.5;
     //height for poles
 
+    String allianceColor = "blue"; // used to determine which alliance we are on
+
     int targetColor = 250; // this is minimum magnitude of color
 
     @Override
@@ -137,7 +142,10 @@ public class NewAutonBlueBigBot extends LinearOpMode {
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
         armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
-
+        colorYellowSide = hardwareMap.get(ColorSensor.class, "colorYellowSide");
+        colorPinkSide = hardwareMap.get(ColorSensor.class, "colorPinkSide");
+        colorLeft = hardwareMap.get(ColorSensor.class, "colorLeft");
+        colorRight = hardwareMap.get(ColorSensor.class, "colorRight");
         webcamName1 = hardwareMap.get(WebcamName.class, "Webcam 2");
         webcamName2 = hardwareMap.get(WebcamName.class, "Webcam 1");
 
@@ -248,8 +256,35 @@ public class NewAutonBlueBigBot extends LinearOpMode {
             }
 
             // drive backwards until reaching terminal
-            while (colorBack.blue() < targetColor) {
-                backwards(500);
+            if(STPL==1) {
+                while (colorLeft.blue() < targetColor && colorLeft.red() < targetColor) {
+                    backwards(500);
+                }
+
+                // let's determine our alliance
+                if (colorLeft.blue() >= targetColor) {
+                    // we are the blue alliance
+                    allianceColor = "blue";
+                }
+                else if (colorLeft.red() >= targetColor) {
+                    // we are on the red alliance
+                    allianceColor = "red";
+                }
+            }
+            else if (STPL==-1){
+                while (colorRight.blue()<targetColor && colorRight.red() < targetColor){
+                    backwards(500);
+                }
+
+                // let's determine our alliance
+                if (colorRight.blue() >= targetColor) {
+                    // we are the blue alliance
+                    allianceColor = "blue";
+                }
+                else if (colorRight.red() >= targetColor) {
+                    // we are on the red alliance
+                    allianceColor = "red";
+                }
             }
 
             // now strafe until in line with  high pole
@@ -286,10 +321,10 @@ public class NewAutonBlueBigBot extends LinearOpMode {
                 forward(tilef*2);
 
                 //line up with line
-                while(colorLeft.blue() < targetColor || colorRight.blue() < targetColor) {
-                    if (colorLeft.blue() < targetColor && colorRight.blue() >= targetColor) {
+                while(getColor(colorLeft, allianceColor) < targetColor || getColor(colorRight, allianceColor) < targetColor) {
+                    if (getColor(colorLeft, allianceColor) < targetColor && getColor(colorRight, allianceColor) >= targetColor) {
                         drive(lowPow * STPL, -lowPow * STPL, lowPow * STPL, -lowPow * STPL, 100);
-                    } else if (colorLeft.blue() >= targetColor && colorRight.blue() < targetColor) {
+                    } else if (getColor(colorLeft, allianceColor) >= targetColor && getColor(colorRight, allianceColor) < targetColor) {
                         drive(-lowPow * STPL, lowPow * STPL, -lowPow * STPL, lowPow * STPL, 100);
                     }
                     else{
@@ -438,7 +473,7 @@ public class NewAutonBlueBigBot extends LinearOpMode {
         sleep(10);
     }
 
-    public void lift(double AH, double pow) {
+    public void moveArm(double AH, double pow) {
         // lift, but with an assigned power as well.
 
         while (armHeight.getDistance(DistanceUnit.INCH)<AH){
@@ -515,4 +550,14 @@ public class NewAutonBlueBigBot extends LinearOpMode {
         sleep(10);
     }
 
+    public int getColor(ColorSensor s, String alliance) {
+        // if we are on the blue alliance, look for blue
+        if (alliance.equalsIgnoreCase("blue")) {
+            return s.blue();
+        }
+        else {
+            // if we are on the red alliance, look for red
+            return s.red();
+        }
+    }
 }
