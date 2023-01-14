@@ -31,6 +31,10 @@ public class NewAutonBlueBigBot extends LinearOpMode {
     private DcMotor leftBack;
     private DcMotor rightBack;
 
+    // arm motors
+    private DcMotor arm;
+    private DcMotor arm2;
+
     // touch sensor for arm and intake to tell when something is fully in / down
     private TouchSensor armTouch;
     private TouchSensor intakeTouch;
@@ -50,9 +54,6 @@ public class NewAutonBlueBigBot extends LinearOpMode {
     private Servo rightTurnSensor;
     private Servo leftTurnSensor;
 
-    // arm motors
-    private DcMotor arm;
-    private DcMotor arm2;
 
     // color sensors
     private ColorSensor colorBack;
