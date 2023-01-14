@@ -304,7 +304,7 @@ public class NewAutonMultiColored extends LinearOpMode {
             lower();
 
             //set loop counter to 0
-            loopCounter=0;
+            loopCounter=1;
 
             //start loop
             for (int i = 0; i < loopCounter; i++){
