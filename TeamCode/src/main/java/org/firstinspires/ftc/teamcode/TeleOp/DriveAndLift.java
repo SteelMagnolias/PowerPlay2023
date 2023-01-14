@@ -330,18 +330,20 @@ public class DriveAndLift extends OpMode
         rightFront.setPower(fr - rightx1);
         rightBack.setPower(br - rightx1);
 
+        pow = 0.5;
+
         if (lefty2 >= 0.1) {
             // up
-            arm.setPower(0.5);
-            arm2.setPower(0.5);
+            arm.setPower(pow * lefty2);
+            arm2.setPower(pow * lefty2);
         }
         else if (lefty2 <= -0.1) {
             // down
-            arm.setPower(-0.5);
-            arm2.setPower(-0.5);
+            arm.setPower(REVERSE * lefty2 * pow);
+            arm2.setPower(REVERSE * lefty2 * pow);
         } else if (buttonDown2) {
-            arm.setPower(-pow / 2);
-            arm2.setPower(-pow / 2);
+            arm.setPower(REVERSE * pow / 2);
+            arm2.setPower(REVERSE * pow / 2);
         } else if (buttonUp2) {
             arm.setPower(pow / 2);
             arm2.setPower(pow / 2);
