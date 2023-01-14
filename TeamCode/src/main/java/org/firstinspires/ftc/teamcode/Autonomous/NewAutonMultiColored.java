@@ -403,6 +403,21 @@ public class NewAutonMultiColored extends LinearOpMode {
                 left(tiles*0.5);
             }
 
+            telemetry.addData("Color Sensor colorLeft Red:", colorLeft.red());
+            telemetry.addData("Color Sensor colorLeft Blue:", colorLeft.blue());
+            telemetry.addData("Color Sensor colorLeft Green: ", colorLeft.green());
+
+            telemetry.addData("Color Sensor colorRight Red:", colorRight.red());
+            telemetry.addData("Color Sensor colorRight Blue:", colorRight.blue());
+            telemetry.addData("Color Sensor colorRight Green: ", colorRight.green());
+
+            telemetry.addData("armHeight (inches)", armHeight.getDistance(DistanceUnit.INCH));
+
+            telemetry.addData("straitenLeft", straitenLeft.isPressed());
+            telemetry.addData("straightenRight", straightenRight.isPressed());
+
+            telemetry.addData("armTouch", armTouch.isPressed());
+            telemetry.addData("intakeTouch", intakeTouch.isPressed());
         }
     }
 
