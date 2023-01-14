@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -31,10 +30,6 @@ public class NewAutonBlueBigBot extends LinearOpMode {
     private DcMotor leftBack;
     private DcMotor rightBack;
 
-    // arm motors
-    private DcMotor arm;
-    private DcMotor arm2;
-
     // touch sensor for arm and intake to tell when something is fully in / down
     private TouchSensor armTouch;
     private TouchSensor intakeTouch;
@@ -47,13 +42,12 @@ public class NewAutonBlueBigBot extends LinearOpMode {
     private DistanceSensor armHeight;
 
     // intake servos (continuous)
-    private CRServo rightintake;
-    private CRServo leftintake;
+    private CRServo rightspin;
+    private CRServo leftspin;
 
-    // servos for touch sensors
-    private Servo rightTurnSensor;
-    private Servo leftTurnSensor;
-
+    // arm motors
+    private DcMotor arm;
+    private DcMotor arm2;
 
     // color sensors
     private ColorSensor colorBack;
@@ -120,9 +114,10 @@ public class NewAutonBlueBigBot extends LinearOpMode {
     //time it takes to go forward or backwards a tile
     double tiles = 2600;
     //time it takes to stafe a tile
-    double low = 13.5;
-    double med = 23.5;
-    double high = 33.5;
+    double low = 19.5;
+    double med = 29.5;
+    double high = 39.5;
+    //height for poles
 
     int targetColor = 250; // this is minimum magnitude of color
 
@@ -134,12 +129,10 @@ public class NewAutonBlueBigBot extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // in config --> port 3 --> "rightFront"
         intakeTouch = hardwareMap.get(TouchSensor.class, "intakeTouch");
         armTouch = hardwareMap.get(TouchSensor.class, "armTouch");  // in config --> digital port 5 --> "touchy"
-        rightintake = hardwareMap.get(CRServo.class, "rightClaw"); // in config --> port 3 --> "rightintake"
-        leftintake = hardwareMap.get(CRServo.class, "leftClaw"); // in config --> port 4 --> "leftintake"
+        rightspin = hardwareMap.get(CRServo.class, "rightspin"); // in config --> port 3 --> "rightintake"
+        leftspin = hardwareMap.get(CRServo.class, "leftspin"); // in config --> port 4 --> "leftintake"
         straightenRight = hardwareMap.get(TouchSensor.class, "straitenRight");
         straitenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
-        rightTurnSensor= hardwareMap.get(Servo.class, "rightTurnSensor");
-        leftTurnSensor = hardwareMap.get(Servo.class, "leftTurnSensor");
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
         armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
@@ -233,9 +226,6 @@ public class NewAutonBlueBigBot extends LinearOpMode {
                             // this means we've seen the third thing (triangle) and should do that stuff
                             // 3 circle
                             signal = 3;
-                        } else {
-                            signal = 3;
-                            // do 3 because it dont like reading circle
                         }
                     }
 
@@ -258,23 +248,23 @@ public class NewAutonBlueBigBot extends LinearOpMode {
 
             // drive backwards until reaching terminal
             while (colorBack.blue() < targetColor) {
-                drive(-pow, -pow, -pow, -pow, 500);
+                backwards(500);
             }
 
             // now strafe until in line with  high pole
-            drive(STPL * pow, STPL * -pow, STPL * -pow, STPL * pow, tiles*3.75);
+            left(tiles*3.75);
 
             // raise arm
             lift(high);
 
             //get closer to pole
-            drive(pow, pow, pow, pow, 500);
+            forward(500);
 
             //drop cone
             intake(-fullPow, dropTime);
 
             //back away from pole
-            drive(-pow, -pow, -pow, -pow, 500);
+            backwards(500);
 
             //lower arm
             lower();
@@ -285,18 +275,14 @@ public class NewAutonBlueBigBot extends LinearOpMode {
             //start loop
             for (int i = 0; i < loopCounter; i++){
                 //strafe to line up with cone stack
-
                 //undershoot
-                drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.4);
-
-                //touch sensor down
-                turnSensor(1);
+                right(tiles*0.4);
 
                 //raise arm
                 lift(15);
 
                 //aproach stack
-                drive(pow, pow, pow, pow, tilef*2);
+                forward(tilef*2);
 
                 //line up with line
                 while(colorLeft.blue() < targetColor || colorRight.blue() < targetColor) {
@@ -314,7 +300,7 @@ public class NewAutonBlueBigBot extends LinearOpMode {
                 while(!straitenLeft.isPressed() || !straightenRight.isPressed()) {
                     if (!straitenLeft.isPressed() && !straightenRight.isPressed()) {
                         //both not pressed drive forward
-                        drive(pow, pow, pow, pow, 1000);
+                        drive(lowPow, lowPow, lowPow, lowPow, 1000);
                     }
                     else if (!straitenLeft.isPressed() && straightenRight.isPressed()){
                         //right pressed power left wheeles
@@ -347,43 +333,38 @@ public class NewAutonBlueBigBot extends LinearOpMode {
                 lift(high);
 
                 //back up
-                drive(-pow, -pow, -pow, -pow,tiles*2);
-
-                //turn sensor up
-                turnSensor(0);
+                backwards(tiles*2);
 
                 //line up with pole
-                drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
+                left(tiles*0.5);
 
                 //move closer to pole
-                drive(pow, pow, pow, pow, 50);
+                forward(50);
 
                 //drop cone
                 intake(fullPow, dropTime);
 
                 //back away from pole
-                drive(-pow, -pow, -pow, -pow, 50);
+                backwards(50);
 
                 //lower arm
                 lower();
             }
 
             //move to middle of park zone
-            drive(pow, -pow, pow, -pow, tiles*2);
+            right(tiles*2);
 
             if ((signal==1 && STPL==-1)||(signal==3 &&STPL==1)){
                 //zone closest to wall
-                drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
-                drive(pow, pow, pow, pow, tilef*2);
-                drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
+                right(tiles*0.5);
+                forward(tilef*2);
+                left(tiles*0.5);
             }
             else if (signal==2){
                 //middle zone
-                drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.5);
-                drive(pow, pow, pow, pow, tilef*1);
-                drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
-            }
-            else{
+                right(tiles*0.5);
+                forward(tilef*1);
+                left(tiles*0.5);
             }
 
         }
@@ -428,23 +409,11 @@ public class NewAutonBlueBigBot extends LinearOpMode {
 
 
     public void intake(double IP, double time) {
-        rightintake.setPower (IP);
-        leftintake.setPower (IP);
+        rightspin.setPower (IP);
+        leftspin.setPower (IP);
         sleep ((int) time);
-        rightintake.setPower(0);
-        leftintake.setPower(0);
-        sleep (10);
-    }
-
-    // for lowering up and down the touch sensors to get ready for hitting wall.
-    /**
-     * Pre-Condition: int TP is either 0 or 1
-     * Post-Condition: turn sensors move up or down from current position
-     * @param TP = servo position
-     */
-    public void turnSensor(int TP) {
-        rightTurnSensor.setPosition (TP);
-        leftTurnSensor.setPosition (TP);
+        rightspin.setPower(0);
+        leftspin.setPower(0);
         sleep (10);
     }
 
@@ -492,4 +461,57 @@ public class NewAutonBlueBigBot extends LinearOpMode {
         rightBack.setPower(0);
         sleep(10);
     }
+
+    public void forward(double time){
+        leftFront.setPower(pow);
+        rightFront.setPower(pow);
+        leftBack.setPower(pow);
+        rightBack.setPower(pow);
+        sleep ((int)time);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+        sleep(10);
+    }
+
+    public void backwards(double time){
+        leftFront.setPower(-pow);
+        rightFront.setPower(-pow);
+        leftBack.setPower(-pow);
+        rightBack.setPower(-pow);
+        sleep ((int)time);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+        sleep(10);
+    }
+
+    public void left(double time){
+        leftFront.setPower(-pow*STPL);
+        rightFront.setPower(pow*STPL);
+        leftBack.setPower(-pow*STPL);
+        rightBack.setPower(pow*STPL);
+        sleep ((int)time);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+        sleep(10);
+    }
+
+    public void right(double time){
+        leftFront.setPower(pow*STPL);
+        rightFront.setPower(-pow*STPL);
+        leftBack.setPower(pow*STPL);
+        rightBack.setPower(-pow*STPL);
+        sleep ((int)time);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+        sleep(10);
+    }
+
 }
