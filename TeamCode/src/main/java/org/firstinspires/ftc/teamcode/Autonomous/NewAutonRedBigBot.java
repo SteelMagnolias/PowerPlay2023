@@ -92,7 +92,9 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
         private TFObjectDetector tfod;
         // this will later allow you to use TensorFlow.  This is a particular instance of the TensorFlow engine.
 
-        private int signal;
+    //this should be the hardest to detect
+        private int signal=2;
+
   /*
   Vuforia will feed its information and pictures it finds into TensorFlow for further analysis!
    */
@@ -437,7 +439,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
         sleep(10);
     }
 
-    public void lift(double AH, double pow) {
+    public void moveArm(double AH, double pow) {
         // lift, but with an assigned power as well.
 
         while (armHeight.getDistance(DistanceUnit.INCH)<AH){

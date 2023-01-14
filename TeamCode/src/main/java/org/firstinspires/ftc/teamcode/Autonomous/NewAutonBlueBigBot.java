@@ -92,7 +92,8 @@ public class NewAutonBlueBigBot extends LinearOpMode {
     private TFObjectDetector tfod;
     // this will later allow you to use TensorFlow.  This is a particular instance of the TensorFlow engine.
 
-    private int signal;
+    //this should be hardest to detect
+    private int signal = 2;
   /*
   Vuforia will feed its information and pictures it finds into TensorFlow for further analysis!
    */
