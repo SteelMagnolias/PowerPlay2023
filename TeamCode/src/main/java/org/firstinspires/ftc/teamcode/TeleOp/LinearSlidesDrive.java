@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import java.util.List;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -57,6 +59,16 @@ public class LinearSlidesDrive extends OpMode {
     private WebcamName webcamName1;
     private WebcamName webcamName2;
 
+    public enum ArmState {
+        BOTTOM,
+        LOWER,
+        MIDDLE,
+        UPPER,
+        RESET ,
+        GROUND, // Ground Junctions
+    };
+    LinearSlidesDrive.ArmState levels;
+
     private final static int REVERSE = -1;
     private final static double POWER = 0.3;
     private int FORWARD;
@@ -67,6 +79,10 @@ public class LinearSlidesDrive extends OpMode {
 
     private static final double DEAD_ZONE = 0.1;
     private static final double OFF = 0;
+
+    // finite state machine that defines the position of the arm in relation to certain events.
+    // bottom is the default
+
 
     @Override
     public void init() {
@@ -167,6 +183,52 @@ public class LinearSlidesDrive extends OpMode {
         //X2 is pushed will bring to low Level
         //B2 is pushed will bring to middle level
         //Y2 is pushed will bring to tall level
+
+        // Finite State Machine - Levels (need to edit distances on time once tested)
+
+        final double low = 19.5;
+        final double middle = 29.5;
+        final double tall = 39.5;
+
+        switch (levels) {
+            // at bottom continue to bottom or respond to button push
+            case BOTTOM:
+                arm.setPower(0);
+                arm2.setPower(0);
+                if (a2) {
+                    levels = LinearSlidesDrive.ArmState.LOWER;
+                }
+                if (b2) {
+                    levels = LinearSlidesDrive. ArmState.MIDDLE;
+                }
+                if (y2) {
+                    levels = LinearSlidesDrive.ArmState.UPPER;
+                }
+
+                break;
+            // at low  continue to low or respond to button push
+            case LOWER:
+                lift(low);
+                break;
+            // at middle  continue to middle or respond to button push
+            case MIDDLE:
+                lift(middle);
+            // at Tall  continue to tall or respond to button push
+            case UPPER:
+                lift(tall);
+                break;
+            // at reset  continue to reset or respond to button push
+            case RESET:
+                if (!armTouch.isPressed()) {
+                    arm.setPower(-.8);
+                    arm2.setPower(-.8);
+                } else {
+                    levels = LinearSlidesDrive.ArmState.BOTTOM;
+                }
+                break;
+            default:
+                levels = LinearSlidesDrive.ArmState.BOTTOM;
+        }
 
 
         double pow;
@@ -361,5 +423,22 @@ public class LinearSlidesDrive extends OpMode {
             telemetry.update(); // print output
 
         }
+
+    }
+    public void lift (double AH) {
+        if (armHeight.getDistance(DistanceUnit.INCH)>=AH){
+            while (armHeight.getDistance(DistanceUnit.INCH)>=AH){
+                arm.setPower(-0.3);
+                arm2.setPower(-0.3);
+            }
+        }
+        else if (armHeight.getDistance(DistanceUnit.INCH)<AH){
+            while (armHeight.getDistance(DistanceUnit.INCH)<AH){
+                arm.setPower(0.3);
+                arm2.setPower(0.3);
+            }
+        }
+        arm.setPower(0);
+        arm2.setPower(0);
     }
 }
