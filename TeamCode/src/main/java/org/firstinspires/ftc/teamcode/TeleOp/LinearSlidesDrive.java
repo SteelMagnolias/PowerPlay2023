@@ -44,13 +44,6 @@ public class LinearSlidesDrive extends OpMode {
     private CRServo rightspin;
     private CRServo leftspin;
 
-    // servos for touch sensors
-    private Servo rightTurnSensor;
-    private Servo leftTurnSensor;
-
-
-    // color sensors
-    private ColorSensor colorBack;
     private ColorSensor colorLeft;
     private ColorSensor colorRight;
 
@@ -96,11 +89,11 @@ public class LinearSlidesDrive extends OpMode {
         leftspin = hardwareMap.get(CRServo.class, "leftClaw"); // in config --> port 4 --> "leftintake"
         straightenRight = hardwareMap.get(TouchSensor.class, "straitenRight");
         straitenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
-        rightTurnSensor = hardwareMap.get(Servo.class, "rightTurnSensor");
-        leftTurnSensor = hardwareMap.get(Servo.class, "leftTurnSensor");
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
         armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
+        colorLeft = hardwareMap.get(ColorSensor.class, "colorLeft");
+        colorRight = hardwareMap.get(ColorSensor.class, "colorRight");
 
         webcamName1 = hardwareMap.get(WebcamName.class, "Webcam 2");
         webcamName2 = hardwareMap.get(WebcamName.class, "Webcam 1");

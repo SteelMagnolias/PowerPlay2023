@@ -142,8 +142,6 @@ public class NewAutonMultiColored extends LinearOpMode {
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
         armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
-        colorYellowSide = hardwareMap.get(ColorSensor.class, "colorYellowSide");
-        colorPinkSide = hardwareMap.get(ColorSensor.class, "colorPinkSide");
         colorLeft = hardwareMap.get(ColorSensor.class, "colorLeft");
         colorRight = hardwareMap.get(ColorSensor.class, "colorRight");
         webcamName1 = hardwareMap.get(WebcamName.class, "Webcam 2");
