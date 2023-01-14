@@ -16,8 +16,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 @TeleOp (name = "LinearSlidesDrive" , group = "Interative OpMode")
-public class LinearSlidesDrive extends OpMode
-{
+public class LinearSlidesDrive extends OpMode {
     // wheels
     private DcMotor leftFront;
     private DcMotor rightFront;
@@ -63,19 +62,14 @@ public class LinearSlidesDrive extends OpMode
     private int FORWARD;
     private int STRAFE;
 
-    private int STPL;
-    //starting place
     private int dropTime = 5000;
     //time it takes to drop cone
-    private int loopCounter;
-    private int sum = (loopCounter+1);
 
-    private static final int REVERSE = -1;
     private static final double DEAD_ZONE = 0.1;
     private static final double OFF = 0;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void init() {
         leftBack = hardwareMap.get(DcMotor.class, "leftBack"); // in config --> port 1 --> "leftBack"
         rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // in config --> port 2 --> "rightBack
         leftFront = hardwareMap.get(DcMotor.class, "leftFront"); // in config --> port 0 --> "leftFront"
@@ -115,8 +109,9 @@ public class LinearSlidesDrive extends OpMode
         leftspin.setPower(OFF);
         rightspin.setPower(OFF);
     }
-    @Override
+
     // this is where we loop all of our code in teleop
+    @Override
     public void loop() {
         // Assigning & Data
         double lefty1 = -(gamepad1.left_stick_y); // this is the value of gamepad1's left joystick y value
@@ -259,8 +254,8 @@ public class LinearSlidesDrive extends OpMode
                     arm.setPower(0);
                     arm2.setPower(0);
                 } else {
-                    arm.setPower(lefty2 * pow);
-                    arm2.setPower(lefty2 * pow);
+                    arm.setPower(REVERSE * lefty2 * pow);
+                    arm2.setPower(REVERSE * lefty2 * pow);
                 }
             }
             if (lefty2 > 0) {
@@ -367,3 +362,4 @@ public class LinearSlidesDrive extends OpMode
 
         }
     }
+}
