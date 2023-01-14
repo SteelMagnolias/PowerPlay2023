@@ -273,7 +273,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                 intake(-fullPow, dropTime);
 
                 //back away from pole
-                drive(-pow, -pow, -pow, -pow, 500)
+                drive(-pow, -pow, -pow, -pow, 500);
 
                 //lower arm
                 lower();
