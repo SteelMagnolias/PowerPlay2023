@@ -22,8 +22,8 @@ import java.util.List;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 // hiiiiiiiiiiiii
-@Autonomous(name = "NewAutonRed", group="Iterative OpMode")
-    public class NewAutonRed extends LinearOpMode {
+@Autonomous(name = "NewAutonRedBigBot", group="Iterative OpMode")
+    public class NewAutonRedBigBot extends LinearOpMode {
 
         // wheels
         private DcMotor leftFront;
@@ -266,8 +266,14 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                 // raise arm
                 lift(high);
 
+                //get closer to pole
+                drive(pow, pow, pow, pow, 500);
+
                 //drop cone
                 intake(-fullPow, dropTime);
+
+                //back away from pole
+                drive(-pow, -pow, -pow, -pow, 500)
 
                 //lower arm
                 lower();
@@ -346,7 +352,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
                     turnSensor(0);
 
                     //line up with pole
-                    drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.7);
+                    drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
 
                     //move closer to pole
                     drive(pow, pow, pow, pow, 50);

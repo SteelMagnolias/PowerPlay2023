@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,33 +21,45 @@ import java.util.List;
 
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+// hiiiiiiiiiiiii
+@Autonomous(name = "NewAutonBlueBigBot", group="Iterative OpMode")
+public class NewAutonBlueBigBot extends LinearOpMode {
 
-@Autonomous(name = "NewAutonBlue", group="Iterative OpMode")
-public class NewAutonBlue extends LinearOpMode {
-
-    // declaration
+    // wheels
     private DcMotor leftFront;
     private DcMotor rightFront;
     private DcMotor leftBack;
     private DcMotor rightBack;
+
+    // touch sensor for arm and intake to tell when something is fully in / down
     private TouchSensor armTouch;
     private TouchSensor intakeTouch;
+
+    // touch sensors that touch the wall and get us straight
     private TouchSensor straightenRight;
     private TouchSensor straitenLeft;
+
+    // distance sensor on arm
     private DistanceSensor armHeight;
+
+    // intake servos (continuous)
     private CRServo rightintake;
     private CRServo leftintake;
-    private CRServo rightTurnSensor;
-    private CRServo leftTurnSensor;
+
+    // servos for touch sensors
+    private Servo rightTurnSensor;
+    private Servo leftTurnSensor;
+
+    // arm motors
     private DcMotor arm;
     private DcMotor arm2;
-    // wheelies!
 
     // color sensors
     private ColorSensor colorBack;
     private ColorSensor colorLeft;
     private ColorSensor colorRight;
 
+    // cameras (each go into webcam name for universal coding) OOP is cool my guys!
     private WebcamName webcamName; // webcam
     private WebcamName webcamName1;
     private WebcamName webcamName2;
@@ -124,8 +137,8 @@ public class NewAutonBlue extends LinearOpMode {
         leftintake = hardwareMap.get(CRServo.class, "leftClaw"); // in config --> port 4 --> "leftintake"
         straightenRight = hardwareMap.get(TouchSensor.class, "straitenRight");
         straitenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
-        rightTurnSensor= hardwareMap.get(CRServo.class, "rightTurnSensor");
-        leftTurnSensor = hardwareMap.get(CRServo.class, "leftTurnSensor");
+        rightTurnSensor= hardwareMap.get(Servo.class, "rightTurnSensor");
+        leftTurnSensor = hardwareMap.get(Servo.class, "leftTurnSensor");
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
         armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
@@ -149,7 +162,7 @@ public class NewAutonBlue extends LinearOpMode {
         arm.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
         arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
 
-        telemetry.addData("ABBY AND ALLIE LISTEN UP", "blue corners, press button red corners, don't press button");
+        telemetry.addData("ABBY AND ALLIE LISTEN UP", "blue corners, press button.  red corners, don't press button");
 
 
         initVuforia(); // initialize vuforia first
@@ -247,14 +260,20 @@ public class NewAutonBlue extends LinearOpMode {
                 drive(-pow, -pow, -pow, -pow, 500);
             }
 
-            // now strafe until in line with pole
+            // now strafe until in line with  high pole
             drive(STPL * pow, STPL * -pow, STPL * -pow, STPL * pow, tiles*3.75);
 
             // raise arm
             lift(high);
 
+            //get closer to pole
+            drive(pow, pow, pow, pow, 500);
+
             //drop cone
             intake(-fullPow, dropTime);
+
+            //back away from pole
+            drive(-pow, -pow, -pow, -pow, 500)
 
             //lower arm
             lower();
@@ -263,13 +282,14 @@ public class NewAutonBlue extends LinearOpMode {
             loopCounter=0;
 
             //start loop
-            while(loopCounter!=2){
+            for (int i = 0; i < loopCounter; i++){
                 //strafe to line up with cone stack
+
                 //undershoot
                 drive(-pow*STPL, pow*STPL, -pow*STPL, pow*STPL, tiles*0.4);
 
                 //touch sensor down
-                turnSensor(-fullPow);
+                turnSensor(1);
 
                 //raise arm
                 lift(15);
@@ -279,9 +299,9 @@ public class NewAutonBlue extends LinearOpMode {
 
                 //line up with line
                 while(colorLeft.blue() < targetColor || colorRight.blue() < targetColor) {
-                    if (colorLeft.blue() < targetColor && colorRight.blue() > targetColor) {
+                    if (colorLeft.blue() < targetColor && colorRight.blue() >= targetColor) {
                         drive(lowPow * STPL, -lowPow * STPL, lowPow * STPL, -lowPow * STPL, 100);
-                    } else if (colorLeft.blue() > targetColor && colorRight.blue() < targetColor) {
+                    } else if (colorLeft.blue() >= targetColor && colorRight.blue() < targetColor) {
                         drive(-lowPow * STPL, lowPow * STPL, -lowPow * STPL, lowPow * STPL, 100);
                     }
                     else{
@@ -290,7 +310,7 @@ public class NewAutonBlue extends LinearOpMode {
                 }
 
                 //straiten robot
-                while(!straitenLeft.isPressed()&&!straightenRight.isPressed()) {
+                while(!straitenLeft.isPressed() || !straightenRight.isPressed()) {
                     if (!straitenLeft.isPressed() && !straightenRight.isPressed()) {
                         //both not pressed drive forward
                         drive(pow, pow, pow, pow, 1000);
@@ -300,7 +320,7 @@ public class NewAutonBlue extends LinearOpMode {
                         drive(lowPow, 0, lowPow, 0, 1000);
                     }
                     else if (straitenLeft.isPressed() && !straightenRight.isPressed()){
-                        //left pressed power left wheeles
+                        //left pressed power right wheeles
                         drive(0, lowPow, 0, lowPow, 1000);
                     }
                 }
@@ -308,10 +328,10 @@ public class NewAutonBlue extends LinearOpMode {
                 //lower arm to hit cone
                 arm.setPower(pow);
                 arm2.setPower(pow);
-                if (loopCounter==0){
+                if (i==0){
                     sleep(500);
                 }
-                else if( loopCounter==1){
+                else if( i==1){
                     sleep(1000);
                 }
                 arm.setPower(0);
@@ -329,10 +349,10 @@ public class NewAutonBlue extends LinearOpMode {
                 drive(-pow, -pow, -pow, -pow,tiles*2);
 
                 //turn sensor up
-                turnSensor(fullPow);
+                turnSensor(0);
 
                 //line up with pole
-                drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.7);
+                drive(pow*STPL, -pow*STPL, pow*STPL, -pow*STPL, tiles*0.5);
 
                 //move closer to pole
                 drive(pow, pow, pow, pow, 50);
@@ -345,12 +365,9 @@ public class NewAutonBlue extends LinearOpMode {
 
                 //lower arm
                 lower();
-
-                //update loop counter
-                sum=loopCounter;
             }
 
-            //move to middke of park zone
+            //move to middle of park zone
             drive(pow, -pow, pow, -pow, tiles*2);
 
             if ((signal==1 && STPL==-1)||(signal==3 &&STPL==1)){
@@ -418,12 +435,15 @@ public class NewAutonBlue extends LinearOpMode {
         sleep (10);
     }
 
-    public void turnSensor(double TP) {
-        rightintake.setPower (TP);
-        leftintake.setPower (TP);
-        sleep (10);
-        rightintake.setPower(0);
-        leftintake.setPower(0);
+    // for lowering up and down the touch sensors to get ready for hitting wall.
+    /**
+     * Pre-Condition: int TP is either 0 or 1
+     * Post-Condition: turn sensors move up or down from current position
+     * @param TP = servo position
+     */
+    public void turnSensor(int TP) {
+        rightTurnSensor.setPosition (TP);
+        leftTurnSensor.setPosition (TP);
         sleep (10);
     }
 
@@ -441,6 +461,18 @@ public class NewAutonBlue extends LinearOpMode {
         while (armHeight.getDistance(DistanceUnit.INCH)<AH){
             arm.setPower(0.3);
             arm2.setPower(0.3);
+        }
+        arm.setPower(0);
+        arm2.setPower(0);
+        sleep(10);
+    }
+
+    public void lift(double AH, double pow) {
+        // lift, but with an assigned power as well.
+
+        while (armHeight.getDistance(DistanceUnit.INCH)<AH){
+            arm.setPower(pow);
+            arm2.setPower(pow);
         }
         arm.setPower(0);
         arm2.setPower(0);
