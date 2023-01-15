@@ -60,7 +60,7 @@ public class LinearSlidesDrive extends OpMode {
         RESET ,
         GROUND, // Ground Junctions
     };
-    LinearSlidesDrive.ArmState levels;
+    LinearSlidesDrive.ArmState levels = ArmState.RESET;
 
     private final static int REVERSE = -1;
     private final static double POWER = 0.3;
@@ -85,8 +85,8 @@ public class LinearSlidesDrive extends OpMode {
         rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // in config --> port 3 --> "rightFront"
         intakeTouch = hardwareMap.get(TouchSensor.class, "intakeTouch");
         armTouch = hardwareMap.get(TouchSensor.class, "armTouch");  // in config --> digital port 5 --> "touchy"
-        rightspin = hardwareMap.get(CRServo.class, "rightClaw"); // in config --> port 3 --> "rightintake"
-        leftspin = hardwareMap.get(CRServo.class, "leftClaw"); // in config --> port 4 --> "leftintake"
+        rightspin = hardwareMap.get(CRServo.class, "rightspin"); // in config --> port 3 --> "rightintake"
+        leftspin = hardwareMap.get(CRServo.class, "leftspin"); // in config --> port 4 --> "leftintake"
         straightenRight = hardwareMap.get(TouchSensor.class, "straitenRight");
         straitenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
         arm = hardwareMap.get(DcMotor.class, "arm");
@@ -179,6 +179,7 @@ public class LinearSlidesDrive extends OpMode {
 
         // Finite State Machine - Levels (need to edit distances on time once tested)
 
+        final double bottom = 3.0;
         final double low = 19.5;
         final double middle = 29.5;
         final double tall = 39.5;
@@ -189,26 +190,53 @@ public class LinearSlidesDrive extends OpMode {
                 arm.setPower(0);
                 arm2.setPower(0);
                 if (a2) {
-                    levels = LinearSlidesDrive.ArmState.LOWER;
+                   levels = LinearSlidesDrive.ArmState.LOWER;
                 }
                 if (b2) {
-                    levels = LinearSlidesDrive. ArmState.MIDDLE;
+                    levels = LinearSlidesDrive.ArmState.MIDDLE;
                 }
                 if (y2) {
                     levels = LinearSlidesDrive.ArmState.UPPER;
                 }
-
                 break;
             // at low  continue to low or respond to button push
             case LOWER:
-                lift(low);
+                if (armHeight.getDistance(DistanceUnit.INCH) < low) {
+                    arm.setPower(.8);
+                    arm2.setPower(.8);
+                } else {
+                    arm.setPower(0);
+                    arm2.setPower(0);
+                }
+                if (rb2) {
+                    levels = LinearSlidesDrive.ArmState.RESET;
+                }
                 break;
             // at middle  continue to middle or respond to button push
-            case MIDDLE:
-                lift(middle);
             // at Tall  continue to tall or respond to button push
+            case MIDDLE:
+                if (armHeight.getDistance(DistanceUnit.INCH) < middle) {
+                arm.setPower(.8);
+                arm2.setPower(.8);
+            } else {
+                arm.setPower(0);
+                arm2.setPower(0);
+            }
+            if (rb2) {
+                levels = LinearSlidesDrive.ArmState.RESET;
+            }
+                break;
             case UPPER:
-                lift(tall);
+                if (armHeight.getDistance(DistanceUnit.INCH) < tall) {
+                    arm.setPower(.8);
+                    arm2.setPower(.8);
+                } else {
+                    arm.setPower(0);
+                    arm2.setPower(0);
+                }
+                if (rb2) {
+                    levels = LinearSlidesDrive.ArmState.RESET;
+                }
                 break;
             // at reset  continue to reset or respond to button push
             case RESET:
@@ -222,7 +250,6 @@ public class LinearSlidesDrive extends OpMode {
             default:
                 levels = LinearSlidesDrive.ArmState.BOTTOM;
         }
-
 
         double pow;
         if (a1) pow = 1; // turbo mode

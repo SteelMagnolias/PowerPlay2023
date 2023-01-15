@@ -313,7 +313,7 @@ public class NewAutonMultiColored extends LinearOpMode {
                 right(tiles*0.4);
 
                 //raise arm
-                lift(15);
+                lift(11);
 
                 //aproach stack
                 forward(tilef*2);
