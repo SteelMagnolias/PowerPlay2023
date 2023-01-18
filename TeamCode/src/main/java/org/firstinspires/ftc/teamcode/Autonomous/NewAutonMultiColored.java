@@ -37,7 +37,7 @@ public class NewAutonMultiColored extends LinearOpMode {
 
     // touch sensors that touch the wall and get us straight
     private TouchSensor straightenRight;
-    private TouchSensor straitenLeft;
+    private TouchSensor straightenLeft;
 
     // distance sensor on arm
     private DistanceSensor armHeight;
@@ -137,8 +137,8 @@ public class NewAutonMultiColored extends LinearOpMode {
         armTouch = hardwareMap.get(TouchSensor.class, "armTouch");  // in config --> digital port 5 --> "touchy"
         rightspin = hardwareMap.get(CRServo.class, "rightspin"); // in config --> port 3 --> "rightintake"
         leftspin = hardwareMap.get(CRServo.class, "leftspin"); // in config --> port 4 --> "leftintake"
-        straightenRight = hardwareMap.get(TouchSensor.class, "straitenRight");
-        straitenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
+        straightenRight = hardwareMap.get(TouchSensor.class, "straightenRight");
+        straightenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
         armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
@@ -160,8 +160,8 @@ public class NewAutonMultiColored extends LinearOpMode {
         }
         telemetry.addData("Status", "Initialized");
 
-        arm.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
-        arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
+        //arm.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
+        //arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
 
         telemetry.addData("ABBY AND ALLIE LISTEN UP", "blue corners, press button.  red corners, don't press button");
 
@@ -330,17 +330,17 @@ public class NewAutonMultiColored extends LinearOpMode {
                     }
                 }
 
-                //straiten robot
-                while(!straitenLeft.isPressed() || !straightenRight.isPressed()) {
-                    if (!straitenLeft.isPressed() && !straightenRight.isPressed()) {
+                //straighten robot
+                while(!straightenLeft.isPressed() || !straightenRight.isPressed()) {
+                    if (!straightenLeft.isPressed() && !straightenRight.isPressed()) {
                         //both not pressed drive forward
                         drive(lowPow, lowPow, lowPow, lowPow, 1000);
                     }
-                    else if (!straitenLeft.isPressed() && straightenRight.isPressed()){
+                    else if (!straightenLeft.isPressed() && straightenRight.isPressed()){
                         //right pressed power left wheeles
                         drive(lowPow, 0, lowPow, 0, 1000);
                     }
-                    else if (straitenLeft.isPressed() && !straightenRight.isPressed()){
+                    else if (straightenLeft.isPressed() && !straightenRight.isPressed()){
                         //left pressed power right wheeles
                         drive(0, lowPow, 0, lowPow, 1000);
                     }
@@ -411,7 +411,7 @@ public class NewAutonMultiColored extends LinearOpMode {
 
             telemetry.addData("armHeight (inches)", armHeight.getDistance(DistanceUnit.INCH));
 
-            telemetry.addData("straitenLeft", straitenLeft.isPressed());
+            telemetry.addData("straightenLeft", straightenLeft.isPressed());
             telemetry.addData("straightenRight", straightenRight.isPressed());
 
             telemetry.addData("armTouch", armTouch.isPressed());

@@ -181,6 +181,7 @@ public class EarlySeasonDrive extends OpMode
         final int low = 800;
         final int tall = 1200;
 
+
         switch (levels) {
             // at bottom continue to bottom or respond to button push
             case BOTTOM:
