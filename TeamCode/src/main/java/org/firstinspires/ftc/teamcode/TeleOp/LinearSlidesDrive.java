@@ -125,7 +125,9 @@ public class LinearSlidesDrive extends OpMode {
         leftspin.setPower(OFF);
         rightspin.setPower(OFF);
 
-        levels = ArmState.RESET;
+        //levels = ArmState.RESET;
+        // edit 11 - start the armstate at BOTTOM so we can choose.  The way it is rewritten currently does not allow for the arm to come all the way down straight away. we have to start with it on the bottom, or we can use the manual controls
+        levels = ArmState.BOTTOM;
     }
 
     // this is where we loop all of our code in teleop
@@ -202,17 +204,30 @@ public class LinearSlidesDrive extends OpMode {
                 found = false;
 
                 if (a2) {
-                   levels = ArmState.LOWER;
+                    levels = ArmState.LOWER;
+                    
+                    // edit 1 - get rid of this if it doesn't work.  We're going set the motors here, so that it only happens once and won't be starting over and over and over, sending a burst of energy each time
+                    arm.setPower(.6);
+                    arm2.setPower(.6);
                 }
                 if (b2) {
                     levels = ArmState.MIDDLE;
+                    
+                    // edit 2 - get rid of this if it doesn't work.  like edit 1, same pupose.
+                    arm.setPower(.6);
+                    arm2.setPower(.6);
                 }
                 if (y2) {
                     levels = ArmState.UPPER;
+                    
+                    // edit 3, same as 1 and 2
+                    arm.setPower(.6);
+                    arm2.setPower(.6);
                 }
                 break;
             // at low  continue to low or respond to button push
             case LOWER:
+                /*
                 if (armHeight.getDistance(DistanceUnit.INCH) < low && !found) {
                     arm.setPower(.6);
                     arm2.setPower(.6);
@@ -221,13 +236,26 @@ public class LinearSlidesDrive extends OpMode {
                     arm2.setPower(0);
                     found = true;
                 }
+                */
+                
+                // edit 4 - replacement code that just stops the motors when it reaches low. (old code commented out above)
+                if (armHeight.getDistance(DistanceUnit.INCH) >= low) {
+                    arm.setPower(0);
+                    arm2.setPower(0);
+                }
+                
                 if (rb2) {
                     levels = ArmState.RESET;
+                    
+                    // edit 7 - change so the arm only sets motors once
+                    arm.setPower(-0.3);
+                    arm2.setPower(-0.3);
                 }
                 break;
             // at middle  continue to middle or respond to button push
             // at Tall  continue to tall or respond to button push
             case MIDDLE:
+                /*
                 if (armHeight.getDistance(DistanceUnit.INCH) < middle && !found) {
                 arm.setPower(.6);
                 arm2.setPower(.6);
@@ -236,11 +264,25 @@ public class LinearSlidesDrive extends OpMode {
                     arm2.setPower(0);
                     found = true;
                 }
+                */
+                
+                // edit 5 - replacement code that just stops the motors when it reaches mid. (old code commented out above)
+                if (armHeight.getDistance(DistanceUnit.INCH) >= middle) {
+                    arm.setPower(0);
+                    arm2.setPower(0);
+                }
+                
                 if (rb2) {
                     levels = ArmState.RESET;
+                    
+                    // edit 8 - change so the arm only sets motors once
+                    arm.setPower(-0.3);
+                    arm2.setPower(-0.3);
                 }
                 break;
             case UPPER:
+                
+                /*
                 if (armHeight.getDistance(DistanceUnit.INCH) < tall  &&  !found) {
                     arm.setPower(.6);
                     arm2.setPower(.6);
@@ -249,16 +291,36 @@ public class LinearSlidesDrive extends OpMode {
                     arm2.setPower(0);
                     found = true;
                 }
+                */
+                
+                // edit 6 - replacement code that just stops the motors when it reaches tall. (old code commented out above)
+                if (armHeight.getDistance(DistanceUnit.INCH) >= tall) {
+                    arm.setPower(0);
+                    arm2.setPower(0);
+                }
+                
                 if (rb2) {
                     levels = ArmState.RESET;
+                    
+                    // edit 9 - change so the arm only sets motors once
+                    arm.setPower(-0.3);
+                    arm2.setPower(-0.3);
                 }
                 break;
             // at reset  continue to reset or respond to button push
             case RESET:
+                /*
                 if (!armTouch.isPressed()) {
                     arm.setPower(-.3);
                     arm2.setPower(-.3);
                 } else {
+                    levels = ArmState.BOTTOM;
+                }
+                */
+                
+                // edit 10, old code commented out above.  Arm would already be moving downward
+                if (armTouch.isPressed()) {
+                    // bottom case has it stop motor power
                     levels = ArmState.BOTTOM;
                 }
                 break;
