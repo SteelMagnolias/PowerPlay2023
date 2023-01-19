@@ -120,7 +120,7 @@ public class NewAutonMultiColored extends LinearOpMode {
     //time it takes to stafe a tile
     double low = 19.5;
     double med = 29.5;
-    double high = 39.5;
+    double high = 37.5;
     //height for poles
 
     String allianceColor = "blue"; // used to determine which alliance we are on
@@ -146,6 +146,10 @@ public class NewAutonMultiColored extends LinearOpMode {
         colorRight = hardwareMap.get(ColorSensor.class, "colorRight");
         webcamName1 = hardwareMap.get(WebcamName.class, "Webcam 2");
         webcamName2 = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        rightspin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
+
+        rightBack.setDirection(CRServo.Direction.REVERSE);
 
         if (armTouch.isPressed()) {
             // A2 F5
@@ -248,15 +252,13 @@ public class NewAutonMultiColored extends LinearOpMode {
             lower();
 
             // preload
-            while(!intakeTouch.isPressed()) {
-                // intake
-                intake(fullPow, 10);
-            }
+            intake();
 
             // drive backwards until reaching terminal
             if(STPL==1) {
                 while (colorLeft.blue() < targetColor && colorLeft.red() < targetColor) {
                     backwards(500);
+                    //posible choppy motion
                 }
 
                 // let's determine our alliance
@@ -295,7 +297,7 @@ public class NewAutonMultiColored extends LinearOpMode {
             forward(500);
 
             //drop cone
-            intake(-fullPow, dropTime);
+            outtake();
 
             //back away from pole
             backwards(500);
@@ -303,7 +305,7 @@ public class NewAutonMultiColored extends LinearOpMode {
             //lower arm
             lower();
 
-            //set loop counter to 0
+            //set loop counter to 1
             loopCounter=1;
 
             //start loop
@@ -313,7 +315,7 @@ public class NewAutonMultiColored extends LinearOpMode {
                 right(tiles*0.4);
 
                 //raise arm
-                lift(11);
+                lift(15);
 
                 //aproach stack
                 forward(tilef*2);
@@ -346,25 +348,18 @@ public class NewAutonMultiColored extends LinearOpMode {
                     }
                 }
 
-                //lower arm to hit cone
-                arm.setPower(pow);
-                arm2.setPower(pow);
-                if (i==0){
-                    sleep(500);
+                //lower and intake
+                arm.setPower(-lowPow);
+                arm2.setPower(-lowPow);
+                leftspin.setPower(fullPow);
+                rightspin.setPower(fullPow);
+                while (!intakeTouch.isPressed()){
+                    sleep(1);
                 }
-                else if( i==1){
-                    sleep(1000);
-                }
+                leftspin.setPower(0);
+                rightspin.setPower(0);
                 arm.setPower(0);
                 arm2.setPower(0);
-
-                //intake
-                while (!intakeTouch.isPressed()) {
-                    intake(fullPow, 10);
-                }
-
-                //raise arm pole height
-                lift(high);
 
                 //back up
                 backwards(tiles*2);
@@ -372,11 +367,14 @@ public class NewAutonMultiColored extends LinearOpMode {
                 //line up with pole
                 left(tiles*0.5);
 
+                //raise arm pole height
+                lift(high);
+
                 //move closer to pole
                 forward(50);
 
                 //drop cone
-                intake(fullPow, dropTime);
+                outtake();
 
                 //back away from pole
                 backwards(50);
@@ -401,6 +399,7 @@ public class NewAutonMultiColored extends LinearOpMode {
                 left(tiles*0.5);
             }
 
+
             telemetry.addData("Color Sensor colorLeft Red:", colorLeft.red());
             telemetry.addData("Color Sensor colorLeft Blue:", colorLeft.blue());
             telemetry.addData("Color Sensor colorLeft Green: ", colorLeft.green());
@@ -408,6 +407,7 @@ public class NewAutonMultiColored extends LinearOpMode {
             telemetry.addData("Color Sensor colorRight Red:", colorRight.red());
             telemetry.addData("Color Sensor colorRight Blue:", colorRight.blue());
             telemetry.addData("Color Sensor colorRight Green: ", colorRight.green());
+            //do we need green here??
 
             telemetry.addData("armHeight (inches)", armHeight.getDistance(DistanceUnit.INCH));
 
@@ -455,9 +455,25 @@ public class NewAutonMultiColored extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS); // loads the objects that can be detected.;
     }
 
+    public void outtake() {
+        rightspin.setPower (-fullPow);
+        leftspin.setPower (-fullPow);
+        sleep (dropTime);
+        rightspin.setPower(0);
+        leftspin.setPower(0);
+        sleep (10);
+    }
 
+    public void intake() {
+        while(!intakeTouch.isPressed()) {
+            rightspin.setPower(fullPow);
+            leftspin.setPower(fullPow);
+        }
+        rightspin.setPower(0);
+        leftspin.setPower(0);
+    }
 
-    public void intake(double IP, double time) {
+    public void cone(double IP, double time) {
         rightspin.setPower (IP);
         leftspin.setPower (IP);
         sleep ((int) time);
@@ -540,8 +556,8 @@ public class NewAutonMultiColored extends LinearOpMode {
     public void left(double time){
         leftFront.setPower(-pow*STPL);
         rightFront.setPower(pow*STPL);
-        leftBack.setPower(-pow*STPL);
-        rightBack.setPower(pow*STPL);
+        leftBack.setPower(pow*STPL);
+        rightBack.setPower(-pow*STPL);
         sleep ((int)time);
         leftFront.setPower(0);
         rightFront.setPower(0);
@@ -553,8 +569,8 @@ public class NewAutonMultiColored extends LinearOpMode {
     public void right(double time){
         leftFront.setPower(pow*STPL);
         rightFront.setPower(-pow*STPL);
-        leftBack.setPower(pow*STPL);
-        rightBack.setPower(-pow*STPL);
+        leftBack.setPower(-pow*STPL);
+        rightBack.setPower(pow*STPL);
         sleep ((int)time);
         leftFront.setPower(0);
         rightFront.setPower(0);
