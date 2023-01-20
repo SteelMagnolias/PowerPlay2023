@@ -11,12 +11,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-
 import java.util.List;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 @TeleOp (name = "LinearSlidesDrive" , group = "Iterative Opmode")
 public class LinearSlidesDrive extends OpMode {
     // wheels
@@ -77,6 +74,8 @@ public class LinearSlidesDrive extends OpMode {
     // bottom is the default
 
     private boolean found = false; // tells whether we have reached target height once
+    
+    private boolean alreadyMoving = false; // tells whether the arm is already moving.
 
     @Override
     public void init() {
@@ -200,17 +199,21 @@ public class LinearSlidesDrive extends OpMode {
             case BOTTOM:
                 arm.setPower(0);
                 arm2.setPower(0);
+                alreadyMoving = false;
 
                 found = false;
 
                 if (a2) {
                     levels = ArmState.LOWER;
+                    alreadyMoving = true;
                 }
                 if (b2) {
                     levels = ArmState.MIDDLE;
+                    alreadyMoving = true;
                 }
                 if (y2) {
                     levels = ArmState.UPPER;
+                    alreadyMoving = true;
                 }
                 break;
             // at low  continue to low or respond to button push
@@ -222,10 +225,12 @@ public class LinearSlidesDrive extends OpMode {
                     arm.setPower(0);
                     arm2.setPower(0);
                     found = true;
+                    alreadyMoving = false;
                 }
                 
                 if (rb2) {
                     levels = ArmState.RESET;
+                    alreadyMoving = true;
                 }
                 break;
             // at middle  continue to middle or respond to button push
@@ -239,15 +244,16 @@ public class LinearSlidesDrive extends OpMode {
                     arm.setPower(0);
                     arm2.setPower(0);
                     found = true;
+                    alreadyMoving = false;
                 }
                 
                 if (rb2) {
                     levels = ArmState.RESET;
+                    alreadyMoving = true;
                 }
                 break;
             case UPPER:
                 
-
                 if (armHeight.getDistance(DistanceUnit.INCH) < tall  &&  !found) {
                     arm.setPower(.6);
                     arm2.setPower(.6);
@@ -255,10 +261,12 @@ public class LinearSlidesDrive extends OpMode {
                     arm.setPower(0);
                     arm2.setPower(0);
                     found = true;
+                    alreadyMoving = false;
                 }
                 
                 if (rb2) {
                     levels = ArmState.RESET;
+                    alreadyMoving = true;
                 }
                 break;
             // at reset  continue to reset or respond to button push
@@ -269,11 +277,13 @@ public class LinearSlidesDrive extends OpMode {
                     arm2.setPower(-.3);
                 } else {
                     levels = ArmState.BOTTOM;
+                    alreadyMoving = false;
                 }
 
                 break;
             default:
                 levels = ArmState.BOTTOM;
+                alreadyMoving = false;
         }
 
 
@@ -366,32 +376,35 @@ public class LinearSlidesDrive extends OpMode {
 
         pow = 0.8;
 
-        if (Math.abs(lefty2) >= DEAD_ZONE && arm.getPower() == 0) {
-            if (lefty2 < 0) {
-                if (armTouch.isPressed()) {
-                    // if button is pressed, stop moving
-                    arm.setPower(0);
-                    arm2.setPower(0);
-                } else {
+        if (!alreadyMoving) {
+            // basically we are waiting to use it manually
+            if (Math.abs(lefty2) >= DEAD_ZONE) {
+                if (lefty2 < 0) {
+                    if (armTouch.isPressed()) {
+                        // if button is pressed, stop moving
+                        arm.setPower(0);
+                        arm2.setPower(0);
+                    } else {
+                        arm.setPower(lefty2 * pow);
+                        arm2.setPower(lefty2 * pow);
+                    }
+                }
+                if (lefty2 > 0) {
                     arm.setPower(lefty2 * pow);
                     arm2.setPower(lefty2 * pow);
                 }
+            } else if (buttonDown2) {
+                arm.setPower(-pow / 2);
+                arm2.setPower(-pow / 2);
+            } else if (buttonUp2) {
+                arm.setPower(pow / 2);
+                arm2.setPower(pow / 2);
+            } else {
+                arm.setPower(0);
+                arm2.setPower(0);
             }
-            if (lefty2 > 0) {
-                arm.setPower(lefty2 * pow);
-                arm2.setPower(lefty2 * pow);
-            }
-        } else if (buttonDown2) {
-            arm.setPower(-pow / 2);
-            arm2.setPower(-pow / 2);
-        } else if (buttonUp2) {
-            arm.setPower(pow / 2);
-            arm2.setPower(pow / 2);
-        } else {
-            arm.setPower(0);
-            arm2.setPower(0);
         }
-
+        
         // add information on arm powers
         telemetry.addData("arm", arm.getPower());
         telemetry.addData("arm2", arm2.getPower());
