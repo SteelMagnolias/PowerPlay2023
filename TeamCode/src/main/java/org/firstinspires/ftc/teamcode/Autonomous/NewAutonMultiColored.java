@@ -287,6 +287,8 @@ public class NewAutonMultiColored extends LinearOpMode {
             // now strafe until in line with  high pole
             left(tiles*3.75);
 
+            /*
+
             // raise arm
             lift(high);
 
@@ -379,6 +381,7 @@ public class NewAutonMultiColored extends LinearOpMode {
                 //lower arm
                 lower();
             }
+            */
 
             //move to middle of park zone
             right(tiles*2);
