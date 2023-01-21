@@ -25,7 +25,6 @@ public class LinearSlidesDrive extends OpMode {
     // arm motors
     private DcMotor arm;
     private DcMotor arm2;
-    private DcMotor arm3;
 
     // touch sensor for arm and intake to tell when something is fully in / down
     private TouchSensor armTouch;
@@ -61,9 +60,9 @@ public class LinearSlidesDrive extends OpMode {
     ArmState levels;
 
     private final static int REVERSE = -1;
-    private final static double POWER = 0.3;
-    private int FORWARD;
-    private int STRAFE;
+    //private final static double POWER = 0.3;
+    //private int FORWARD;
+    //private int STRAFE;
 
     private int dropTime = 5000;
     //time it takes to drop cone
@@ -96,7 +95,6 @@ public class LinearSlidesDrive extends OpMode {
 
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
-        arm3 = hardwareMap. get(DcMotor.class, "arm3");
 
         armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
 
@@ -111,7 +109,7 @@ public class LinearSlidesDrive extends OpMode {
 
         rightspin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
 
-        rightBack.setDirection(CRServo.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
 
@@ -121,7 +119,6 @@ public class LinearSlidesDrive extends OpMode {
         rightFront.setPower(OFF);
         arm.setPower(OFF);
         arm2.setPower(OFF);
-        arm3.setPower(OFF);
 
         // set servos to 0
         leftspin.setPower(OFF);
@@ -193,16 +190,15 @@ public class LinearSlidesDrive extends OpMode {
         // Finite State Machine - Levels (need to edit distances on time once tested)
 
         final double bottom = 4.0;
+        final double motorShutOff = 10.0;
         final double low = 19.5;
         final double middle = 29.5;
-        final double tall = 35.0;
+        final double tall = 38.0;
 
         switch (levels) {
             // at bottom continue to bottom or respond to button push
             case BOTTOM:
-                arm.setPower(0);
-                arm2.setPower(0);
-                arm3.setPower(0);
+
                 alreadyMoving = false;
 
                 found = false;
@@ -219,17 +215,19 @@ public class LinearSlidesDrive extends OpMode {
                     levels = ArmState.UPPER;
                     alreadyMoving = true;
                 }
+                if (rb2) {
+                    levels = ArmState.RESET; // reset
+                    alreadyMoving = true;
+                }
                 break;
             // at low  continue to low or respond to button push
             case LOWER:
                 if (armHeight.getDistance(DistanceUnit.INCH) < low && !found) {
                     arm.setPower(.6);
                     arm2.setPower(.6);
-                    arm3.setPower(-.6);
                 } else {
                     arm.setPower(0);
                     arm2.setPower(0);
-                    arm3.setPower(0);
                     found = true;
                     alreadyMoving = false;
                 }
@@ -246,11 +244,9 @@ public class LinearSlidesDrive extends OpMode {
                 if (armHeight.getDistance(DistanceUnit.INCH) < middle && !found) {
                 arm.setPower(.6);
                 arm2.setPower(.6);
-                arm3.setPower(-.6);
                 } else {
                     arm.setPower(0);
                     arm2.setPower(0);
-                    arm3.setPower(0);
                     found = true;
                     alreadyMoving = false;
                 }
@@ -265,11 +261,9 @@ public class LinearSlidesDrive extends OpMode {
                 if (armHeight.getDistance(DistanceUnit.INCH) < tall  &&  !found) {
                     arm.setPower(.6);
                     arm2.setPower(.6);
-                    arm3.setPower(-.6);
                 } else {
                     arm.setPower(0);
                     arm2.setPower(0);
-                    arm3.setPower(0);
                     found = true;
                     alreadyMoving = false;
                 }
@@ -282,11 +276,12 @@ public class LinearSlidesDrive extends OpMode {
             // at reset  continue to reset or respond to button push
             case RESET:
 
-                if (!armTouch.isPressed()) {
-                    arm.setPower(-.8);
-                    arm2.setPower(-.8);
-                    arm3.setPower(.8);
+                if (armHeight.getDistance(DistanceUnit.INCH) > motorShutOff) {
+                    arm.setPower(-.3);
+                    arm2.setPower(-.3);
                 } else {
+                    arm.setPower(0);
+                    arm2.setPower(0);
                     levels = ArmState.BOTTOM;
                     alreadyMoving = false;
                 }
@@ -300,7 +295,7 @@ public class LinearSlidesDrive extends OpMode {
 
         double pow;
         if (a1) pow = 1; // turbo mode
-        else pow = 0.5;
+        else pow =0.5;
         double c = Math.hypot(leftx1, lefty1);
         double perct = pow * c;
         if (c <= .1) perct = 0;
@@ -329,15 +324,6 @@ public class LinearSlidesDrive extends OpMode {
         //   theta += (Math.PI/2);
         //}
 
-        telemetry.addData("distance" , armHeight.getDistance(DistanceUnit.INCH));
-        telemetry.addData("red", colorLeft.red() );
-        telemetry.addData("blue", colorLeft.blue());
-        telemetry.addData("red", colorRight.red());
-        telemetry.addData("blue",colorRight.blue());
-        telemetry.addData("touchsensor1", armTouch.isPressed());
-        telemetry.addData("touchsensor2", armTouch.isPressed());
-        telemetry.addData("touchsensor3" , armTouch.isPressed());
-        telemetry.addData("touchsensor4" , armTouch.isPressed());
         telemetry.addData("pow", pow);
         telemetry.addData("dir", dir);
         telemetry.addData("c", c);
@@ -389,36 +375,31 @@ public class LinearSlidesDrive extends OpMode {
 
         if (!alreadyMoving) {
             // basically we are waiting to use it manually
+
             if (Math.abs(lefty2) >= DEAD_ZONE) {
                 if (lefty2 < 0) {
                     if (armTouch.isPressed()) {
                         // if button is pressed, stop moving
                         arm.setPower(0);
                         arm2.setPower(0);
-                        arm3.setPower(0);
                     } else {
                         arm.setPower(lefty2 * pow);
                         arm2.setPower(lefty2 * pow);
-                        arm3.setPower(lefty2 * -pow);
                     }
                 }
                 if (lefty2 > 0) {
                     arm.setPower(lefty2 * pow);
                     arm2.setPower(lefty2 * pow);
-                    arm3.setPower(lefty2 * -pow);
                 }
             } else if (buttonDown2) {
                 arm.setPower(-pow / 2);
                 arm2.setPower(-pow / 2);
-                arm3.setPower(pow/2);
             } else if (buttonUp2) {
                 arm.setPower(pow / 2);
                 arm2.setPower(pow / 2);
-                arm3.setPower(pow/2);
             } else {
                 arm.setPower(0);
                 arm2.setPower(0);
-                arm3.setPower(0);
             }
         }
         
@@ -452,13 +433,13 @@ public class LinearSlidesDrive extends OpMode {
             leftBack.setPower(pow);
             rightFront.setPower(pow);
             rightBack.setPower(-pow);
-        } else {
+        }/* else {
             // stops movement
             leftFront.setPower(0);
             leftBack.setPower(0);
             rightFront.setPower(0);
             rightBack.setPower(0);
-        }
+        }*/
 
         pow = .6;
 
@@ -474,16 +455,17 @@ public class LinearSlidesDrive extends OpMode {
             leftBack.setPower(-pow);
             rightFront.setPower(pow);
             rightBack.setPower(pow);
-        } else {
+        }/* else {
             // stops movement
             leftFront.setPower(0);
             leftBack.setPower(0);
             rightFront.setPower(0);
             rightBack.setPower(0);
-        }
+        }*/
 
         pow = 1; // this is the speed in which we will turn the servos
 
+        telemetry.addData("armHeight", armHeight.getDistance(DistanceUnit.INCH));
         telemetry.addData("Touchy", intakeTouch.isPressed());
         telemetry.addData("Right Joystick (righty2)", righty2);
         telemetry.addData("leftSpin power", leftspin.getPower());
@@ -494,6 +476,7 @@ public class LinearSlidesDrive extends OpMode {
             rightspin.setPower(0);
         } else if (righty2 > DEAD_ZONE) {
             // intake
+
             leftspin.setPower(REVERSE * pow);
             rightspin.setPower(REVERSE * pow);
 
@@ -507,7 +490,6 @@ public class LinearSlidesDrive extends OpMode {
                 leftspin.setPower(pow);
                 rightspin.setPower(pow);
             }
-
 
         }
 
@@ -524,18 +506,15 @@ public class LinearSlidesDrive extends OpMode {
             while (armHeight.getDistance(DistanceUnit.INCH)>=AH){
                 arm.setPower(-0.3);
                 arm2.setPower(-0.3);
-                arm3.setPower(0.3);
             }
         }
         else if (armHeight.getDistance(DistanceUnit.INCH)<AH){
             while (armHeight.getDistance(DistanceUnit.INCH)<AH){
                 arm.setPower(0.3);
                 arm2.setPower(0.3);
-                arm3.setPower(-0.3);
             }
         }
         arm.setPower(0);
         arm2.setPower(0);
-        arm3.setPower(0);
     }
 }

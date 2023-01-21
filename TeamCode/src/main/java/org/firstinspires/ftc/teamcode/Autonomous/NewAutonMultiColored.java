@@ -49,7 +49,6 @@ public class NewAutonMultiColored extends LinearOpMode {
     // arm motors
     private DcMotor arm;
     private DcMotor arm2;
-    private DcMotor arm3;
 
     // color sensors
     private ColorSensor colorPinkSide;
@@ -142,7 +141,6 @@ public class NewAutonMultiColored extends LinearOpMode {
         straightenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
-        arm3 = hardwareMap.get(DcMotor.class, "arm3");
         armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
         colorLeft = hardwareMap.get(ColorSensor.class, "colorLeft");
         colorRight = hardwareMap.get(ColorSensor.class, "colorRight");
@@ -151,7 +149,7 @@ public class NewAutonMultiColored extends LinearOpMode {
 
         rightspin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
 
-        rightBack.setDirection(CRServo.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
 
         if (armTouch.isPressed()) {
             // A2 F5
@@ -353,7 +351,6 @@ public class NewAutonMultiColored extends LinearOpMode {
                 //lower and intake
                 arm.setPower(-lowPow);
                 arm2.setPower(-lowPow);
-                arm3.setPower(lowPow);
                 leftspin.setPower(fullPow);
                 rightspin.setPower(fullPow);
                 while (!intakeTouch.isPressed()){
@@ -363,7 +360,6 @@ public class NewAutonMultiColored extends LinearOpMode {
                 rightspin.setPower(0);
                 arm.setPower(0);
                 arm2.setPower(0);
-                arm3.setPower(0);
 
                 //back up
                 backwards(tiles*2);
@@ -490,11 +486,9 @@ public class NewAutonMultiColored extends LinearOpMode {
         while(!armTouch.isPressed()) {
             arm.setPower(-pow);
             arm2.setPower(-pow);
-            arm3.setPower(pow);
         }
         arm.setPower(0);
         arm2.setPower(0);
-        arm3.setPower(0);
         sleep (10);
     }
 
@@ -502,11 +496,9 @@ public class NewAutonMultiColored extends LinearOpMode {
         while (armHeight.getDistance(DistanceUnit.INCH)<AH){
             arm.setPower(0.3);
             arm2.setPower(0.3);
-            arm3.setPower(-0.3);
         }
         arm.setPower(0);
         arm2.setPower(0);
-        arm3.setPower(0);
         sleep(10);
     }
 
@@ -520,7 +512,6 @@ public class NewAutonMultiColored extends LinearOpMode {
         }
         arm.setPower(0);
         arm2.setPower(0);
-        arm3.setPower(0);
         sleep(10);
     }
 
