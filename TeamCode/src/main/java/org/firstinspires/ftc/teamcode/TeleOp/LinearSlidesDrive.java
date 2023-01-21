@@ -25,6 +25,7 @@ public class LinearSlidesDrive extends OpMode {
     // arm motors
     private DcMotor arm;
     private DcMotor arm2;
+    private DcMotor arm3;
 
     // touch sensor for arm and intake to tell when something is fully in / down
     private TouchSensor armTouch;
@@ -95,6 +96,7 @@ public class LinearSlidesDrive extends OpMode {
 
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
+        arm3 = hardwareMap. get(DcMotor.class, "arm3");
 
         armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
 
@@ -119,6 +121,7 @@ public class LinearSlidesDrive extends OpMode {
         rightFront.setPower(OFF);
         arm.setPower(OFF);
         arm2.setPower(OFF);
+        arm3.setPower(OFF);
 
         // set servos to 0
         leftspin.setPower(OFF);
@@ -199,6 +202,7 @@ public class LinearSlidesDrive extends OpMode {
             case BOTTOM:
                 arm.setPower(0);
                 arm2.setPower(0);
+                arm3.setPower(0);
                 alreadyMoving = false;
 
                 found = false;
@@ -221,9 +225,11 @@ public class LinearSlidesDrive extends OpMode {
                 if (armHeight.getDistance(DistanceUnit.INCH) < low && !found) {
                     arm.setPower(.6);
                     arm2.setPower(.6);
+                    arm3.setPower(-.6);
                 } else {
                     arm.setPower(0);
                     arm2.setPower(0);
+                    arm3.setPower(0);
                     found = true;
                     alreadyMoving = false;
                 }
@@ -240,9 +246,11 @@ public class LinearSlidesDrive extends OpMode {
                 if (armHeight.getDistance(DistanceUnit.INCH) < middle && !found) {
                 arm.setPower(.6);
                 arm2.setPower(.6);
+                arm3.setPower(-.6);
                 } else {
                     arm.setPower(0);
                     arm2.setPower(0);
+                    arm3.setPower(0);
                     found = true;
                     alreadyMoving = false;
                 }
@@ -257,9 +265,11 @@ public class LinearSlidesDrive extends OpMode {
                 if (armHeight.getDistance(DistanceUnit.INCH) < tall  &&  !found) {
                     arm.setPower(.6);
                     arm2.setPower(.6);
+                    arm3.setPower(-.6);
                 } else {
                     arm.setPower(0);
                     arm2.setPower(0);
+                    arm3.setPower(0);
                     found = true;
                     alreadyMoving = false;
                 }
@@ -275,6 +285,7 @@ public class LinearSlidesDrive extends OpMode {
                 if (!armTouch.isPressed()) {
                     arm.setPower(-.8);
                     arm2.setPower(-.8);
+                    arm3.setPower(.8);
                 } else {
                     levels = ArmState.BOTTOM;
                     alreadyMoving = false;
@@ -384,24 +395,30 @@ public class LinearSlidesDrive extends OpMode {
                         // if button is pressed, stop moving
                         arm.setPower(0);
                         arm2.setPower(0);
+                        arm3.setPower(0);
                     } else {
                         arm.setPower(lefty2 * pow);
                         arm2.setPower(lefty2 * pow);
+                        arm3.setPower(lefty2 * -pow);
                     }
                 }
                 if (lefty2 > 0) {
                     arm.setPower(lefty2 * pow);
                     arm2.setPower(lefty2 * pow);
+                    arm3.setPower(lefty2 * -pow);
                 }
             } else if (buttonDown2) {
                 arm.setPower(-pow / 2);
                 arm2.setPower(-pow / 2);
+                arm3.setPower(pow/2);
             } else if (buttonUp2) {
                 arm.setPower(pow / 2);
                 arm2.setPower(pow / 2);
+                arm3.setPower(pow/2);
             } else {
                 arm.setPower(0);
                 arm2.setPower(0);
+                arm3.setPower(0);
             }
         }
         
@@ -507,15 +524,18 @@ public class LinearSlidesDrive extends OpMode {
             while (armHeight.getDistance(DistanceUnit.INCH)>=AH){
                 arm.setPower(-0.3);
                 arm2.setPower(-0.3);
+                arm3.setPower(0.3);
             }
         }
         else if (armHeight.getDistance(DistanceUnit.INCH)<AH){
             while (armHeight.getDistance(DistanceUnit.INCH)<AH){
                 arm.setPower(0.3);
                 arm2.setPower(0.3);
+                arm3.setPower(-0.3);
             }
         }
         arm.setPower(0);
         arm2.setPower(0);
+        arm3.setPower(0);
     }
 }
