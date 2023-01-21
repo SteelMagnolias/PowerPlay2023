@@ -125,7 +125,7 @@ public class NewAutonMultiColored extends LinearOpMode {
 
     String allianceColor = "blue"; // used to determine which alliance we are on
 
-    int targetColor = 250; // this is minimum magnitude of color
+    int targetColor = 100; // this is minimum magnitude of color
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -248,32 +248,14 @@ public class NewAutonMultiColored extends LinearOpMode {
             }
             waitForStart();
 
-            // lower arm if not there
-            lower();
-
             // preload
             intake();
 
             // drive backwards until reaching terminal
             if(STPL==1) {
-                while (colorLeft.blue() < targetColor && colorLeft.red() < targetColor) {
-                    backwards(500);
+                while (colorRight.blue() < targetColor && colorRight.red() < targetColor) {
+                    backwards(75);
                     //posible choppy motion
-                }
-
-                // let's determine our alliance
-                if (colorLeft.blue() >= targetColor) {
-                    // we are the blue alliance
-                    allianceColor = "blue";
-                }
-                else if (colorLeft.red() >= targetColor) {
-                    // we are on the red alliance
-                    allianceColor = "red";
-                }
-            }
-            else if (STPL==-1){
-                while (colorRight.blue()<targetColor && colorRight.red() < targetColor){
-                    backwards(500);
                 }
 
                 // let's determine our alliance
@@ -282,6 +264,21 @@ public class NewAutonMultiColored extends LinearOpMode {
                     allianceColor = "blue";
                 }
                 else if (colorRight.red() >= targetColor) {
+                    // we are on the red alliance
+                    allianceColor = "red";
+                }
+            }
+            else if (STPL==-1){
+                while (colorLeft.blue()<targetColor && colorLeft.red() < targetColor){
+                    backwards(75);
+                }
+
+                // let's determine our alliance
+                if (colorLeft.blue() >= targetColor) {
+                    // we are the blue alliance
+                    allianceColor = "blue";
+                }
+                else if (colorLeft.red() >= targetColor) {
                     // we are on the red alliance
                     allianceColor = "red";
                 }
@@ -416,6 +413,7 @@ public class NewAutonMultiColored extends LinearOpMode {
 
             telemetry.addData("armTouch", armTouch.isPressed());
             telemetry.addData("intakeTouch", intakeTouch.isPressed());
+            telemetry.update();
         }
     }
 
@@ -494,8 +492,8 @@ public class NewAutonMultiColored extends LinearOpMode {
 
     public void lift(double AH){
         while (armHeight.getDistance(DistanceUnit.INCH)<AH){
-            arm.setPower(0.3);
-            arm2.setPower(0.3);
+            arm.setPower(0.5);
+            arm2.setPower(0.5);
         }
         arm.setPower(0);
         arm2.setPower(0);

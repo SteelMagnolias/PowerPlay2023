@@ -181,6 +181,14 @@ public class LinearSlidesDrive extends OpMode {
         telemetry.addData("rt", rt);
         telemetry.addData("lb2", lb2);
 
+        telemetry.addData("Color Sensor colorLeft Red:", colorLeft.red());
+        telemetry.addData("Color Sensor colorLeft Blue:", colorLeft.blue());
+        telemetry.addData("Color Sensor colorLeft Green: ", colorLeft.green());
+
+        telemetry.addData("Color Sensor colorRight Red:", colorRight.red());
+        telemetry.addData("Color Sensor colorRight Blue:", colorRight.blue());
+        telemetry.addData("Color Sensor colorRight Green: ", colorRight.green());
+
         //When a certain button is pushed robot reacts fast and moves it's arm to level indicated by button
         //A2 is pushed will bring to bottom level
         //X2 is pushed will bring to low Level
