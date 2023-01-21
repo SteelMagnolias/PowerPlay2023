@@ -273,8 +273,8 @@ public class LinearSlidesDrive extends OpMode {
             case RESET:
 
                 if (!armTouch.isPressed()) {
-                    arm.setPower(-.3);
-                    arm2.setPower(-.3);
+                    arm.setPower(-.8);
+                    arm2.setPower(-.8);
                 } else {
                     levels = ArmState.BOTTOM;
                     alreadyMoving = false;
