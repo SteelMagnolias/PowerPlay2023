@@ -17,10 +17,10 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 @TeleOp (name = "LinearSlidesDrive" , group = "Iterative Opmode")
 public class LinearSlidesDrive extends OpMode {
     // wheels
-    private DcMotor leftFront;
-    private DcMotor rightFront;
-    private DcMotor leftBack;
-    private DcMotor rightBack;
+    private DcMotor leftFront; //Left wheel front
+    private DcMotor rightFront; //right wheel front
+    private DcMotor leftBack; //left wheel back
+    private DcMotor rightBack; //right wheel back
 
     // arm motors
     private DcMotor arm;
@@ -31,16 +31,17 @@ public class LinearSlidesDrive extends OpMode {
     private TouchSensor intakeTouch;
 
     // touch sensors that touch the wall and get us straight
-    private TouchSensor straightenRight;
-    private TouchSensor straightenLeft;
+    private TouchSensor straightenRight; //Not used, using distance sensors
+    private TouchSensor straightenLeft; //NOT used using distance sensor
 
     // distance sensor on arm
     private DistanceSensor armHeight;
 
     // intake servos (continuous)
-    private CRServo rightspin;
-    private CRServo leftspin;
+    private CRServo rightspin; //intake severo 1
+    private CRServo leftspin; //intake servo 2
 
+    // Color Sensors
     private ColorSensor colorLeft;
     private ColorSensor colorRight;
 
@@ -49,6 +50,7 @@ public class LinearSlidesDrive extends OpMode {
     private WebcamName webcamName1;
     private WebcamName webcamName2;
 
+    // Armstate levels
     public enum ArmState {
         BOTTOM,
         LOWER,
@@ -59,19 +61,19 @@ public class LinearSlidesDrive extends OpMode {
     }
     ArmState levels;
 
-    private final static int REVERSE = -1;
     //private final static double POWER = 0.3;
     //private int FORWARD;
     //private int STRAFE;
+    private final static int REVERSE = -1;
 
-    private int dropTime = 5000;
     //time it takes to drop cone
-
-    private static final double DEAD_ZONE = 0.1;
-    private static final double OFF = 0;
+    private int dropTime = 5000;
 
     // finite state machine that defines the position of the arm in relation to certain events.
     // bottom is the default
+    private static final double DEAD_ZONE = 0.1;
+    private static final double OFF = 0;
+
 
     private boolean found = false; // tells whether we have reached target height once
     
@@ -90,15 +92,15 @@ public class LinearSlidesDrive extends OpMode {
         rightspin = hardwareMap.get(CRServo.class, "rightspin"); // in config --> port 3 --> "rightintake"
         leftspin = hardwareMap.get(CRServo.class, "leftspin"); // in config --> port 4 --> "leftintake"
 
-        straightenRight = hardwareMap.get(TouchSensor.class, "straightenRight");
-        straightenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
+        straightenRight = hardwareMap.get(TouchSensor.class, "straightenRight"); //Not used in teleop
+        straightenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft"); //not used in teleop
 
-        arm = hardwareMap.get(DcMotor.class, "arm");
-        arm2 = hardwareMap.get(DcMotor.class, "arm2");
+        arm = hardwareMap.get(DcMotor.class, "arm"); // in config --> "arm"
+        arm2 = hardwareMap.get(DcMotor.class, "arm2"); //in config --> "arm2"
 
-        armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
+        armHeight = hardwareMap.get(DistanceSensor.class, "armHeight"); // in config --> "armHeight"
 
-        colorLeft = hardwareMap.get(ColorSensor.class, "colorLeft");
+        colorLeft = hardwareMap.get(ColorSensor.class, "colorLeft");// Not used
         colorRight = hardwareMap.get(ColorSensor.class, "colorRight");
 
         webcamName1 = hardwareMap.get(WebcamName.class, "Webcam 2");
@@ -110,9 +112,11 @@ public class LinearSlidesDrive extends OpMode {
         rightspin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
 
         rightBack.setDirection(DcMotor.Direction.REVERSE);
+
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
 
+        //sets power immediatly off once code starts running
         leftBack.setPower(OFF);
         rightBack.setPower(OFF);
         leftFront.setPower(OFF);
@@ -154,11 +158,11 @@ public class LinearSlidesDrive extends OpMode {
 
         boolean buttonUp2 = gamepad2.dpad_up; // this is the value of the up button on gamepad2
         boolean buttonDown2 = gamepad2.dpad_down; // this is  the value of the down button on gamepad2
-        boolean b2 = gamepad2.b; // this is the value of the b button on gamepad2
-        boolean a2 = gamepad2.a; // this is the value of the a button on gamepad2
-        boolean y2 = gamepad2.y; // this is the value of the y button on gamepad2
-        boolean x2 = gamepad2.x; // this is the value of the x button on gamepad2
-        boolean rb2 = gamepad2.right_bumper;// Reset
+        boolean b2 = gamepad2.b; // this is the value of the b button on gamepad2- Middle level
+        boolean a2 = gamepad2.a; // this is the value of the a button on gamepad2- Bottom Level
+        boolean y2 = gamepad2.y; // this is the value of the y button on gamepad2- Top Level
+        boolean x2 = gamepad2.x; // this is the value of the x button on gamepad2- Not used
+        boolean rb2 = gamepad2.right_bumper;// This is the value of rb on gamepad2-Reset button
         boolean lb2 = gamepad2.left_bumper; // levels for stack of cones, keep clicking until reached prefered level
 
         // print values to console
@@ -191,11 +195,11 @@ public class LinearSlidesDrive extends OpMode {
 
         //When a certain button is pushed robot reacts fast and moves it's arm to level indicated by button
         //A2 is pushed will bring to bottom level
-        //X2 is pushed will bring to low Level
+        //X2 is Not used
         //B2 is pushed will bring to middle level
         //Y2 is pushed will bring to tall level
 
-        // Finite State Machine - Levels (need to edit distances on time once tested)
+        // Finite State Machine - Levels (need to edit distances on time once tested)- Number from distance sensor up
 
         final double bottom = 4.0;
         final double motorShutOff = 10.0;
@@ -246,7 +250,6 @@ public class LinearSlidesDrive extends OpMode {
                 }
                 break;
             // at middle  continue to middle or respond to button push
-            // at Tall  continue to tall or respond to button push
             case MIDDLE:
 
                 if (armHeight.getDistance(DistanceUnit.INCH) < middle && !found) {
@@ -265,7 +268,7 @@ public class LinearSlidesDrive extends OpMode {
                 }
                 break;
             case UPPER:
-                
+                // at Tall  continue to tall or respond to button push
                 if (armHeight.getDistance(DistanceUnit.INCH) < tall  &&  !found) {
                     arm.setPower(.6);
                     arm2.setPower(.6);
@@ -380,7 +383,7 @@ public class LinearSlidesDrive extends OpMode {
         telemetry.addData("rightBack", rightBack.getPower());
 
         pow = 0.8;
-
+        //Basically code for not using levels using joystick
         if (!alreadyMoving) {
             // basically we are waiting to use it manually
 
