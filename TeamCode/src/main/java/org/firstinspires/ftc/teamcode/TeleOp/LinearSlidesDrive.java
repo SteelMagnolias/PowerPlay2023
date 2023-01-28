@@ -106,8 +106,8 @@ public class LinearSlidesDrive extends OpMode {
         webcamName1 = hardwareMap.get(WebcamName.class, "Webcam 2");
         webcamName2 = hardwareMap.get(WebcamName.class, "Webcam 1");
 
-        //arm.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
-        //arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
+        arm.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
+        arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
 
         rightspin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
 
@@ -205,7 +205,7 @@ public class LinearSlidesDrive extends OpMode {
         final double motorShutOff = 10.0;
         final double low = 19.5;
         final double middle = 29.5;
-        final double tall = 38.0;
+        final double tall = 36.5;
 
         switch (levels) {
             // at bottom continue to bottom or respond to button push
