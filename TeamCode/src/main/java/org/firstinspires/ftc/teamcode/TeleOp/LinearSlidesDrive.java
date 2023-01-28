@@ -511,7 +511,7 @@ public class LinearSlidesDrive extends OpMode {
     public void stop() {
 
     }
-
+    //Setting power for arm heights, using distance sensor
     public void lift (double AH) {
         if (armHeight.getDistance(DistanceUnit.INCH)>=AH){
             while (armHeight.getDistance(DistanceUnit.INCH)>=AH){
