@@ -330,7 +330,7 @@ public class DriveAndLift extends OpMode
         rightFront.setPower(fr - rightx1);
         rightBack.setPower(br - rightx1);
 
-        pow = 0.5;
+        pow = 0.3;
 
         if (lefty2 >= 0.1) {
             // up

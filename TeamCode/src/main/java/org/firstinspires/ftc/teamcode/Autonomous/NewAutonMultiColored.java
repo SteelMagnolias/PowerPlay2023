@@ -35,8 +35,8 @@ public class NewAutonMultiColored extends LinearOpMode {
     private TouchSensor armTouch;
     private TouchSensor intakeTouch;
 
-    // touch sensors that touch the wall and get us straight
-    private TouchSensor straightenRight;
+    private TouchSensor straightenRight;    // touch sensors that touch the wall and get us straight
+
     private TouchSensor straightenLeft;
 
     // distance sensor on arm
@@ -116,7 +116,7 @@ public class NewAutonMultiColored extends LinearOpMode {
     double lowPow = 0.1;
     double tilef = 1400;
     //time it takes to go forward or backwards a tile
-    double tiles = 2600;
+    double tiles = 2100;
     //time it takes to stafe a tile
     double low = 19.5;
     double med = 29.5;
@@ -190,8 +190,7 @@ public class NewAutonMultiColored extends LinearOpMode {
             if (armTouch.isPressed()) {
                 // if the arm button is pressed, we are on the right side of alliance
                 STPL = 1;
-            }
-            else {
+            } else {
                 // if the arm button is not pressed, we are on the left side of the alliance
                 STPL = -1;
             }
@@ -246,6 +245,7 @@ public class NewAutonMultiColored extends LinearOpMode {
                     // update telemetry.(aka update what it says in the console on phone!)
                 }
             }
+        }
             waitForStart();
 
             // preload
@@ -267,9 +267,11 @@ public class NewAutonMultiColored extends LinearOpMode {
                     // we are on the red alliance
                     allianceColor = "red";
                 }
+
+                    drive(0.1, -0.1, 0.1, -0.1, 750);
             }
-            else if (STPL==-1){
-                while (colorLeft.blue()<targetColor && colorLeft.red() < targetColor){
+            else if (STPL==-1) {
+                while (colorLeft.blue() < targetColor && colorLeft.red() < targetColor) {
                     backwards(75);
                 }
 
@@ -277,16 +279,33 @@ public class NewAutonMultiColored extends LinearOpMode {
                 if (colorLeft.blue() >= targetColor) {
                     // we are the blue alliance
                     allianceColor = "blue";
-                }
-                else if (colorLeft.red() >= targetColor) {
+                } else if (colorLeft.red() >= targetColor) {
                     // we are on the red alliance
                     allianceColor = "red";
                 }
+
+                    drive(-0.1, 0.1, -0.1, 0.1, 750);
+
             }
 
             // now strafe until in line with  high pole
-            left(tiles*3.75);
+            left(tiles*1);
 
+            if (signal == 2) {
+                forward(120);
+            }
+            else {
+                forward(150);
+            }
+
+            left(tiles*1);
+
+            if (STPL == 1) {
+                drive(0.1, -0.1, 0.1, -0.1, 750);
+            }
+            else if (STPL == -1){
+                drive(-0.1, 0.1, -0.1, 0.1, 750);
+            }
             /*
 
             // raise arm
@@ -381,22 +400,22 @@ public class NewAutonMultiColored extends LinearOpMode {
                 //lower arm
                 lower();
             }
-            */
+
 
             //move to middle of park zone
             right(tiles*2);
-
+            */
             if ((signal==1 && STPL==-1)||(signal==3 &&STPL==1)){
                 //zone closest to wall
-                right(tiles*0.5);
-                forward(tilef*2);
-                left(tiles*0.5);
+                left(tiles*0.1);
+                forward(tilef*2.25);
+                right(tiles*0.1);
             }
             else if (signal==2){
                 //middle zone
-                right(tiles*0.5);
-                forward(tilef*1);
-                left(tiles*0.5);
+                left(tiles*0.1);
+                forward(tilef*1.25);
+                right(tiles*0.25);
             }
 
 
@@ -417,9 +436,8 @@ public class NewAutonMultiColored extends LinearOpMode {
             telemetry.addData("armTouch", armTouch.isPressed());
             telemetry.addData("intakeTouch", intakeTouch.isPressed());
             telemetry.update();
-        }
-    }
 
+    }
 
 
     private void initVuforia () {

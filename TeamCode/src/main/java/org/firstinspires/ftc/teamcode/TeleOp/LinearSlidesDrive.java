@@ -303,7 +303,7 @@ public class LinearSlidesDrive extends OpMode {
 
         double pow;
         if (a1) pow = 1; // turbo mode
-        else pow =0.5;
+        else pow =0.3; // was 0.5
         double c = Math.hypot(leftx1, lefty1);
         double perct = pow * c;
         if (c <= .1) perct = 0;
@@ -416,7 +416,7 @@ public class LinearSlidesDrive extends OpMode {
         telemetry.addData("arm2", arm2.getPower());
 
         // Below: precision (slower) movement
-        pow = 0.5;
+        pow = 0.1;
         if (buttonUp) {
             // slowly moves forwards
             leftFront.setPower(pow);
@@ -449,7 +449,7 @@ public class LinearSlidesDrive extends OpMode {
             rightBack.setPower(0);
         }*/
 
-        pow = .6;
+        pow = .3;
 
         if (rb) {
             // slowly moves clockwise
