@@ -57,9 +57,19 @@ public class LinearSlidesDrive extends OpMode {
         MIDDLE,
         UPPER,
         RESET ,
+        BROKEN,
         GROUND, // Ground Junctions
     }
     ArmState levels;
+
+    // Finite State Machine - Levels (need to edit distances on time once tested)- Number from distance sensor up
+
+    final double bottom = 4.0;
+    final double lineUpLevel = 10.0;
+    final double low = 19.5;
+    final double middle = 29.5;
+    final double tall = 36.5;
+    final double intakeHeight = 2.0;
 
     //private final static double POWER = 0.3;
     //private int FORWARD;
@@ -155,6 +165,8 @@ public class LinearSlidesDrive extends OpMode {
         boolean x1 = gamepad1.x; // this is the value of the x button on gamepad1
         boolean y1 = gamepad1.y; // this is the value of the y button on gamepad1
         boolean rt = gamepad1.right_stick_button; // this is the value of the button behind the right stick on gamepad1
+        boolean rt2 = gamepad2.right_stick_button; // value of button behind right stick on gamepad2
+        boolean lt2 = gamepad2.left_stick_button; // value of button behind the left stick on gamepad2
 
         boolean buttonUp2 = gamepad2.dpad_up; // this is the value of the up button on gamepad2
         boolean buttonDown2 = gamepad2.dpad_down; // this is  the value of the down button on gamepad2
@@ -199,13 +211,6 @@ public class LinearSlidesDrive extends OpMode {
         //B2 is pushed will bring to middle level
         //Y2 is pushed will bring to tall level
 
-        // Finite State Machine - Levels (need to edit distances on time once tested)- Number from distance sensor up
-
-        final double bottom = 4.0;
-        final double motorShutOff = 10.0;
-        final double low = 19.5;
-        final double middle = 29.5;
-        final double tall = 36.5;
 
         switch (levels) {
             // at bottom continue to bottom or respond to button push
@@ -243,7 +248,7 @@ public class LinearSlidesDrive extends OpMode {
                     found = true;
                     alreadyMoving = false;
                 }
-                
+
                 if (rb2) {
                     levels = ArmState.RESET;
                     alreadyMoving = true;
@@ -261,7 +266,7 @@ public class LinearSlidesDrive extends OpMode {
                     found = true;
                     alreadyMoving = false;
                 }
-                
+
                 if (rb2) {
                     levels = ArmState.RESET;
                     alreadyMoving = true;
@@ -278,7 +283,7 @@ public class LinearSlidesDrive extends OpMode {
                     found = true;
                     alreadyMoving = false;
                 }
-                
+
                 if (rb2) {
                     levels = ArmState.RESET;
                     alreadyMoving = true;
@@ -287,20 +292,50 @@ public class LinearSlidesDrive extends OpMode {
             // at reset  continue to reset or respond to button push
             case RESET:
 
-                if (armHeight.getDistance(DistanceUnit.INCH) > motorShutOff) {
+                if (armHeight.getDistance(DistanceUnit.INCH) > lineUpLevel) { // if above target, move down
                     arm.setPower(-.3);
                     arm2.setPower(-.3);
-                } else {
+                }
+                else if (armHeight.getDistance(DistanceUnit.INCH) < lineUpLevel - 1) { // if we move 1 inch below target height, we are going to move up
+                    arm.setPower(0.3);
+                    arm2.setPower(0.3);
+                }
+                else {
                     arm.setPower(0);
                     arm2.setPower(0);
+                }
+
+                if (x2){
+                    // if x button pressed, bring to the bottom level - you will not be able to move the robot at all while this is happening.  this is done to prevent the drivers from moving and messing up alignment and hurting the robot
+                    while (armHeight.getDistance(DistanceUnit.INCH) > intakeHeight) {
+                        // go down to the intake height
+                        arm.setPower(-0.3);
+                        arm2.setPower(-0.3);
+                    }
+
+                    // turn motors off
+                    arm.setPower(0);
+                    arm2.setPower(0);
+
+                    // set the state to bottom
                     levels = ArmState.BOTTOM;
-                    alreadyMoving = false;
                 }
 
                 break;
+            case BROKEN:
+                telemetry.addData("IMPORTANT MESSAGE", "ARM HAS BEEN INACTIVATED");
+                arm.setPower(0);
+                arm2.setPower(0);
+                alreadyMoving = true; // while we are not moving, we are also disabling manual movement at the same time.
+
+                if (rb2) {
+                    // if we rb2, we should reactivate the arm
+                    levels = ArmState.RESET;
+                }
             default:
                 levels = ArmState.BOTTOM;
                 alreadyMoving = false;
+                break;
         }
 
 
@@ -502,6 +537,13 @@ public class LinearSlidesDrive extends OpMode {
                 rightspin.setPower(pow);
             }
 
+        }
+
+
+        // arm shut off clause
+        if (lt2 && rt2) {
+            // if both buttons behind joysticks are pressed, the arm is told to stop working
+            levels = ArmState.BROKEN;
         }
 
         telemetry.update(); // print output
