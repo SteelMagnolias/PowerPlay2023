@@ -68,8 +68,10 @@ public class LinearSlidesDrive extends OpMode {
     final double lineUpLevel = 5.0;
     final double low = 17.0;
     final double middle = 26.5;
-    final double tall = 44.5;
-    final double intakeHeight = 3.5;
+    final double tall = 36.0;
+    final double intakeHeight = 4.5;
+
+    final double restPow = 0.0; // holds the motor.
 
     //private final static double POWER = 0.3;
     //private int FORWARD;
@@ -239,13 +241,14 @@ public class LinearSlidesDrive extends OpMode {
                 break;
             // at low  continue to low or respond to button push
             case LOWER:
-                if (armHeight.getDistance(DistanceUnit.INCH) < low && !found) {
+                if (armHeight.getDistance(DistanceUnit.INCH) < low) {
                     arm.setPower(.6);
                     arm2.setPower(.6);
+                    alreadyMoving = true;
                 } else {
-                    arm.setPower(0);
-                    arm2.setPower(0);
-                    found = true;
+                    arm.setPower(restPow);
+                    arm2.setPower(restPow);
+                    found = true; // no longer does anything but I'm too lazy to get rid of right now.
                     alreadyMoving = false;
                 }
 
@@ -257,12 +260,13 @@ public class LinearSlidesDrive extends OpMode {
             // at middle  continue to middle or respond to button push
             case MIDDLE:
 
-                if (armHeight.getDistance(DistanceUnit.INCH) < middle && !found) {
-                arm.setPower(.6);
-                arm2.setPower(.6);
+                if (armHeight.getDistance(DistanceUnit.INCH) < middle) {
+                    arm.setPower(.6);
+                    arm2.setPower(.6);
+                    alreadyMoving = true;
                 } else {
-                    arm.setPower(0);
-                    arm2.setPower(0);
+                    arm.setPower(restPow);
+                    arm2.setPower(restPow);
                     found = true;
                     alreadyMoving = false;
                 }
@@ -274,14 +278,15 @@ public class LinearSlidesDrive extends OpMode {
                 break;
             case UPPER:
                 // at Tall  continue to tall or respond to button push
-                if (armHeight.getDistance(DistanceUnit.INCH) < tall  &&  !found) {
+                if (armHeight.getDistance(DistanceUnit.INCH) < tall) {
                     arm.setPower(.6);
                     arm2.setPower(.6);
+                    alreadyMoving = true;
                 } else {
-                    arm.setPower(0);
-                    arm2.setPower(0);
+                    arm.setPower(restPow);
+                    arm2.setPower(restPow);
                     found = true;
-                    alreadyMoving = false;
+                    alreadyMoving = false; // turn to true if we want to get rid of intentional jitter.
                 }
 
                 if (rb2) {
@@ -293,12 +298,12 @@ public class LinearSlidesDrive extends OpMode {
             case RESET:
 
                 if (armHeight.getDistance(DistanceUnit.INCH) > lineUpLevel) { // if above target, move down
-                    arm.setPower(-.3);
-                    arm2.setPower(-.3);
+                    arm.setPower(-.15);
+                    arm2.setPower(-.15);
                 }
                 else if (armHeight.getDistance(DistanceUnit.INCH) < lineUpLevel - 1) { // if we move 1 inch below target height, we are going to move up
-                    arm.setPower(0.3);
-                    arm2.setPower(0.3);
+                    arm.setPower(0.15);
+                    arm2.setPower(0.15);
                 }
                 else {
                     arm.setPower(0);
