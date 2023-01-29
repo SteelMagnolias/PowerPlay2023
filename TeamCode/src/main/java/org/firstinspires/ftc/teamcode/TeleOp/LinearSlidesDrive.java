@@ -140,7 +140,7 @@ public class LinearSlidesDrive extends OpMode {
 
         //levels = ArmState.RESET;
         // edit 11 - start the armstate at BOTTOM so we can choose.  The way it is rewritten currently does not allow for the arm to come all the way down straight away. we have to start with it on the bottom, or we can use the manual controls
-        levels = ArmState.BOTTOM;
+        levels = ArmState.RESET;
     }
 
     // this is where we loop all of our code in teleop
