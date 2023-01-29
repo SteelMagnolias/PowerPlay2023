@@ -65,11 +65,11 @@ public class LinearSlidesDrive extends OpMode {
     // Finite State Machine - Levels (need to edit distances on time once tested)- Number from distance sensor up
 
     final double bottom = 4.0;
-    final double lineUpLevel = 10.0;
-    final double low = 19.5;
-    final double middle = 29.5;
-    final double tall = 36.5;
-    final double intakeHeight = 2.0;
+    final double lineUpLevel = 5.0;
+    final double low = 17.0;
+    final double middle = 26.5;
+    final double tall = 44.5;
+    final double intakeHeight = 3.5;
 
     //private final static double POWER = 0.3;
     //private int FORWARD;
