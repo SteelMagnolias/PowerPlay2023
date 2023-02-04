@@ -67,7 +67,7 @@ public class LinearSlidesDrive extends OpMode {
     final double bottom = 4.0;
     final double lineUpLevel = 5.0;
     final double low = 17.0;
-    final double middle = 26.5;
+    final double middle = 27.5;
     final double tall = 36.0;
     final double intakeHeight = 4.5;
 
@@ -119,7 +119,7 @@ public class LinearSlidesDrive extends OpMode {
         webcamName2 = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         arm.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
-        arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
+        //arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
 
         rightspin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
 
@@ -279,8 +279,8 @@ public class LinearSlidesDrive extends OpMode {
             case UPPER:
                 // at Tall  continue to tall or respond to button push
                 if (armHeight.getDistance(DistanceUnit.INCH) < tall) {
-                    arm.setPower(.6);
-                    arm2.setPower(.6);
+                    arm.setPower(.7);
+                    arm2.setPower(.7);
                     alreadyMoving = true;
                 } else {
                     arm.setPower(restPow);
@@ -422,7 +422,7 @@ public class LinearSlidesDrive extends OpMode {
 
         telemetry.addData("rightBack", rightBack.getPower());
 
-        pow = 0.8;
+        pow = 0.4;
         //Basically code for not using levels using joystick
         if (!alreadyMoving) {
             // basically we are waiting to use it manually
