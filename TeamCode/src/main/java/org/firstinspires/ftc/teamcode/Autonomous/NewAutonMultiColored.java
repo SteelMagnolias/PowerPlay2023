@@ -40,7 +40,7 @@ public class NewAutonMultiColored extends LinearOpMode {
     private TouchSensor straightenLeft;
 
     // distance sensor on arm
-    private DistanceSensor armHeight;
+    //private DistanceSensor armHeight;
 
     // intake servos (continuous)
     private CRServo rightspin;
@@ -116,7 +116,7 @@ public class NewAutonMultiColored extends LinearOpMode {
     double lowPow = 0.1;
     double tilef = 1400;
     //time it takes to go forward or backwards a tile
-    double tiles = 2100;
+    double tiles = 2000;
     //time it takes to stafe a tile
     double low = 19.5;
     double med = 29.5;
@@ -141,7 +141,7 @@ public class NewAutonMultiColored extends LinearOpMode {
         straightenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
-        armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
+        //armHeight = hardwareMap.get(DistanceSensor.class, "armHeight");
         colorLeft = hardwareMap.get(ColorSensor.class, "colorLeft");
         colorRight = hardwareMap.get(ColorSensor.class, "colorRight");
         webcamName1 = hardwareMap.get(WebcamName.class, "Webcam 2");
@@ -150,17 +150,18 @@ public class NewAutonMultiColored extends LinearOpMode {
         rightspin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
 
         rightBack.setDirection(DcMotor.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        if (armTouch.isPressed()) {
+        if (!armTouch.isPressed()) {
             // A2 F5
-            STPL = 1;
+            STPL = -1;
             //use camera 1
-            webcamName = webcamName1;
+            webcamName = webcamName2;
         } else {
             // A5 F2
-            STPL = -1;
+            STPL = 1;
             //use camera 2
-            webcamName = webcamName2;
+            webcamName = webcamName1;
         }
         telemetry.addData("Status", "Initialized");
 
@@ -186,14 +187,6 @@ public class NewAutonMultiColored extends LinearOpMode {
 
         while (!opModeIsActive() && !isStopRequested()) {
             // while we are still running (time hasn't run out!)
-
-            if (armTouch.isPressed()) {
-                // if the arm button is pressed, we are on the right side of alliance
-                STPL = 1;
-            } else {
-                // if the arm button is not pressed, we are on the left side of the alliance
-                STPL = -1;
-            }
 
             if (tfod != null) {
                 // tensor flow is still running.
@@ -251,10 +244,13 @@ public class NewAutonMultiColored extends LinearOpMode {
             // preload
             intake();
 
+            // up to not drag cone
+            moveArm(2000, pow);
+
             // drive backwards until reaching terminal
             if(STPL==1) {
                 while (colorRight.blue() < targetColor && colorRight.red() < targetColor) {
-                    backwards(75);
+                    drive(-lowPow, -lowPow, -lowPow, -lowPow, 100);
                     //posible choppy motion
                 }
 
@@ -267,12 +263,10 @@ public class NewAutonMultiColored extends LinearOpMode {
                     // we are on the red alliance
                     allianceColor = "red";
                 }
-
-                    drive(0.1, -0.1, 0.1, -0.1, 750);
             }
             else if (STPL==-1) {
                 while (colorLeft.blue() < targetColor && colorLeft.red() < targetColor) {
-                    backwards(75);
+                    drive(-lowPow, -lowPow, -lowPow, -lowPow, 100);
                 }
 
                 // let's determine our alliance
@@ -283,29 +277,12 @@ public class NewAutonMultiColored extends LinearOpMode {
                     // we are on the red alliance
                     allianceColor = "red";
                 }
-
-                    drive(-0.1, 0.1, -0.1, 0.1, 750);
-
             }
 
             // now strafe until in line with  high pole
-            left(tiles*1);
+            left(tiles*2.25);
 
-            if (signal == 2) {
-                forward(120);
-            }
-            else {
-                forward(150);
-            }
 
-            left(tiles*1);
-
-            if (STPL == 1) {
-                drive(0.1, -0.1, 0.1, -0.1, 750);
-            }
-            else if (STPL == -1){
-                drive(-0.1, 0.1, -0.1, 0.1, 750);
-            }
             /*
 
             // raise arm
@@ -407,15 +384,15 @@ public class NewAutonMultiColored extends LinearOpMode {
             */
             if ((signal==1 && STPL==-1)||(signal==3 &&STPL==1)){
                 //zone closest to wall
-                left(tiles*0.1);
-                forward(tilef*2.25);
-                right(tiles*0.1);
+                left(tiles*0.3);
+                forward(tilef*2);
+                right(tiles*0.3);
             }
             else if (signal==2){
                 //middle zone
-                left(tiles*0.1);
-                forward(tilef*1.25);
-                right(tiles*0.25);
+                left(tiles*0.3);
+                forward(tilef*1);
+                right(tiles*0.3);
             }
 
 
@@ -428,7 +405,7 @@ public class NewAutonMultiColored extends LinearOpMode {
             telemetry.addData("Color Sensor colorRight Green: ", colorRight.green());
             //do we need green here??
 
-            telemetry.addData("armHeight (inches)", armHeight.getDistance(DistanceUnit.INCH));
+            //telemetry.addData("armHeight (inches)", armHeight.getDistance(DistanceUnit.INCH));
 
             telemetry.addData("straightenLeft", straightenLeft.isPressed());
             telemetry.addData("straightenRight", straightenRight.isPressed());
@@ -511,6 +488,7 @@ public class NewAutonMultiColored extends LinearOpMode {
         sleep (10);
     }
 
+    /*
     public void lift(double AH){
         while (armHeight.getDistance(DistanceUnit.INCH)<AH){
             arm.setPower(0.5);
@@ -521,18 +499,19 @@ public class NewAutonMultiColored extends LinearOpMode {
         sleep(10);
     }
 
-    public void moveArm(double AH, double pow) {
+     */
+
+    public void moveArm(int AH, double pow) {
         // lift, but with an assigned power as well.
 
-        while (armHeight.getDistance(DistanceUnit.INCH)<AH){
-            arm.setPower(pow);
-            arm2.setPower(pow);
-            arm.setPower(-pow);
-        }
+        arm.setPower(pow);
+        arm2.setPower(pow);
+        sleep(AH);
         arm.setPower(0);
         arm2.setPower(0);
         sleep(10);
     }
+
 
     public void drive (double lf, double rf, double lb, double rb, double time){
         leftFront.setPower(lf);
