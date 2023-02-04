@@ -119,17 +119,20 @@ public class LinearSlidesDrive extends OpMode {
         webcamName2 = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         arm.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates and makes it go the correct way
-        arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates
+       /* arm2.setDirection(DcMotorSimple.Direction.REVERSE); // motor is backwards on robot, this compensates*/
 
         rightspin.setDirection(CRServo.Direction.REVERSE); // reversed so servos move opposite ways to pull in / out
 
         rightBack.setDirection(DcMotor.Direction.REVERSE);
+
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
 
         //sets power immediatly off once code starts running
         leftBack.setPower(OFF);
+
         rightBack.setPower(OFF);
         leftFront.setPower(OFF);
         rightFront.setPower(OFF);
