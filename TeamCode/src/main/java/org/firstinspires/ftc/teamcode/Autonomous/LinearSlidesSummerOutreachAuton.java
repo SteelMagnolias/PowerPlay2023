@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
-@Autonomous(name = "LinearSlidesSummerOutreach", group="Iterative OpMode")
-public class LinearSlidesSummerOutreach extends LinearOpMode {
+@Autonomous(name = "LinearSlidesSummerOutreachAuton", group="Iterative OpMode")
+public class LinearSlidesSummerOutreachAuton extends LinearOpMode {
 
     // define hardware
     // wheels
@@ -51,8 +51,8 @@ public class LinearSlidesSummerOutreach extends LinearOpMode {
         armTouch = hardwareMap.get(TouchSensor.class, "armTouch");  // in config --> digital port 5 --> "touchy"
         rightspin = hardwareMap.get(CRServo.class, "rightspin"); // in config --> port 3 --> "rightintake"
         leftspin = hardwareMap.get(CRServo.class, "leftspin"); // in config --> port 4 --> "leftintake"
-        straightenRight = hardwareMap.get(TouchSensor.class, "straightenRight");
-        straightenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
+        //straightenRight = hardwareMap.get(TouchSensor.class, "straightenRight");
+        //straightenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft");
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm2 = hardwareMap.get(DcMotor.class, "arm2");
 

@@ -105,8 +105,8 @@ public class LinearSlidesSummerOutreach extends OpMode {
         rightspin = hardwareMap.get(CRServo.class, "rightspin"); // in config --> port 3 --> "rightintake"
         leftspin = hardwareMap.get(CRServo.class, "leftspin"); // in config --> port 4 --> "leftintake"
 
-        straightenRight = hardwareMap.get(TouchSensor.class, "straightenRight"); //Not used in teleop
-        straightenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft"); //not used in teleop
+        //straightenRight = hardwareMap.get(TouchSensor.class, "straightenRight"); //Not used in teleop
+        //straightenLeft = hardwareMap.get(TouchSensor.class, "straightenLeft"); //not used in teleop
 
         arm = hardwareMap.get(DcMotor.class, "arm"); // in config --> "arm"
         arm2 = hardwareMap.get(DcMotor.class, "arm2"); //in config --> "arm2"
