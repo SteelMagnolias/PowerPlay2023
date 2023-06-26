@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 //import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
-@TeleOp (name = "LinearSlidesDrive" , group = "Iterative Opmode")
+@TeleOp (name = "LinearSlidesSummerOutreach" , group = "Iterative Opmode")
 public class LinearSlidesSummerOutreach extends OpMode {
     // wheels
     private DcMotor leftFront; //Left wheel front
